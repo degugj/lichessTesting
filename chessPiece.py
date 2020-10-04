@@ -5,5 +5,5 @@
 
 class ChessPiece:
     def __init__(self, pieceType, color):
-        self.type = pieceType   # What type of chess piece is this
+        self.type = pieceType   # What type of chess piece is this p, h, r, b, q, K
         self.color = color  # What color is the piece ('w' or 'b')
