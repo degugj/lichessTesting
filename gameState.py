@@ -87,6 +87,6 @@ class GameState:
         return out
 
 test = GameState()
-test.localPlayerColor = 'b'  # remove this, must be set based on server state
+test.localPlayerColor = 'w'  # remove this, must be set based on server state
 test.reset()
 print(test)     # print will call __str()__
