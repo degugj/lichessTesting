@@ -3,16 +3,45 @@
 IMPORTS
 -------------------------------
 """
-from tkinter import *
-import tkinter.font
-import gui_windows
+import tkinter as tk
+import gui_pages
 import gui_widgets
 
 """
 -------------------------------
-FUNCTIONS
+GUI app
 -------------------------------
 """
+class MainApp(tk.Tk):
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
+        
+        #frame of window
+        container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand=True)
+        
+        #centralize container
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+        
+        #dictionary of frames
+        self.frames = {}
+        
+        #create startup page frame and update frame dictionary
+        startupFrame = gui_pages.StartupPage
+        frame = startupFrame(container, self)
+        self.frames[startupFrame] = frame
+        
+        #grid the frame
+        frame.grid(row=0, column=0, sticky="nsew")
+        
+        #show startup page frame
+        self.show_frame(startupFrame)
+        
+    def show_frame(self, page):
+        frame = self.frames[page]
+        frame.tkraise()
+        
 
 """
 -------------------------------
@@ -22,24 +51,11 @@ MAIN
 def main():
     
     #GUI window
-    mainWindow = Tk()
-    mainWindow.title('MagiChess')
+    mainWindow = MainApp()
+    mainWindow.title("MagiChess")
     mainWindow.geometry("600x200")   #main window dimensions
-    newlabel = Label(mainWindow, text="MagiChess Main Menu").pack(pady=5)
     
-    #create buttons
-    exitButton = gui_widgets.createButton(window=mainWindow, function=exit, buttonText="Exit",
-                              font="Comic Sans", fontSize=12, fontWeight="bold")
-    exitButton.pack(pady=2)
-    #exitButton.grid(row=1, column=0)
-    
-    signinButton = gui_widgets.createButton(window=mainWindow, function=lambda: gui_windows.createNewWindow(mainWindow),
-                                buttonText="Sign in to Lichess", font="Comic Sans",
-                                fontSize=12, fontWeight="bold")
-    signinButton.pack(pady=2)
-    #signinButton.grid(row=2, column=0)
-    
-    
+
     mainWindow.mainloop()
 
 
