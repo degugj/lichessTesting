@@ -3,9 +3,8 @@
 IMPORTS
 -------------------------------
 """
-from tkinter import *
+import tkinter as tk
 import tkinter.font
-
 """
 -------------------------------
 FUNCTIONS
@@ -19,7 +18,7 @@ return: button object
 """
 def createButton(window, function, text, bgcolor=None):
     buttonFont = tkinter.font.Font(family="arial", size=12, weight="bold");
-    button = Button(window, command=function, text=text, font=buttonFont, bg=bgcolor);
+    button = tk.Button(window, command=function, text=text, font=buttonFont, bg=bgcolor);
     return button
 
 """
@@ -29,7 +28,7 @@ return: label object
 """
 def createLabel(window, text, font, fontsize, fontweight):
     labelFont = tkinter.font.Font(family=font, size=fontsize, weight=fontweight);
-    label = Label(window, text=text, font=labelFont)
+    label = tk.Label(window, text=text, font=labelFont)
     return label
 
 """
@@ -39,7 +38,7 @@ return: entry object
 """
 def createEntry(window, bgcolor, show=None):
     if show != None:
-        entry = Entry(window, bg=bgcolor, show=show)
+        entry = tk.Entry(window, bg=bgcolor, show=show)
     else:
-        entry = Entry(window, bg=bgcolor)
+        entry = tk.Entry(window, bg=bgcolor)
     return entry

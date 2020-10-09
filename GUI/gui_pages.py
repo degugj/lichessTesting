@@ -4,8 +4,9 @@ IMPORTS
 -------------------------------
 """
 import tkinter as tk
+
 import gui_widgets as widgets
-import gui_test
+import gui_test as main
 
 """
 -------------------------------
@@ -44,26 +45,49 @@ class SigninPage(tk.Frame):
         
         passwordLabel = widgets.createLabel(self, text="Password", font="times", fontsize=11, fontweight="normal")
         passwordLabel.pack()
-        passEntry = widgets.createEntry(self, bgcolor="beige", show="*")
-        passEntry.pack()
+        passwordEntry = widgets.createEntry(self, bgcolor="beige", show="*")
+        passwordEntry.pack()
         
         
         """ buttons """
-        loginButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
-                                           text="Login", bgcolor="sky blue")
+        loginButton = widgets.createButton(self, function=lambda: self.submit(usernameEntry.get(), passwordEntry.get(), controller),
+                                           text="Login", bgcolor="seashell3")
         loginButton.pack(pady=4)
         
         returnButton = widgets.createButton(self, function=lambda: controller.show_frame(StartupPage),
-                                            text="Return", bgcolor="sky blue")
+                                            text="Return", bgcolor="seashell3")
         returnButton.pack(pady=7)
+        
+    """ submit username/password for validation """
+    def submit(self, username, password, controller):
+        valid = 1
+        
+        """
+        Send request to LiChess to validate username/password
+        """
+        
+        #checks if either username/password entries are blank
+        if (username or password) == "":
+            valid = 0
+            
+        if valid:
+            controller.show_frame(MainMenuPage, user=username)
+            print(username)
+        else:
+            print("User not found. Invalid username/password")
+        
+        return
         
 
 class MainMenuPage(tk.Frame):
     def __init__(self, master, controller):
         tk.Frame.__init__(self, master)
-        header = widgets.createLabel(self, text="Welcome to MagiChess", font="times", fontsize=14, fontweight="bold")
+        
+    def welcomeHeader(self, username):
+        header = widgets.createLabel(self, text="Welcome to MagiChess, " + username, font="times", fontsize=14, fontweight="bold")
         header.pack(padx=10, pady=10)
         
+    def menuButtons(self, controller):
         """ main menu options """
         playbotButton = widgets.createButton(self, function=lambda: controller.show_frame(PlayBotPage),
                                              text="Play Bot", bgcolor="sky blue")
@@ -82,7 +106,6 @@ class MainMenuPage(tk.Frame):
         exitButton.pack(pady=5)
         
         
-        
 """ main menu pages """
 class PlayBotPage(tk.Frame):
     def __init__(self, master, controller):
@@ -90,7 +113,8 @@ class PlayBotPage(tk.Frame):
         header = widgets.createLabel(self, text="Play a Bot", font="times", fontsize=14, fontweight="bold")
         header.pack(padx=10, pady=10)
         
-        returnButton = widgets.createButton(self, function=lambda:controller.show_frame(MainMenuPage),
+        #return to main menu
+        returnButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
                                             text="Return to Main Menu", bgcolor="sky blue")
         returnButton.pack()
         
@@ -100,9 +124,17 @@ class PlayRandomPage(tk.Frame):
         header = widgets.createLabel(self, text="Seeking Opponent...", font="times", fontsize=14, fontweight="bold")
         header.pack(padx=10, pady=10)
         
-        returnButton = widgets.createButton(self, function=lambda:controller.show_frame(MainMenuPage),
+        #return to main menu
+        returnButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
                                             text="Return to Main Menu", bgcolor="sky blue")
         returnButton.pack()
+        
+    def seekOpponent(self):
+        """
+        send request to LiChess server to seek an opponent
+        """
+        
+        return
         
         
 class PlayFriendPage(tk.Frame):
@@ -111,9 +143,31 @@ class PlayFriendPage(tk.Frame):
         header = widgets.createLabel(self, text="Search Opponent Name", font="times", fontsize=14, fontweight="bold")
         header.pack(padx=10, pady=10)
         
-        returnButton = widgets.createButton(self, function=lambda:controller.show_frame(MainMenuPage),
+        #name input and search button
+        usernameEntry = widgets.createEntry(self, bgcolor="beige")
+        usernameEntry.pack()
+        challengeButton = widgets.createButton(self, function=lambda: self.searchFriend(usernameEntry.get()), text="Challenge", bgcolor="sky blue")
+        challengeButton.pack()
+        
+        
+        #return to main menu
+        returnButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
                                             text="Return to Main Menu", bgcolor="sky blue")
         returnButton.pack()
+        
+    """ search LiChess server for username, and challenge """
+    def searchFriend(self, username=""):
+        
+        """
+        send request to LiChess server to challenge desired user
+        """
+        
+        if username == "":
+            print("User not Found")
+        else: 
+            print(username)
+        return
+        
         
         
 """

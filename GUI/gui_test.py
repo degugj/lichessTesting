@@ -4,8 +4,9 @@ IMPORTS
 -------------------------------
 """
 import tkinter as tk
-import gui_widgets
+import gui_widgets as widgets
 import gui_pages as pages
+from tkinter import PhotoImage
 
 """
 -------------------------------
@@ -34,7 +35,6 @@ class MainApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
         
         #dictionary of frames
-        
         self.frames = {}
         
         for F in (pages.StartupPage, pages.SigninPage, pages.MainMenuPage, pages.PlayBotPage, pages.PlayRandomPage,
@@ -55,8 +55,15 @@ class MainApp(tk.Tk):
     show desired frame, 'page'
     params: page
     """    
-    def show_frame(self, page):
+    def show_frame(self, page, user=""):
         frame = self.frames[page]
+        
+        #checks for username input
+        if user != "":
+            #main menu frame functions
+            frame.welcomeHeader(user)
+            frame.menuButtons(self)
+            
         frame.tkraise()
     
 
@@ -71,8 +78,6 @@ def main():
     mainWindow = MainApp()
     mainWindow.title("MagiChess")
     mainWindow.geometry("600x400")   #main window dimensions
-
-
 
     mainWindow.mainloop()
 
