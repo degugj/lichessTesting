@@ -4,8 +4,8 @@ IMPORTS
 -------------------------------
 """
 import tkinter as tk
-import gui_widgets as widgets
-import gui_pages as pages
+from GUI import gui_widgets as widgets
+from GUI import gui_pages as pages
 from tkinter import PhotoImage
 
 """
@@ -13,8 +13,7 @@ from tkinter import PhotoImage
 VARIABLES
 -------------------------------
 """
-#frames dictionary
-frames = {}
+
 
 """
 -------------------------------
@@ -79,10 +78,11 @@ def main():
     mainWindow.title("MagiChess")
     mainWindow.geometry("600x400")   #main window dimensions
 
+    # program will terminate and close GUI if no loop (terminal only)
     mainWindow.mainloop()
 
 
 if __name__ == '__main__':
     main();
-# program will terminate and close GUI if no loop (terminal only)
+
 

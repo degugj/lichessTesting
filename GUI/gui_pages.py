@@ -5,15 +5,15 @@ IMPORTS
 """
 import tkinter as tk
 
-import gui_widgets as widgets
-import gui_test as main
+from GUI import gui_widgets as widgets
+
+import lichessInterface_new as interface
 
 """
 -------------------------------
-DEFINITIONS
+PAGE CLASSES
 -------------------------------
 """
-
 
 class StartupPage(tk.Frame):
     def __init__(self, master, controller):
@@ -37,7 +37,7 @@ class SigninPage(tk.Frame):
         header = widgets.createLabel(self, text="Sign in to LiChess", font="times", fontsize=14, fontweight="bold")
         header.pack(padx=10, pady=10)
         
-        """ username/password entries """
+        """ username/password entries
         usernameLabel = widgets.createLabel(self, text="Username", font="times", fontsize=11, fontweight="normal")
         usernameLabel.pack()
         usernameEntry = widgets.createEntry(self, bgcolor="beige")
@@ -47,11 +47,12 @@ class SigninPage(tk.Frame):
         passwordLabel.pack()
         passwordEntry = widgets.createEntry(self, bgcolor="beige", show="*")
         passwordEntry.pack()
+        """
         
         
         """ buttons """
-        loginButton = widgets.createButton(self, function=lambda: self.submit(usernameEntry.get(), passwordEntry.get(), controller),
-                                           text="Login", bgcolor="seashell3")
+        loginButton = widgets.createButton(self, function=lambda: self.submit(controller=controller, username="degugj"),
+                                           text="Login as degugj", bgcolor="seashell3")
         loginButton.pack(pady=4)
         
         returnButton = widgets.createButton(self, function=lambda: controller.show_frame(StartupPage),
@@ -59,16 +60,12 @@ class SigninPage(tk.Frame):
         returnButton.pack(pady=7)
         
     """ submit username/password for validation """
-    def submit(self, username, password, controller):
+    def submit(self, controller, username, password=None):
         valid = 1
         
         """
         Send request to LiChess to validate username/password
         """
-        
-        #checks if either username/password entries are blank
-        if (username or password) == "":
-            valid = 0
 
         #Call api funtion
 
@@ -77,7 +74,6 @@ class SigninPage(tk.Frame):
             print(username)
         else:
             print("User not found. Invalid username/password")
-        
         return
         
 
@@ -138,7 +134,6 @@ class PlayRandomPage(tk.Frame):
         
         return
         
-        
 class PlayFriendPage(tk.Frame):
     def __init__(self, master, controller):
         tk.Frame.__init__(self, master)
@@ -148,7 +143,7 @@ class PlayFriendPage(tk.Frame):
         #name input and search button
         usernameEntry = widgets.createEntry(self, bgcolor="beige")
         usernameEntry.pack()
-        challengeButton = widgets.createButton(self, function=lambda: self.searchFriend(usernameEntry.get()), text="Challenge", bgcolor="sky blue")
+        challengeButton = widgets.createButton(self, function=lambda: self.challenge(usernameEntry.get()), text="Challenge", bgcolor="sky blue")
         challengeButton.pack()
         
         
@@ -158,18 +153,23 @@ class PlayFriendPage(tk.Frame):
         returnButton.pack()
         
     """ search LiChess server for username, and challenge """
-    def searchFriend(self, username=""):
-        
-        """
-        send request to LiChess server to challenge desired user
-        """
+    def challenge(self, username=""):
         
         if username == "":
-            print("User not Found")
+            print("User not found")
         else: 
-            print(username)
+            
+            # challenge user and set gameid
+            gameid = interface.challenge_user(username)
+            if not gameid:
+                print("Unable to complete challenge")
+            else:
+                interface.change_gameid(gameid)
+
+                """
+                show_frame(), wait for opponent to respond to challenge, and change page to chess board
+                """
         return
-        
         
         
 """
@@ -177,4 +177,3 @@ class PlayFriendPage(tk.Frame):
 FUNCTIONS
 -------------------------------
 """
-
