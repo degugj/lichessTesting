@@ -69,7 +69,9 @@ class SigninPage(tk.Frame):
         #checks if either username/password entries are blank
         if (username or password) == "":
             valid = 0
-            
+
+        #Call api funtion
+
         if valid:
             controller.show_frame(MainMenuPage, user=username)
             print(username)
