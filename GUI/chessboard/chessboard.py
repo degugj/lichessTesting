@@ -80,7 +80,7 @@ return:
 """
 def draw_gamestate(screen):
 	draw_board(screen)
-	draw_pieces()
+	#draw_pieces()
 
 
 """ draw_board
@@ -90,7 +90,7 @@ return:
 	none
 """
 def draw_board(screen):
-	colors = [pg.Color("white"), pg.Color("gray")]
+	colors = [pg.Color("white"), pg.Color("dark grey")]
 	for row in range(DIMENSIONS):
 		for column in range(DIMENSIONS):
 			color = colors[(row+column) % 2]
@@ -105,6 +105,6 @@ return:
 	none
 """
 def draw_pieces(screen, gamestate):
-
+	return
 
 init_chessboard()
