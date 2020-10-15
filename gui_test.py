@@ -10,10 +10,11 @@ from tkinter import PhotoImage
 
 """
 -------------------------------
-VARIABLES
+VARIABLES AND DEFINITIONS
 -------------------------------
 """
-
+WIDTH = 600
+HEIGHT = 400
 
 """
 -------------------------------
@@ -25,6 +26,8 @@ class MainApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         
+        tk.Tk.iconbitmap(self, default="GUI/icon.bmp")
+
         #frame of window
         container = tk.Frame(self)
         container.pack(side="top")
@@ -76,7 +79,7 @@ def main():
     #GUI window
     mainWindow = MainApp()
     mainWindow.title("MagiChess")
-    mainWindow.geometry("600x400")   #main window dimensions
+    mainWindow.geometry(f"{WIDTH}x{HEIGHT}")   #main window dimensions
 
     # program will terminate and close GUI if no loop (terminal only)
     mainWindow.mainloop()
