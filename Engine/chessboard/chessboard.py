@@ -4,8 +4,9 @@ IMPORTS
 -------------------------------
 """
 import pygame as pg
+import time
 
-
+import gameState as gs
 """
 -------------------------------
 DEFINITIONS AND VARIABLES 
@@ -25,7 +26,7 @@ FUNCTIONS
 -------------------------------
 """
 
-""" load_images
+""" load_images: loads chesspiece images into images dictionary
 params:
 	none
 return:
@@ -35,7 +36,7 @@ def load_images():
 	pieces = ['wP', 'wR', 'wH', 'wB', 'wK', 'wQ', 'bP', 'bR', 'bH', 'bB', 'bK', 'bQ']
 	# fill images dictionary with pieces and corresponding images
 	for piece in pieces:
-		image = pg.image.load("images/" + piece + ".png")
+		image = pg.image.load("chessboard_images/" + piece + ".png")
 		images[piece] = pg.transform.scale(image, (CELL_SIZE, CELL_SIZE))
 
 """ init_chessboard():
@@ -49,7 +50,7 @@ def init_chessboard():
 	# init pygame and set window title and icon
 	pg.init()
 	pg.display.set_caption('MagiChess: Challenger Game')
-	icon = pg.image.load("images/wQ.png")
+	icon = pg.image.load("chessboard_images/wQ.png")
 	pg.display.set_icon(icon)
 
 	# set window dimensions and color, and create clock
@@ -57,8 +58,11 @@ def init_chessboard():
 	screen.fill(pg.Color("white"))
 	clock = pg.time.Clock()
 	
-	# load piece images into dictionary
+	# load chesspiece images into dictionary
 	load_images()
+
+	# create gamestate object
+	gamestate = gs.GameState()
 
 	# always run until quit event
 	run = True
@@ -67,7 +71,7 @@ def init_chessboard():
 			if e.type == pg.QUIT:
 				run = False
 
-		draw_gamestate(screen)
+		draw_gamestate(screen, gamestate)
 		clock.tick(MAX_FPS)
 		pg.display.flip()
 
@@ -78,9 +82,9 @@ params:
 return:
 	none
 """
-def draw_gamestate(screen):
+def draw_gamestate(screen, gamestate):
 	draw_board(screen)
-	#draw_pieces()
+	draw_pieces(screen, gamestate.board)
 
 
 """ draw_board
@@ -104,7 +108,12 @@ params:
 return:
 	none
 """
-def draw_pieces(screen, gamestate):
+def draw_pieces(screen, gamestate_board):
+	for row in range(DIMENSIONS):
+		for column in range(DIMENSIONS):
+			piece = gamestate_board[row][column]
+			if piece != "--":
+				screen.blit(images[piece], (column*CELL_SIZE, row*CELL_SIZE, CELL_SIZE, CELL_SIZE))
 	return
-
-init_chessboard()
+ 
+ init_chessboard()

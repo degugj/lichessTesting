@@ -4,9 +4,9 @@ IMPORTS
 -------------------------------
 """
 import tkinter as tk
-from GUI import gui_widgets as widgets
-from GUI import gui_pages as pages
-from tkinter import PhotoImage
+
+from Engine.GUI import gui_widgets as widgets
+from Engine import gui_pages as pages
 
 """
 -------------------------------

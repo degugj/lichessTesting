@@ -5,9 +5,10 @@ IMPORTS
 """
 import tkinter as tk
 
+from chessboard import chessboard
+from lichess import lichessInterface_new as interface
 from GUI import gui_widgets as widgets
 
-import lichessInterface_new as interface
 
 """
 -------------------------------
