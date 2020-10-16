@@ -116,4 +116,4 @@ def draw_pieces(screen, gamestate_board):
 				screen.blit(images[piece], (column*CELL_SIZE, row*CELL_SIZE, CELL_SIZE, CELL_SIZE))
 	return
  
- init_chessboard()
+init_chessboard()
