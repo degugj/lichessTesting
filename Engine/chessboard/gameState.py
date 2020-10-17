@@ -59,9 +59,3 @@ class GameState():
             print(self.board[i])
 
         return ''
-
-
-test = GameState()
-print(test)
-test.movePiece('a2a3')
-print(test)

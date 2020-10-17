@@ -5,9 +5,12 @@ IMPORTS
 """
 import tkinter as tk
 
-from chessboard import chessboard
-from lichess import lichessInterface_new as interface
-from GUI import gui_widgets as widgets
+from Engine.GUI import gui_widgets as widgets
+
+from Engine.chessboard import chessboard
+from Engine.chessboard import gameState as gs
+
+from Engine.lichess import lichessInterface_new as interface
 
 
 """
@@ -96,7 +99,7 @@ class MainMenuPage(tk.Frame):
                                              text="Seek an Opponent", bgcolor="sky blue")
         playrandButton.pack(pady=5)
         
-        playfriendButton = widgets.createButton(self, function=lambda: controller.show_frame(PlayFriendPage),
+        playfriendButton = widgets.createButton(self, function=lambda: controller.show_frame(ChallengePage),
                                              text="Challenge a Friend", bgcolor="sky blue")
         playfriendButton.pack(pady=5)
         
@@ -135,46 +138,65 @@ class PlayRandomPage(tk.Frame):
         
         return
         
-class PlayFriendPage(tk.Frame):
-    def __init__(self, master, controller):
-        tk.Frame.__init__(self, master)
-        header = widgets.createLabel(self, text="Search Opponent Name", font="times", fontsize=14, fontweight="bold")
-        header.pack(padx=10, pady=10)
-        
-        #name input and search button
-        usernameEntry = widgets.createEntry(self, bgcolor="beige")
-        usernameEntry.pack()
-        challengeButton = widgets.createButton(self, function=lambda: self.challenge(usernameEntry.get()), text="Challenge", bgcolor="sky blue")
-        challengeButton.pack()
-        
-        
-        #return to main menu
-        returnButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
-                                            text="Return to Main Menu", bgcolor="sky blue")
-        returnButton.pack()
-        
-    """ search LiChess server for username, and challenge """
-    def challenge(self, username=""):
-        
-        if username == "":
-            print("User not found")
-        else: 
-            
-            # challenge user and set gameid
-            gameid = interface.challenge_user(username)
-            if not gameid:
-                print("Unable to complete challenge")
-            else:
-                interface.change_gameid(gameid)
+class ChallengePage(tk.Frame):
+	def __init__(self, master, controller):
+		tk.Frame.__init__(self, master)
+		header = widgets.createLabel(self, text="Search Opponent Name", font="times", fontsize=14, fontweight="bold")
+		header.pack(padx=10, pady=10)
 
-                """
-                show_frame(), wait for opponent to respond to challenge, and change page to chess board
-                """
-        return
-        
-        
+		#name input and search button
+		usernameEntry = widgets.createEntry(self, bgcolor="beige")
+		usernameEntry.pack()
+		challengeButton = widgets.createButton(self, function=lambda: self.challenge(controller, usernameEntry.get()), text="Challenge", bgcolor="sky blue")
+		challengeButton.pack()
+
+
+		#return to main menu
+		returnButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
+		                        			text="Return to Main Menu", bgcolor="sky blue")
+		returnButton.pack()
+
+
+	def challenge(self, controller, username=""):
+
+		if username == "":
+			print("User not found")
+		else: 
+
+			# challenge user and set gameid
+			gameid = interface.challenge_user(username)
+			if not gameid:
+				print("Unable to complete challenge")
+			else:
+
+				interface.change_gameid(gameid)
+				controller.show_frame(WaitChallengerPage)
+				waitForChallenger()
+		return
+	        
+class WaitChallengerPage(tk.Frame):
+	def __init__(self, master, controller):
+		tk.Frame.__init__(self, master)
+		header = widgets.createLabel(self, text="Waiting for Challenger...", font="times", fontsize=18, fontweight="bold")
+		header.pack(padx=10, pady=10)
+
+
 """
 -------------------------------
 FUNCTIONS
 -------------------------------
 """
+
+""" waitForChallenger: wait for challenger to respond
+	params:
+	return:
+"""
+def waitForChallenger():
+	accepted = False
+	while not accepted:
+		# read from event stream, find event 'startGame'
+		break
+
+	# start chessboard game window
+	chessboard.init_chessboard()
+

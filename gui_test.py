@@ -26,7 +26,7 @@ class MainApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         
-        tk.Tk.iconbitmap(self, default="GUI/icon.bmp")
+        tk.Tk.iconbitmap(self, default="Engine/GUI/icon.bmp")
 
         #frame of window
         container = tk.Frame(self)
@@ -40,7 +40,7 @@ class MainApp(tk.Tk):
         self.frames = {}
         
         for F in (pages.StartupPage, pages.SigninPage, pages.MainMenuPage, pages.PlayBotPage, pages.PlayRandomPage,
-                  pages.PlayFriendPage):
+                  pages.ChallengePage, pages.WaitChallengerPage):
             
             #create startup page frame and update frame dictionary
             frame = F(container, self)
