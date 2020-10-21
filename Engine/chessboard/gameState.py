@@ -32,7 +32,7 @@ class GameState():
             return:
                 none
     """
-    def movePiece(self, move):
+    def move_piece(self, move):
         # find starting cell in self.board
         startcell_y = self.letter_to_x[move[0]]
         startcell_x = self.number_to_y[move[1]]
@@ -51,8 +51,10 @@ class GameState():
         self.board[cell_x][cell_y] = piece
 
     def reset(self):
-
         self.board = self.defaultState
+
+    def update_gamestate(self):
+        return
 
     def __str__(self):
         for i in range(8):

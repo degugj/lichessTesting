@@ -13,6 +13,7 @@ from Engine import gui_pages as pages
 VARIABLES AND DEFINITIONS
 -------------------------------
 """
+# width and height of gui window
 WIDTH = 600
 HEIGHT = 400
 

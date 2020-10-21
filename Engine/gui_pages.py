@@ -5,6 +5,8 @@ IMPORTS
 """
 import tkinter as tk
 
+from Engine import stream_processes
+
 from Engine.GUI import gui_widgets as widgets
 
 from Engine.chessboard import chessboard
@@ -22,16 +24,16 @@ PAGE CLASSES
 class StartupPage(tk.Frame):
     def __init__(self, master, controller):
         tk.Frame.__init__(self, master)
-        header = widgets.createLabel(self, text="MagiChess", font="times", fontsize=14, fontweight="bold")
+        header = widgets.createLabel(self, text="MagiChess", font="times", fontsize=25, fontweight="bold")
         header.pack(padx=10, pady=10)
         
         #startup buttons
         signinButton = widgets.createButton(self, function=lambda: controller.show_frame(SigninPage),
-                                           text="Sign in to LiChess.org")
-        signinButton.pack()
+                                           text="Sign in to LiChess.org", bgcolor="sky blue")
+        signinButton.pack(pady=10)
         
         exitButton = widgets.createButton(self, function=exit,
-                                          text="Exit")    
+                                          text="Exit", bgcolor="seashell3")    
         exitButton.pack()
 
 
@@ -66,16 +68,15 @@ class SigninPage(tk.Frame):
     """ submit username/password for validation """
     def submit(self, controller, username, password=None):
         valid = 1
-        
-        """
-        Send request to LiChess to validate username/password
-        """
 
-        #Call api funtion
-
+       	# login as degugj
         if valid:
             controller.show_frame(MainMenuPage, user=username)
-            print(username)
+            
+            # create event stream process
+            #eventstream = stream_processes.EventStream()
+            #eventstreamProcess = eventstream.get_eventstreamProcess()
+
         else:
             print("User not found. Invalid username/password")
         return
@@ -145,16 +146,16 @@ class ChallengePage(tk.Frame):
 		header.pack(padx=10, pady=10)
 
 		#name input and search button
-		usernameEntry = widgets.createEntry(self, bgcolor="beige")
-		usernameEntry.pack()
+		usernameEntry = widgets.createEntry(self, bgcolor="beige") 
+		usernameEntry.pack(pady=10)
 		challengeButton = widgets.createButton(self, function=lambda: self.challenge(controller, usernameEntry.get()), text="Challenge", bgcolor="sky blue")
-		challengeButton.pack()
+		challengeButton.pack(pady=10)
 
 
 		#return to main menu
 		returnButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
 		                        			text="Return to Main Menu", bgcolor="sky blue")
-		returnButton.pack()
+		returnButton.pack(pady=10)
 
 
 	def challenge(self, controller, username=""):
@@ -171,7 +172,7 @@ class ChallengePage(tk.Frame):
 
 				interface.change_gameid(gameid)
 				controller.show_frame(WaitChallengerPage)
-				waitForChallenger()
+				waitForChallenger(username)
 		return
 	        
 class WaitChallengerPage(tk.Frame):
@@ -191,12 +192,12 @@ FUNCTIONS
 	params:
 	return:
 """
-def waitForChallenger():
+def waitForChallenger(challengerName):
 	accepted = False
 	while not accepted:
 		# read from event stream, find event 'startGame'
 		break
 
 	# start chessboard game window
-	chessboard.init_chessboard()
+	chessboard.init_chessboard(challengerName)
 

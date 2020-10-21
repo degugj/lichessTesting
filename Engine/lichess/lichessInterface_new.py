@@ -48,10 +48,12 @@ def create_eventstream(controlQueue):
 				# place response events in control queue
 				if line:
 					event = json.loads(line.decode('utf-8'))
-					print(event)
 					controlQueue.put_nowait(event)
 				else:
 					controlQueue.put_nowait({"type": "ping"})
+
+				time.sleep(2)
+
 		except:
 			pass
 
