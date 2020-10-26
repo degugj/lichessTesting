@@ -3,8 +3,20 @@
 # September 2020
 # Description: GameState class for storing the local state of the chess board
 
+"""
+-------------------------------
+IMPORTS
+-------------------------------
+"""
 import time
+from Engine.lichess import lichessInterface_new as interface
 
+
+"""
+-------------------------------
+GameState Class
+-------------------------------
+"""
 class GameState():
     def __init__(self):
         self.localPlayerColor = ''
@@ -25,6 +37,7 @@ class GameState():
             ["wR", "wH", "wB", "wQ", "wK", "wB", "wH", "wR"]]
         self.defaultState = self.board
 
+        self.userMove = True
 
     """ movePiece: move piece
             params: 
@@ -50,11 +63,45 @@ class GameState():
     def setCell(self, piece, cell_x, cell_y):
         self.board[cell_x][cell_y] = piece
 
+    
+    """ update_gamestate: handles user and opponent moves
+        params:
+        return:
+    """
+    def update_gamestate(self):
+
+        # user's move
+        if self.userMove:
+            """
+            read local gamestate for user move
+            """
+            while (self.userMove):
+                print("User Move - Enter Move: ")
+                move = input()
+
+                # send move to server
+                message, valid = interface.make_move(move)
+                print(message, valid)
+                if (valid):
+                    # if move is success
+                    try:
+                        self.move_piece(move)
+                        self.userMove = False
+                    except:
+                        print("Invalid input given")
+                        
+
+        # opponent's move
+        else:
+
+            """
+            read gamestream for opponent moves
+            """
+            self.userMove = True
+
+    # reset board to original state 
     def reset(self):
         self.board = self.defaultState
-
-    def update_gamestate(self):
-        return
 
     def __str__(self):
         for i in range(8):

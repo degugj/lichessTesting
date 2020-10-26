@@ -3,16 +3,29 @@
 IMPORTS
 -------------------------------
 """
+import signal, json, time
 import tkinter as tk
+import multiprocessing as mp
 
-from Engine import stream_processes
+from Engine import chessboard
+from Engine import gameState
 
 from Engine.GUI import gui_widgets as widgets
-
-from Engine.chessboard import chessboard
-from Engine.chessboard import gameState as gs
-
 from Engine.lichess import lichessInterface_new as interface
+
+
+"""
+-------------------------------
+VARIABLES
+-------------------------------
+"""
+eventQueue = None
+gameQueue = None
+
+eventstream = None
+gamestream = None
+
+terminated = False
 
 
 """
@@ -32,55 +45,60 @@ class StartupPage(tk.Frame):
                                            text="Sign in to LiChess.org", bgcolor="sky blue")
         signinButton.pack(pady=10)
         
-        exitButton = widgets.createButton(self, function=exit,
+        exitButton = widgets.createButton(self, function=quit_program,
                                           text="Exit", bgcolor="seashell3")    
         exitButton.pack()
 
 
+
+
 class SigninPage(tk.Frame):
-    def __init__(self, master, controller):
-        tk.Frame.__init__(self, master)
-        header = widgets.createLabel(self, text="Sign in to LiChess", font="times", fontsize=14, fontweight="bold")
-        header.pack(padx=10, pady=10)
-        
-        """ username/password entries
-        usernameLabel = widgets.createLabel(self, text="Username", font="times", fontsize=11, fontweight="normal")
-        usernameLabel.pack()
-        usernameEntry = widgets.createEntry(self, bgcolor="beige")
-        usernameEntry.pack()
-        
-        passwordLabel = widgets.createLabel(self, text="Password", font="times", fontsize=11, fontweight="normal")
-        passwordLabel.pack()
-        passwordEntry = widgets.createEntry(self, bgcolor="beige", show="*")
-        passwordEntry.pack()
-        """
-        
-        
-        """ buttons """
-        loginButton = widgets.createButton(self, function=lambda: self.submit(controller=controller, username="degugj"),
-                                           text="Login as degugj", bgcolor="seashell3")
-        loginButton.pack(pady=4)
-        
-        returnButton = widgets.createButton(self, function=lambda: controller.show_frame(StartupPage),
-                                            text="Return", bgcolor="seashell3")
-        returnButton.pack(pady=7)
-        
-    """ submit username/password for validation """
-    def submit(self, controller, username, password=None):
-        valid = 1
+	def __init__(self, master, controller):
+		tk.Frame.__init__(self, master)
+		header = widgets.createLabel(self, text="Sign in to LiChess", font="times", fontsize=14, fontweight="bold")
+		header.pack(padx=10, pady=10)
 
-       	# login as degugj
-        if valid:
-            controller.show_frame(MainMenuPage, user=username)
-            
-            # create event stream process
-            #eventstream = stream_processes.EventStream()
-            #eventstreamProcess = eventstream.get_eventstreamProcess()
+		""" username/password entries
+		usernameLabel = widgets.createLabel(self, text="Username", font="times", fontsize=11, fontweight="normal")
+		usernameLabel.pack()
+		usernameEntry = widgets.createEntry(self, bgcolor="beige")
+		usernameEntry.pack()
 
-        else:
-            print("User not found. Invalid username/password")
-        return
-        
+		passwordLabel = widgets.createLabel(self, text="Password", font="times", fontsize=11, fontweight="normal")
+		passwordLabel.pack()
+		passwordEntry = widgets.createEntry(self, bgcolor="beige", show="*")
+		passwordEntry.pack()
+		"""
+
+
+		""" buttons """
+		loginButton = widgets.createButton(self, function=lambda: self.submit(controller=controller, username="degugj"),
+		text="Login as degugj", bgcolor="seashell3")
+		loginButton.pack(pady=4)
+
+		returnButton = widgets.createButton(self, function=lambda: controller.show_frame(StartupPage),
+		text="Return", bgcolor="seashell3")
+		returnButton.pack(pady=7)
+
+	""" submit username/password for validation """
+	def submit(self, controller, username, password=None):
+		valid = 1
+
+		# login as degugj
+		if valid:
+			controller.show_frame(MainMenuPage, user=username)
+
+			# create and start an event stream process
+			global eventstream
+			eventstream = mp.Process(target = event_stream, args = (eventQueue,))
+			eventstream.start()
+
+		else:
+			print("User not found. Invalid username/password")
+		return
+
+
+
 
 class MainMenuPage(tk.Frame):
     def __init__(self, master, controller):
@@ -104,11 +122,13 @@ class MainMenuPage(tk.Frame):
                                              text="Challenge a Friend", bgcolor="sky blue")
         playfriendButton.pack(pady=5)
         
-        exitButton = widgets.createButton(self, function=exit,
+        exitButton = widgets.createButton(self, function=quit_program,
                                              text="Exit MagiChess", bgcolor="seashell3")
         exitButton.pack(pady=5)
         
-        
+     
+
+
 """ main menu pages """
 class PlayBotPage(tk.Frame):
     def __init__(self, master, controller):
@@ -140,46 +160,57 @@ class PlayRandomPage(tk.Frame):
         return
         
 class ChallengePage(tk.Frame):
-	def __init__(self, master, controller):
-		tk.Frame.__init__(self, master)
-		header = widgets.createLabel(self, text="Search Opponent Name", font="times", fontsize=14, fontweight="bold")
-		header.pack(padx=10, pady=10)
+    def __init__(self, master, controller):
+        tk.Frame.__init__(self, master)
+        header = widgets.createLabel(self, text="Search Opponent Name", font="times", fontsize=14, fontweight="bold")
+        header.pack(padx=10, pady=10)
 
-		#name input and search button
-		usernameEntry = widgets.createEntry(self, bgcolor="beige") 
-		usernameEntry.pack(pady=10)
-		challengeButton = widgets.createButton(self, function=lambda: self.challenge(controller, usernameEntry.get()), text="Challenge", bgcolor="sky blue")
-		challengeButton.pack(pady=10)
-
-
-		#return to main menu
-		returnButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
-		                        			text="Return to Main Menu", bgcolor="sky blue")
-		returnButton.pack(pady=10)
+        #name input and search button
+        usernameEntry = widgets.createEntry(self, bgcolor="beige") 
+        usernameEntry.pack(pady=10)
+        challengeButton = widgets.createButton(self, function=lambda: self.challenge(controller, usernameEntry.get()),
+                                                text="Challenge", bgcolor="sky blue")
+        challengeButton.pack(pady=10)
 
 
-	def challenge(self, controller, username=""):
+        #return to main menu
+        returnButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
+                                            text="Return to Main Menu", bgcolor="sky blue")
+        returnButton.pack(pady=10)
 
-		if username == "":
-			print("User not found")
-		else: 
 
-			# challenge user and set gameid
-			gameid = interface.challenge_user(username)
-			if not gameid:
-				print("Unable to complete challenge")
-			else:
+    def challenge(self, controller, username=""):
 
-				interface.change_gameid(gameid)
-				controller.show_frame(WaitChallengerPage)
-				waitForChallenger(username)
-		return
-	        
-class WaitChallengerPage(tk.Frame):
-	def __init__(self, master, controller):
-		tk.Frame.__init__(self, master)
-		header = widgets.createLabel(self, text="Waiting for Challenger...", font="times", fontsize=18, fontweight="bold")
-		header.pack(padx=10, pady=10)
+        if username == "":
+            print("User not found")
+        else:
+
+            # challenge user and set gameid
+            gameid = interface.challenge_user(username)
+            print(gameid)
+
+            if not gameid:
+                print("Unable to complete challenge")
+            else:
+
+                interface.change_gameid(gameid)
+
+                # create and display text indicating waiting for challenger to respond
+                waitingLabel = widgets.createLabel(self, text="Waiting for Challenger...", font="times", fontsize=15, fontweight="bold")
+                waitingLabel.pack(pady=5)
+
+                # wait until challenger accepts challenge
+                accepted = False
+                while not accepted:
+                    """
+                    check event stream for 'gameStarted'
+                    """
+                    break
+                ingame(username, controller)
+
+                # remove label
+                waitingLabel.pack_forget()
+        return
 
 
 """
@@ -188,16 +219,67 @@ FUNCTIONS
 -------------------------------
 """
 
-""" waitForChallenger: wait for challenger to respond
+""" ingame: runs while user is currently in a game
+	params:
+		challengerName: name of player that user is playing
+	return:
+"""
+def ingame(challengerName, controller):
+
+    # create a game stream
+    # gamestream = stream_processes.GameStream(gameQueue)
+
+    # create a game state
+    gamestate = gameState.GameState()
+
+    # start chessboard game window and wait until chessboard window is closed
+    chessboard.init_chessboard(challengerName, gamestate)
+
+
+
+
+""" event_stream: seperate process for event stream
+	params:
+		eventQueue: responses from LiChess event stream will be placed in queue
+	return:
+"""
+def event_stream(eventQueue):
+	while not terminated:
+		try:
+
+			# api call to start an event stream
+			response = interface.create_eventstream()
+			lines = response.iter_lines()
+			# iterate through the response message
+			for line in lines:
+				# place response events in control queue
+				if line:
+					event = json.loads(line.decode('utf-8'))
+					eventQueue.put_nowait(event)
+				else:
+					eventQueue.put_nowait({"type": "ping"})
+
+		except:
+			pass
+	return
+
+
+
+
+""" quit_program: terminates all processes and closes window
 	params:
 	return:
 """
-def waitForChallenger(challengerName):
-	accepted = False
-	while not accepted:
-		# read from event stream, find event 'startGame'
-		break
+def quit_program():
+	global terminated
+	terminated = True
+	global eventstream
+	if eventstream != None:
+		eventstream.terminate()
+		eventstream.join()
+	print("Quit Program")
+	exit()
 
-	# start chessboard game window
-	chessboard.init_chessboard(challengerName)
+""" maps signal, SIGINT (keyboard interrupts), to quit_program """
+signal.signal(signal.SIGINT, quit_program)
 

@@ -13,6 +13,7 @@ VARIABLES
 -------------------------------
 """
 api_key = settings.api_key
+
 """
 -------------------------------
 LICHESS API FUNCTIONS
@@ -31,31 +32,46 @@ def get_accountinfo(user, password):
 	return r.content
 
 
+
+
 """ create_eventstream: creating an event stream using the API key (run this as a seperate process)
 	params: 
 		controlQueue
 	return:
 """
-def create_eventstream(controlQueue):
+def create_eventstream():
+	response = requests.get('https://lichess.org/api/stream/event', headers={'Authorization': 'Bearer {}'.format(api_key)}, stream=True)
+	return response
+
+
+
+
+""" create_gamestream: creating an game stream using the gameid (run this as a seperate process)
+	params:
+		gameEventsQueue
+	return:
+"""
+def create_gamestream(gameQueue):
 	while 1:
 		try:
-			# api call to start an event stream
-			response = requests.get('https://lichess.org/api/stream/event', headers={'Authorization': 'Bearer {}'.format(settings.api_key)}, stream=True)
-
+			gameid = open('game.txt', 'r')
+			# api call to start a game stream
+			response = requests.get('https://lichess.org/api/board/game/stream/{}'.format(gameid.read()), headers={'Authorization': 'Bearer {}'.format(api_key)})
 			lines = response.iter_lines()
 			# iterate through the response message
 			for line in lines:
 				# place response events in control queue
 				if line:
 					event = json.loads(line.decode('utf-8'))
-					controlQueue.put_nowait(event)
+					print(event)
+					gameQueue.put_nowait(event)
 				else:
-					controlQueue.put_nowait({"type": "ping"})
-
-				time.sleep(2)
+					gameQueue.put_nowait({"type": "ping"})
 
 		except:
 			pass
+
+
 
 
 """ challenge_user
@@ -73,6 +89,7 @@ def challenge_user(username, **kwargs):
 	    'increment': 0, 
 	}
 	r = requests.post('https://lichess.org/api/challenge/' + username, json=configurations, headers={'Authorization': 'Bearer {}'.format(api_key)})
+	print(r.content)
 	if r.status_code == 200:
 
 		# response message from challenge request to LiChess
@@ -85,17 +102,23 @@ def challenge_user(username, **kwargs):
 		return 0
 
 
+
+
 """ make_move: request to make move to lichess server
 	params:
 	return:
 """
 def make_move(move):
-	r = requests.post('https://lichess.org/api/board/game/{id}/move/{move}'.format(id=settings.gameid, move=move), headers={'Authorization': 'Bearer {}'.format(api_key)})
+	gameid = open('gameid.txt', 'r')
+	r = requests.post('https://lichess.org/api/board/game/{id}/move/{move}'.format(id=gameid.read(), move=move), headers={'Authorization': 'Bearer {}'.format(api_key)})
 	if r.status_code == '200':
-		return
+		print('status code 200')
+		return (r.content, 1)
 	# error code 400
 	else:
-		print("move is not valid")
+		return (r.content, 0)
+
+
 
 
 """ change_gameid

@@ -6,7 +6,7 @@ IMPORTS
 import pygame as pg
 import time
 
-from Engine.chessboard import gameState as gs
+from Engine import gameState as gs
 #import gameState as gs
 
 """
@@ -41,7 +41,7 @@ FUNCTIONS
 	params:
 	return:
 """
-def init_chessboard(challengerName):
+def init_chessboard(challengerName, gamestate):
 
 	# init pygame and set window title and icon
 	pg.init()
@@ -57,15 +57,29 @@ def init_chessboard(challengerName):
 	# load chesspiece images into dictionary
 	load_images()
 
-	# create gamestate object
-	gamestate = gs.GameState()
-
 	# on-screen text
 	leftbuffertextOffset = 	(WIN_WIDTH - CB_WIDTH) // 4
 	rightbuffertextOffset =  WIN_WIDTH - leftbuffertextOffset
 	display_text(screen, "Currently Playing: " + challengerName, (0,0,0), 20, WIN_WIDTH // 2, 40)
 	display_text(screen, "White Capture Buffer", (0,0,0), 15, leftbuffertextOffset, ychessboardOffset-25)
 	display_text(screen, "Black Capture Buffer", (0,0,0), 15, rightbuffertextOffset, ychessboardOffset-25)
+
+
+	# letter and number chess gridding
+	letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+	letterOffsetx = ((WIN_WIDTH - CB_WIDTH)//2) + (cellSize//2)
+	letterOffsety = WIN_HEIGHT - ((WIN_HEIGHT - CB_HEIGHT)//2) + 10
+	for letter in letters:
+		display_text(screen, letter, (255,0,0), 12, letterOffsetx, letterOffsety)
+		letterOffsetx += 64
+
+	numberOffsetx = WIN_WIDTH - ((WIN_WIDTH - CB_WIDTH)//2) + 10
+	numberOffsety = WIN_HEIGHT -  ((WIN_HEIGHT - CB_HEIGHT)//2) - (cellSize//2)
+	numbers = list(range(1,9))
+	for number in numbers:
+		display_text(screen, str(number), (255,0,0), 12, numberOffsetx, numberOffsety)
+		numberOffsety -= 64
+
 
 	# always run until quit event
 	run = True
@@ -80,6 +94,10 @@ def init_chessboard(challengerName):
 		clock.tick(MAX_FPS)
 		pg.display.flip()
 
+		# update gamestate of the board (i.e user/opponent makes move)
+		gamestate.update_gamestate()
+
+	# close out of chessboard window
 	pg.display.quit()
 	pg.quit()
 
@@ -102,10 +120,11 @@ def load_images():
 	return:
 """
 def draw_gamestate(screen, gamestate):
-	gamestate.update_gamestate()
+
 	draw_board(screen)
 	draw_buffers(screen)
 	draw_pieces(screen, gamestate.board)
+
 	return
 
 
