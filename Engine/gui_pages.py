@@ -19,8 +19,8 @@ from Engine.lichess import lichessInterface_new as interface
 VARIABLES
 -------------------------------
 """
-eventQueue = None
-gameQueue = None
+eventQueue = mp.Queue()
+gameQueue = mp.Queue()
 
 eventstream = None
 gamestream = None
@@ -165,7 +165,7 @@ class ChallengePage(tk.Frame):
         header = widgets.createLabel(self, text="Search Opponent Name", font="times", fontsize=14, fontweight="bold")
         header.pack(padx=10, pady=10)
 
-        #name input and search button
+        # name input and search button
         usernameEntry = widgets.createEntry(self, bgcolor="beige") 
         usernameEntry.pack(pady=10)
         challengeButton = widgets.createButton(self, function=lambda: self.challenge(controller, usernameEntry.get()),
@@ -173,7 +173,7 @@ class ChallengePage(tk.Frame):
         challengeButton.pack(pady=10)
 
 
-        #return to main menu
+        # return to main menu
         returnButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
                                             text="Return to Main Menu", bgcolor="sky blue")
         returnButton.pack(pady=10)
@@ -195,21 +195,19 @@ class ChallengePage(tk.Frame):
 
                 interface.change_gameid(gameid)
 
-                # create and display text indicating waiting for challenger to respond
-                waitingLabel = widgets.createLabel(self, text="Waiting for Challenger...", font="times", fontsize=15, fontweight="bold")
-                waitingLabel.pack(pady=5)
-
                 # wait until challenger accepts challenge
                 accepted = False
                 while not accepted:
-                    """
-                    check event stream for 'gameStarted'
-                    """
-                    break
+                    event = eventQueue.get()
+                    if event["type"] == "gameStart":
+                        if event["game"]["id"] == gameid:
+                            accepted = True
+
+                initialGameStreamProcess = mp.Process(target=initialgame_stream)
+                initialGameStreamProcess.start()
+                
                 ingame(username, controller)
 
-                # remove label
-                waitingLabel.pack_forget()
         return
 
 
@@ -227,10 +225,12 @@ FUNCTIONS
 def ingame(challengerName, controller):
 
     # create a game stream
-    # gamestream = stream_processes.GameStream(gameQueue)
+    global gamestream
+    gamestream = mp.Process(target=game_stream, args=(gameQueue,))
+    gamestream.start()
 
     # create a game state
-    gamestate = gameState.GameState()
+    gamestate = gameState.GameState(gameQueue=gameQueue)
 
     # start chessboard game window and wait until chessboard window is closed
     chessboard.init_chessboard(challengerName, gamestate)
@@ -244,24 +244,52 @@ def ingame(challengerName, controller):
 	return:
 """
 def event_stream(eventQueue):
-	while not terminated:
-		try:
+    iterator = 0
+    while not terminated:
+        try:
+            time.sleep(3)
+            # api call to start an event stream
+            response = interface.create_eventstream()
+            lines = response.iter_lines()
 
-			# api call to start an event stream
-			response = interface.create_eventstream()
-			lines = response.iter_lines()
-			# iterate through the response message
-			for line in lines:
-				# place response events in control queue
-				if line:
-					event = json.loads(line.decode('utf-8'))
-					eventQueue.put_nowait(event)
-				else:
-					eventQueue.put_nowait({"type": "ping"})
+            # iterate through the response message
+            for line in lines:
+                # place response events in control queue
+                if line:
+                    event = json.loads(line.decode('utf-8'))
+                    eventQueue.put_nowait(event)
+                else:
+                    eventQueue.put_nowait({"type": "ping"})
+            
 
-		except:
-			pass
-	return
+        except:
+            pass
+    return
+
+
+
+
+""" game_stream: seperate process for game stream
+    params:
+    return:
+"""
+def game_stream(gameQueue):
+    temp = None
+    while not terminated:
+        response = interface.create_gamestream()
+        lines = response.iter_lines()
+        time.sleep(3)
+        #iterate through the response message
+        for line in lines:
+            if line:
+                event = json.loads(line.decode('utf-8'))
+                gameQueue.put_nowait(event)
+
+    return
+
+
+def initialgame_stream():
+    response = interface.create_gamestream()
 
 
 
@@ -271,14 +299,19 @@ def event_stream(eventQueue):
 	return:
 """
 def quit_program():
-	global terminated
-	terminated = True
-	global eventstream
-	if eventstream != None:
-		eventstream.terminate()
-		eventstream.join()
-	print("Quit Program")
-	exit()
+    global terminated
+    global eventstream
+    global gamestream
+
+    terminated = True
+    if eventstream != None:
+        eventstream.terminate()
+        eventstream.join()
+    if gamestream != None:
+        gamestream.terminate()
+        gamestream.join()
+    print("Quit Program")
+    exit()
 
 """ maps signal, SIGINT (keyboard interrupts), to quit_program """
 signal.signal(signal.SIGINT, quit_program)

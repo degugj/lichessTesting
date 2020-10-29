@@ -18,8 +18,14 @@ GameState Class
 -------------------------------
 """
 class GameState():
-    def __init__(self):
-        self.localPlayerColor = ''
+    def __init__(self, gameQueue):
+
+        # set user color (i.e 'w', 'b')
+        self.gameQueue = gameQueue
+        if self.gameQueue.get()["white"]["id"] == 'wayli':     # <---------------------------------------------------------------------------------------DEGUGJ-----------------------------------
+            self.userColor = 'w'
+        else:
+            self.userColor = 'b'
 
         # letter and number conversion to index self.board
         self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
@@ -35,16 +41,59 @@ class GameState():
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"],
             ["wR", "wH", "wB", "wQ", "wK", "wB", "wH", "wR"]]
-        self.defaultState = self.board
 
         self.userMove = True
 
-    """ movePiece: move piece
-            params: 
-                move: string that indicates chess convention move (i.e 'e7e5') (e7=start cell, e5=dest cell)
-            return:
-                none
-    """
+        # if user starts game as black
+        if self.userColor == 'b':
+            # letter and number conversion to index self.board
+            self.letter_to_x = {'a':7, 'b':6, 'c':5, 'd':4, 'e':3, 'f':2, 'g':1, 'h':0}
+            self.number_to_y = {'1':0, '2':1, '3':2, '4':3, '5':4, '6':5, '7':6, '8':7}
+
+            # board state
+            self.board = [
+                ["wR", "wH", "wB", "wK", "wQ", "wB", "wH", "wR"],
+                ["wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"],
+                ["--", "--", "--", "--", "--", "--", "--", "--"],
+                ["--", "--", "--", "--", "--", "--", "--", "--"],
+                ["--", "--", "--", "--", "--", "--", "--", "--"],
+                ["--", "--", "--", "--", "--", "--", "--", "--"],
+                ["bP", "bP", "bP", "bP", "bP", "bP", "bP", "bP"],
+                ["bR", "bH", "bB", "bK", "bQ", "bB", "bH", "bR"]]
+
+            self.userMove = False
+
+        self.defaultState = self.board
+
+
+        # create capture buffers for white and black
+        # self.whiteBufferZone = {'wP1': '--', 'wP2': '--'
+        #                         'wP3': '--', 'wP4': '--'
+        #                         'wP5': '--', 'wP6': '--'
+        #                         'wP7': '--', 'wP8': '--'
+        #                         'wH1': '--', 'wH2': '--'
+        #                         'wB1': '--', 'wB2': '--'
+        #                         'wR1': '--', 'wR2': '--'
+        #                         'wQ1': '--', 'wQ2': '--'}
+
+
+        # self.blackBufferZone = {'bP1': '--', 'bP2': '--'
+        #                         'bP3': '--', 'bP4': '--'
+        #                         'bP5': '--', 'bP6': '--'
+        #                         'bP7': '--', 'bP8': '--'
+        #                         'bH1': '--', 'bH2': '--'
+        #                         'bB1': '--', 'bB2': '--'
+        #                         'bR1': '--', 'bR2': '--'
+        #                         'bQ1': '--', 'bQ2': '--'}
+
+
+
+    """ get user color """
+    def get_usercolor(self):
+        return self.userColor
+
+
+    """ make a move on local gamestate """
     def move_piece(self, move):
         # find starting cell in self.board
         startcell_y = self.letter_to_x[move[0]]
@@ -55,56 +104,89 @@ class GameState():
         destcell_x = self.number_to_y[move[3]]
 
         # find the piece and move to destination
-        piece = self.board[startcell_x][startcell_y]
+        piece = self.board[startcell_x][startcell_y] 
+
         self.board[startcell_x][startcell_y] = "--"
         self.board[destcell_x][destcell_y] = piece
 
 
-    def setCell(self, piece, cell_x, cell_y):
-        self.board[cell_x][cell_y] = piece
+    """ capture piece and move to buffer """
+    def capture_piece(self, piece, color):
+        # if color == 'w' and piece[1] == 'P':
+        #     for num in range(8):
+        #         if self.blackBufferZone[piece + str(num)] == '--':
+        #             self.blackBufferZone[piece + str(num)] = piece
+        # elif 
+        return
 
-    
-    """ update_gamestate: handles user and opponent moves
-        params:
-        return:
-    """
-    def update_gamestate(self):
+    """ handles user/opponent moves and updates gamestate """
+    def update_gamestate(self): 
 
         # user's move
         if self.userMove:
-            """
-            read local gamestate for user move
-            """
-            while (self.userMove):
-                print("User Move - Enter Move: ")
-                move = input()
-
-                # send move to server
-                message, valid = interface.make_move(move)
-                print(message, valid)
-                if (valid):
-                    # if move is success
-                    try:
-                        self.move_piece(move)
-                        self.userMove = False
-                    except:
-                        print("Invalid input given")
+            move = self.get_usermove()
+            self.move_piece(move)
+            self.userMove = False
                         
 
         # opponent's move
         else:
-
-            """
-            read gamestream for opponent moves
-            """
+            move = self.get_opponentmove()
+            print(move)
+            # self.move_piece(move)
             self.userMove = True
 
-    # reset board to original state 
+
+    """ get_usermove: read local gamestate to get move
+    params:
+    return:
+        move - user's desired move (i.e 'e2e4')
+    """
+    def get_usermove(self):
+
+        """
+        read local game state
+        """
+        while True:
+            print("User's turn - Enter Move:")
+            move = input()
+
+            valid = interface.make_move(move)
+            if valid:
+                return move
+
+
+    """ get_opponentmove: read gamestream for opponent moves
+        params:
+        return:
+            move - opponent's move
+    """
+    def get_opponentmove(self):
+
+        waiting = True
+        while waiting:
+            
+            try:
+                event = self.gameQueue.get_nowait()
+                print('event',event)
+                if event["type"] == 'gameState':
+                    move = nextEvent["moves"]
+                    waiting = False
+            except:
+                time.sleep(1)
+
+        return move
+
+
+
+    """ reset board to original state """ 
     def reset(self):
         self.board = self.defaultState
 
+    """ print board """
     def __str__(self):
         for i in range(8):
             print(self.board[i])
 
         return ''
+

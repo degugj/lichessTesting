@@ -4,6 +4,7 @@ IMPORTS
 -------------------------------
 """
 import pygame as pg
+import multiprocessing as mp
 import time
 
 from Engine import gameState as gs
@@ -67,6 +68,12 @@ def init_chessboard(challengerName, gamestate):
 
 	# letter and number chess gridding
 	letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+	numbers = list(range(1,9))
+	if gamestate.get_usercolor() == 'b':
+		letters = letters[::-1]
+		numbers = numbers[::-1]
+	
+
 	letterOffsetx = ((WIN_WIDTH - CB_WIDTH)//2) + (cellSize//2)
 	letterOffsety = WIN_HEIGHT - ((WIN_HEIGHT - CB_HEIGHT)//2) + 10
 	for letter in letters:
@@ -75,31 +82,33 @@ def init_chessboard(challengerName, gamestate):
 
 	numberOffsetx = WIN_WIDTH - ((WIN_WIDTH - CB_WIDTH)//2) + 10
 	numberOffsety = WIN_HEIGHT -  ((WIN_HEIGHT - CB_HEIGHT)//2) - (cellSize//2)
-	numbers = list(range(1,9))
 	for number in numbers:
 		display_text(screen, str(number), (255,0,0), 12, numberOffsetx, numberOffsety)
 		numberOffsety -= 64
 
 
 	# always run until quit event
-	run = True
+	run = draw = True
 	while run:
-		for e in pg.event.get():
-			if e.type == pg.QUIT:
+
+		for event in pg.event.get():
+			if event.type == pg.QUIT:
 				run = False
+				draw = False
 
-		draw_gamestate(screen, gamestate)
+		if draw:
+			draw_gamestate(screen, gamestate)
 
-		# set max number of frames per second and update display
-		clock.tick(MAX_FPS)
-		pg.display.flip()
+			# set max number of frames per second and update display
+			clock.tick(MAX_FPS)
+			pg.display.flip()
 
-		# update gamestate of the board (i.e user/opponent makes move)
-		gamestate.update_gamestate()
+			# update gamestate of the board (i.e user/opponent makes move)
+			gamestate.update_gamestate()
 
-	# close out of chessboard window
 	pg.display.quit()
 	pg.quit()
+
 
 
 """ load_images: loads chesspiece images into images dictionary
