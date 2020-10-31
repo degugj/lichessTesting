@@ -3,7 +3,7 @@
 IMPORTS
 -------------------------------
 """
-import signal, json, time
+import signal, json, time, os
 import tkinter as tk
 import multiprocessing as mp
 
@@ -39,63 +39,64 @@ class StartupPage(tk.Frame):
         tk.Frame.__init__(self, master)
         header = widgets.createLabel(self, text="MagiChess", font="times", fontsize=25, fontweight="bold")
         header.pack(padx=10, pady=10)
-        
+
         #startup buttons
         signinButton = widgets.createButton(self, function=lambda: controller.show_frame(SigninPage),
-                                           text="Sign in to LiChess.org", bgcolor="sky blue")
+                                text="Sign in to LiChess.org", bgcolor="sky blue")
         signinButton.pack(pady=10)
-        
+
         exitButton = widgets.createButton(self, function=quit_program,
-                                          text="Exit", bgcolor="seashell3")    
+                                text="Exit", bgcolor="seashell3")    
         exitButton.pack()
 
 
 
-
 class SigninPage(tk.Frame):
-	def __init__(self, master, controller):
-		tk.Frame.__init__(self, master)
-		header = widgets.createLabel(self, text="Sign in to LiChess", font="times", fontsize=14, fontweight="bold")
-		header.pack(padx=10, pady=10)
+    def __init__(self, master, controller):
+        tk.Frame.__init__(self, master)
+        header = widgets.createLabel(self, text="Sign in to LiChess", font="times", fontsize=14, fontweight="bold")
+        header.pack(padx=10, pady=10)
 
-		""" username/password entries
-		usernameLabel = widgets.createLabel(self, text="Username", font="times", fontsize=11, fontweight="normal")
-		usernameLabel.pack()
-		usernameEntry = widgets.createEntry(self, bgcolor="beige")
-		usernameEntry.pack()
+        """ username/password entries
+        usernameLabel = widgets.createLabel(self, text="Username", font="times", fontsize=11, fontweight="normal")
+        usernameLabel.pack()
+        usernameEntry = widgets.createEntry(self, bgcolor="beige")
+        usernameEntry.pack()
 
-		passwordLabel = widgets.createLabel(self, text="Password", font="times", fontsize=11, fontweight="normal")
-		passwordLabel.pack()
-		passwordEntry = widgets.createEntry(self, bgcolor="beige", show="*")
-		passwordEntry.pack()
-		"""
+        passwordLabel = widgets.createLabel(self, text="Password", font="times", fontsize=11, fontweight="normal")
+        passwordLabel.pack()
+        passwordEntry = widgets.createEntry(self, bgcolor="beige", show="*")
+        passwordEntry.pack()
+        """
 
 
-		""" buttons """
-		loginButton = widgets.createButton(self, function=lambda: self.submit(controller=controller, username="degugj"),
-		text="Login as degugj", bgcolor="seashell3")
-		loginButton.pack(pady=4)
+        """ buttons """
+        loginButton = widgets.createButton(self, function=lambda: self.submit(controller=controller, username="degugBot"),
+        text="Login as degugBot", bgcolor="seashell3")
+        loginButton.pack(pady=4)
 
-		returnButton = widgets.createButton(self, function=lambda: controller.show_frame(StartupPage),
-		text="Return", bgcolor="seashell3")
-		returnButton.pack(pady=7)
+        returnButton = widgets.createButton(self, function=lambda: controller.show_frame(StartupPage),
+        text="Return", bgcolor="seashell3")
+        returnButton.pack(pady=7)
 
-	""" submit username/password for validation """
-	def submit(self, controller, username, password=None):
-		valid = 1
+    """ submit username/password for validation """
+    def submit(self, controller, username, password=None):
+        valid = 1
 
-		# login as degugj
-		if valid:
-			controller.show_frame(MainMenuPage, user=username)
+        # login as degugBot
+        if valid:
+            controller.show_frame(MainMenuPage, user=username)
 
-			# create and start an event stream process
-			global eventstream
-			eventstream = mp.Process(target = event_stream, args = (eventQueue,))
-			eventstream.start()
+            # create and start an event stream process
+            global eventstream
+            eventstream = mp.Process(target = event_stream, args = (eventQueue,))
+            eventstream.start()
+            print("EVENT STREAM PID: ", eventstream.pid)
 
-		else:
-			print("User not found. Invalid username/password")
-		return
+        else:
+            print("User not found. Invalid username/password")
+
+        return
 
 
 
@@ -195,18 +196,31 @@ class ChallengePage(tk.Frame):
 
                 interface.change_gameid(gameid)
 
-                # wait until challenger accepts challenge
+                # wait until challenger accepts or declines challenge
                 accepted = False
                 while not accepted:
-                    event = eventQueue.get()
-                    if event["type"] == "gameStart":
-                        if event["game"]["id"] == gameid:
-                            accepted = True
+                    try:
+                        event = eventQueue.get_nowait()
+                        if event["type"] == "gameStart":
+                            if event["game"]["id"] == gameid:
+                                print("game accepted")
+                                accepted = True
 
-                initialGameStreamProcess = mp.Process(target=initialgame_stream)
-                initialGameStreamProcess.start()
+                        if event["type"] == "challengeDeclined":
+                            print("Challenge declined by: ", username)
+                            break
+                    except:
+                        pass
+
+
+                if accepted:
+                    ingame(username, controller)
+
+                    
+                # initialGameStreamProcess = mp.Process(target=initialgame_stream)
+                # initialGameStreamProcess.start()
+            
                 
-                ingame(username, controller)
 
         return
 
@@ -228,6 +242,7 @@ def ingame(challengerName, controller):
     global gamestream
     gamestream = mp.Process(target=game_stream, args=(gameQueue,))
     gamestream.start()
+    print("GAME STREAM PID: ", gamestream.pid)
 
     # create a game state
     gamestate = gameState.GameState(gameQueue=gameQueue)
@@ -244,6 +259,7 @@ def ingame(challengerName, controller):
 	return:
 """
 def event_stream(eventQueue):
+    print("os.getpid", os.getpid)
     iterator = 0
     while not terminated:
         try:
@@ -274,17 +290,25 @@ def event_stream(eventQueue):
     return:
 """
 def game_stream(gameQueue):
-    temp = None
+
+    response = interface.create_gamestream()
+    lines = response.iter_lines()
+    initialState = json.loads(next(lines).decode('utf-8'))
+
+    print("os.getpid", os.getpid)
     while not terminated:
+        time.sleep(3)
         response = interface.create_gamestream()
         lines = response.iter_lines()
-        time.sleep(3)
+    
         #iterate through the response message
         for line in lines:
+
             if line:
                 event = json.loads(line.decode('utf-8'))
                 gameQueue.put_nowait(event)
 
+                
     return
 
 
@@ -313,6 +337,5 @@ def quit_program():
     print("Quit Program")
     exit()
 
-""" maps signal, SIGINT (keyboard interrupts), to quit_program """
-signal.signal(signal.SIGINT, quit_program)
+
 

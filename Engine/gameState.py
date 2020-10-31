@@ -22,7 +22,7 @@ class GameState():
 
         # set user color (i.e 'w', 'b')
         self.gameQueue = gameQueue
-        if self.gameQueue.get()["white"]["id"] == 'wayli':     # <---------------------------------------------------------------------------------------DEGUGJ-----------------------------------
+        if self.gameQueue.get()["white"]["id"] == 'degugbot':     # <---------------------------------------------------------------------------------------DEGUGJ-----------------------------------
             self.userColor = 'w'
         else:
             self.userColor = 'b'
@@ -64,6 +64,9 @@ class GameState():
             self.userMove = False
 
         self.defaultState = self.board
+        
+        self.firstTurn = True
+        self.previousMovesEvent = None
 
 
         # create capture buffers for white and black
@@ -131,9 +134,10 @@ class GameState():
 
         # opponent's move
         else:
+            print("Opponent's Turn...")
             move = self.get_opponentmove()
-            print(move)
-            # self.move_piece(move)
+            print('opponent move: ', move)
+            self.move_piece(move)
             self.userMove = True
 
 
@@ -165,15 +169,38 @@ class GameState():
 
         waiting = True
         while waiting:
-            
             try:
+                
                 event = self.gameQueue.get_nowait()
-                print('event',event)
                 if event["type"] == 'gameState':
-                    move = nextEvent["moves"]
-                    waiting = False
+
+                    if self.firstTurn and self.userColor == 'w':
+                        if self.firstTurn:
+                            self.previousMovesEvent = event
+
+                        if len(event["moves"]) == len(previousEvent["moves"]) + 5:
+                            
+                            move = event["moves"].split()[-1]
+                            self.previousMovesEvent = event
+                            self.firstTurn = False
+                            waiting = False
+                    
+                    elif self.firstTurn and self.userColor == 'b':
+                        move = event["moves"].split()[-1]
+                        self.previousMovesEvent = event
+                        self.firstTurn = False
+                        waiting = False
+
+                    else:
+                        if len(event["moves"]) == len(self.previousMovesEvent["moves"]) + 10:                        
+                            move = event["moves"].split()[-1]
+                            waiting = False
+                            self.previousMovesEvent = event
+
+
             except:
-                time.sleep(1)
+                pass
+
 
         return move
 
