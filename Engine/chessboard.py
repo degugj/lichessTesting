@@ -19,6 +19,8 @@ WIN_WIDTH = 850
 WIN_HEIGHT = 750
 CB_WIDTH = CB_HEIGHT = 512
 DIMENSIONS = 8
+BUFFER_DIMENSIONSx = 2
+BUFFER_DIMENSIONSy = 8
 MAX_FPS = 15
 
 xchessboardOffset = (WIN_WIDTH - CB_WIDTH) // 2
@@ -27,7 +29,6 @@ cellSize = CB_HEIGHT // DIMENSIONS
 
 leftbufferOffset = (xchessboardOffset - (2*cellSize)) // 2
 rightbufferOffset = WIN_WIDTH - (2*cellSize) - leftbufferOffset
-
 
 images = {}
 
@@ -132,7 +133,7 @@ def draw_gamestate(screen, gamestate):
 
 	draw_board(screen)
 	draw_buffers(screen)
-	draw_pieces(screen, gamestate.board)
+	draw_pieces(screen, gamestate)
 
 	return
 
@@ -176,13 +177,26 @@ def draw_buffers(screen):
 		gamestate - curernt local game state of board
 	return:
 """
-def draw_pieces(screen, gamestate_board):
+def draw_pieces(screen, gamestate):
+	# pieces on the board
 	for row in range(DIMENSIONS):
 		for column in range(DIMENSIONS):
-			piece = gamestate_board[row][column]
+			piece = gamestate.board[row][column]
 			if piece != "--":
 				# draw pieces on top of the board; offsets used to center pieces into correct cells
 				screen.blit(images[piece], (column*cellSize + xchessboardOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
+
+	# pieces on the capture zones
+	for row in range(BUFFER_DIMENSIONSy):
+		for column in range(BUFFER_DIMENSIONSx):
+			whitePiece = gamestate.whiteBuffer[row][column]
+			if whitePiece != "--":
+				screen.blit(images[whitePiece], (column*cellSize + leftbufferOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
+
+			blackPiece = gamestate.blackBuffer[row][column]
+			if blackPiece != "--":
+				screen.blit(images[blackPiece], (column*cellSize + rightbufferOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
+
 	return
 
 

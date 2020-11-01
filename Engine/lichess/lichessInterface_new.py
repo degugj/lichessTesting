@@ -74,7 +74,8 @@ def challenge_user(username, **kwargs):
 	# match configurations
 	configurations = {     
 	    'time': 15,
-	    'increment': 0, 
+	    'increment': 0,
+	    'color': 'white',
 	}
 	try:
 		r = requests.post('https://lichess.org/api/challenge/' + username, json=configurations, headers={'Authorization': 'Bearer {}'.format(api_key)})

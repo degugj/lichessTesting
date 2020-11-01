@@ -259,8 +259,12 @@ def ingame(challengerName, controller):
 	return:
 """
 def event_stream(eventQueue):
+    # get process id
     print("os.getpid", os.getpid)
+    
     iterator = 0
+
+    # run in background
     while not terminated:
         try:
             time.sleep(3)
@@ -291,11 +295,15 @@ def event_stream(eventQueue):
 """
 def game_stream(gameQueue):
 
+    # save initial state
     response = interface.create_gamestream()
     lines = response.iter_lines()
     initialState = json.loads(next(lines).decode('utf-8'))
 
+    # get process id
     print("os.getpid", os.getpid)
+
+    # run in background
     while not terminated:
         time.sleep(3)
         response = interface.create_gamestream()
@@ -312,11 +320,6 @@ def game_stream(gameQueue):
     return
 
 
-def initialgame_stream():
-    response = interface.create_gamestream()
-
-
-
 
 """ quit_program: terminates all processes and closes window
 	params:
@@ -331,9 +334,11 @@ def quit_program():
     if eventstream != None:
         eventstream.terminate()
         eventstream.join()
+        print("TERMINATED EVENT STREAM")
     if gamestream != None:
         gamestream.terminate()
         gamestream.join()
+        print("TERMINATED GAME STREAM")
     print("Quit Program")
     exit()
 

@@ -69,25 +69,24 @@ class GameState():
         self.previousMovesEvent = None
 
 
-        # create capture buffers for white and black
-        # self.whiteBufferZone = {'wP1': '--', 'wP2': '--'
-        #                         'wP3': '--', 'wP4': '--'
-        #                         'wP5': '--', 'wP6': '--'
-        #                         'wP7': '--', 'wP8': '--'
-        #                         'wH1': '--', 'wH2': '--'
-        #                         'wB1': '--', 'wB2': '--'
-        #                         'wR1': '--', 'wR2': '--'
-        #                         'wQ1': '--', 'wQ2': '--'}
+        # capture buffer zones
+        self.whiteBuffer = [["--", "--"],
+                            ["--", "--"],
+                            ["--", "--"],
+                            ["--", "--"],
+                            ["--", "--"],
+                            ["--", "--"],
+                            ["--", "--"],
+                            ["--", "--"]]
 
-
-        # self.blackBufferZone = {'bP1': '--', 'bP2': '--'
-        #                         'bP3': '--', 'bP4': '--'
-        #                         'bP5': '--', 'bP6': '--'
-        #                         'bP7': '--', 'bP8': '--'
-        #                         'bH1': '--', 'bH2': '--'
-        #                         'bB1': '--', 'bB2': '--'
-        #                         'bR1': '--', 'bR2': '--'
-        #                         'bQ1': '--', 'bQ2': '--'}
+        self.blackBuffer = [["--", "--"],
+                            ["--", "--"],
+                            ["--", "--"],
+                            ["--", "--"],
+                            ["--", "--"],
+                            ["--", "--"],
+                            ["--", "--"],
+                            ["--", "--"]]
 
 
 
@@ -106,21 +105,82 @@ class GameState():
         destcell_y = self.letter_to_x[move[2]]
         destcell_x = self.number_to_y[move[3]]
 
-        # find the piece and move to destination
-        piece = self.board[startcell_x][startcell_y] 
+        # find the pieces to be moved
+        startpiece = self.board[startcell_x][startcell_y]
+        destpiece = self.board[destcell_x][destcell_y]
+
+        # capturing condition
+        if destpiece != "--":
+            self.capture_piece(destpiece)
 
         self.board[startcell_x][startcell_y] = "--"
-        self.board[destcell_x][destcell_y] = piece
+        self.board[destcell_x][destcell_y] = startpiece
 
 
     """ capture piece and move to buffer """
-    def capture_piece(self, piece, color):
-        # if color == 'w' and piece[1] == 'P':
-        #     for num in range(8):
-        #         if self.blackBufferZone[piece + str(num)] == '--':
-        #             self.blackBufferZone[piece + str(num)] = piece
-        # elif 
+    def capture_piece(self, piece):
+        pieceColor = piece[0]
+        # if captured piece is black
+        if pieceColor == 'b':
+            # check if captured piece is pawn, bishop, knight, rook, or queen and place into buffer accordingly
+            if piece[1] == 'P':
+                for row in range(4):
+                    for column in range(2):
+                        if self.blackBuffer[row][column] == '--':
+                            self.blackBuffer[row][column] = piece
+                            return
+            elif piece[1] == 'B': 
+                for column in range(2):
+                    if self.blackBuffer[4][column] == '--':
+                        self.blackBuffer[4][column] = piece
+                        return
+            elif piece[1] == 'H':
+                for column in range(2):
+                    if self.blackBuffer[5][column] == '--':
+                        self.blackBuffer[5][column] = piece
+                        return
+            elif piece[1] == 'R':
+                for column in range(2):
+                    if self.blackBuffer[6][column] == '--':
+                        self.blackBuffer[6][column] = piece
+                        return
+            elif piece[1] == 'Q':
+                for column in range(2):
+                    if self.blackBuffer[7][column] == '--':
+                        self.blackBuffer[7][column] = piece
+                        return
+
+        # if captured piece is white
+        elif pieceColor == 'w':
+            # check if captured piece is pawn, bishop, knight, rook, or queen and place into buffer accordingly
+            if piece[1] == 'P':
+                for row in range(4):
+                    for column in range(2):
+                        if self.whiteBuffer[row][column] == '--':
+                            self.whiteBuffer[row][column] = piece
+                            return
+            elif piece[1] == 'B':
+                for column in range(2):
+                    if self.whiteBuffer[4][column] == '--':
+                        self.whiteBuffer[4][column] = piece
+                        return
+            elif piece[1] == 'H':
+                for column in range(2):
+                    if self.whiteBuffer[5][column] == '--':
+                        self.whiteBuffer[5][column] = piece
+                        return
+            elif piece[1] == 'R':
+                for column in range(2):
+                    if self.whiteBuffer[6][column] == '--':
+                        self.whiteBuffer[6][column] = piece
+                        return
+            elif piece[1] == 'Q':
+                for column in range(2):
+                    if self.whiteBuffer[7][column] == '--':
+                        self.whiteBuffer[7][column] = piece
+                        return
         return
+
 
     """ handles user/opponent moves and updates gamestate """
     def update_gamestate(self): 
@@ -170,34 +230,34 @@ class GameState():
         waiting = True
         while waiting:
             try:
-                
+                # get event from game queue and check the type of event
                 event = self.gameQueue.get_nowait()
                 if event["type"] == 'gameState':
 
-                    if self.firstTurn and self.userColor == 'w':
-                        if self.firstTurn:
-                            self.previousMovesEvent = event
+                    # handles first turn
+                    if self.firstTurn:
+                        # user starts the game with first move
+                        if self.userColor == 'w':
+                            if len(event["moves"]) == 9:
+                                move = event["moves"].split()[-1]
+                                self.firstTurn = False
+                                waiting = False
+                                self.previousMovesEvent = event
 
-                        if len(event["moves"]) == len(previousEvent["moves"]) + 5:
-                            
+                        # opponent starts the game with first move
+                        if self.userColor == "b":
                             move = event["moves"].split()[-1]
-                            self.previousMovesEvent = event
                             self.firstTurn = False
                             waiting = False
+                            self.previousMovesEvent = event
                     
-                    elif self.firstTurn and self.userColor == 'b':
-                        move = event["moves"].split()[-1]
-                        self.previousMovesEvent = event
-                        self.firstTurn = False
-                        waiting = False
-
+                    # handles all turns beyond the first
                     else:
                         if len(event["moves"]) == len(self.previousMovesEvent["moves"]) + 10:                        
                             move = event["moves"].split()[-1]
                             waiting = False
                             self.previousMovesEvent = event
-
-
+                
             except:
                 pass
 
