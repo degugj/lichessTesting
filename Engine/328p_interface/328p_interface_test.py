@@ -9,4 +9,4 @@ gamestate = gs() # Instantiate test gamestate
 
 posMap = interface.gamestate_to_position_map(gamestate) # convert 8x8 to position map
 
-print(posMap)
+interface.print_posMap(posMap)
