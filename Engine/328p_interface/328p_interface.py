@@ -2,9 +2,11 @@
 # Authors: Weishan Li, Jack DeGuglielmo
 # Date: 2020-11-01
 
-letterToRow = {}  # To translate cell to posMap location
-numbertoColumn = {}
+letterToColumn = {}  # To translate cell to posMap location
+numberToRow = {}
 
+# self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
+# self.number_to_y = {'1':7, '2':6, '3':5, '4':4, '5':3, '6':2, '7':1, '8':0}
 
 # Translates an 8x8 gamestate to a 24x24 piece position map
 def gamestate_to_position_map(gamestate):
@@ -29,7 +31,7 @@ def send_to_328p(path):
 
 
 # External function used to interface with GUI and game execution. Takes current gamestate and string move (ie 'e4e5')
-def make_physical_move(gamestate, move):
+def make_physical_move(gamestate, move, isCaptured):
     # TODO Extract and interpret move as start and end pos
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
