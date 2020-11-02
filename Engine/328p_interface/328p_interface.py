@@ -31,7 +31,7 @@ def send_to_328p(path):
 
 
 # External function used to interface with GUI and game execution. Takes current gamestate and string move (ie 'e4e5')
-def make_physical_move(gamestate, move, isCaptured):
+def make_physical_move(gamestate, move, capturedPiece=None):
     # TODO Extract and interpret move as start and end pos
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
