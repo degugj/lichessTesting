@@ -4,9 +4,10 @@ IMPORTS
 -------------------------------
 """
 import pygame as pg
+import multiprocessing as mp
 import time
 
-from Engine.chessboard import gameState as gs
+from Engine import gameState as gs
 #import gameState as gs
 
 """
@@ -18,6 +19,8 @@ WIN_WIDTH = 850
 WIN_HEIGHT = 750
 CB_WIDTH = CB_HEIGHT = 512
 DIMENSIONS = 8
+BUFFER_DIMENSIONSx = 2
+BUFFER_DIMENSIONSy = 8
 MAX_FPS = 15
 
 xchessboardOffset = (WIN_WIDTH - CB_WIDTH) // 2
@@ -26,7 +29,6 @@ cellSize = CB_HEIGHT // DIMENSIONS
 
 leftbufferOffset = (xchessboardOffset - (2*cellSize)) // 2
 rightbufferOffset = WIN_WIDTH - (2*cellSize) - leftbufferOffset
-
 
 images = {}
 
@@ -41,7 +43,7 @@ FUNCTIONS
 	params:
 	return:
 """
-def init_chessboard(challengerName):
+def init_chessboard(challengerName, gamestate):
 
 	# init pygame and set window title and icon
 	pg.init()
@@ -57,9 +59,6 @@ def init_chessboard(challengerName):
 	# load chesspiece images into dictionary
 	load_images()
 
-	# create gamestate object
-	gamestate = gs.GameState()
-
 	# on-screen text
 	leftbuffertextOffset = 	(WIN_WIDTH - CB_WIDTH) // 4
 	rightbuffertextOffset =  WIN_WIDTH - leftbuffertextOffset
@@ -67,21 +66,50 @@ def init_chessboard(challengerName):
 	display_text(screen, "White Capture Buffer", (0,0,0), 15, leftbuffertextOffset, ychessboardOffset-25)
 	display_text(screen, "Black Capture Buffer", (0,0,0), 15, rightbuffertextOffset, ychessboardOffset-25)
 
+
+	# letter and number chess gridding
+	letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+	numbers = list(range(1,9))
+	if gamestate.get_usercolor() == 'b':
+		letters = letters[::-1]
+		numbers = numbers[::-1]
+	
+
+	letterOffsetx = ((WIN_WIDTH - CB_WIDTH)//2) + (cellSize//2)
+	letterOffsety = WIN_HEIGHT - ((WIN_HEIGHT - CB_HEIGHT)//2) + 10
+	for letter in letters:
+		display_text(screen, letter, (255,0,0), 12, letterOffsetx, letterOffsety)
+		letterOffsetx += 64
+
+	numberOffsetx = WIN_WIDTH - ((WIN_WIDTH - CB_WIDTH)//2) + 10
+	numberOffsety = WIN_HEIGHT -  ((WIN_HEIGHT - CB_HEIGHT)//2) - (cellSize//2)
+	for number in numbers:
+		display_text(screen, str(number), (255,0,0), 12, numberOffsetx, numberOffsety)
+		numberOffsety -= 64
+
+
 	# always run until quit event
-	run = True
+	run = draw = True
 	while run:
-		for e in pg.event.get():
-			if e.type == pg.QUIT:
+
+		for event in pg.event.get():
+			if event.type == pg.QUIT:
 				run = False
+				draw = False
 
-		draw_gamestate(screen, gamestate)
+		if draw:
+			draw_gamestate(screen, gamestate)
 
-		# set max number of frames per second and update display
-		clock.tick(MAX_FPS)
-		pg.display.flip()
+			# set max number of frames per second and update display
+			clock.tick(MAX_FPS)
+			pg.display.flip()
+
+			# update gamestate of the board (i.e user/opponent makes move)
+			gamestate.update_gamestate()
 
 	pg.display.quit()
 	pg.quit()
+
 
 
 """ load_images: loads chesspiece images into images dictionary
@@ -102,10 +130,11 @@ def load_images():
 	return:
 """
 def draw_gamestate(screen, gamestate):
-	gamestate.update_gamestate()
+
 	draw_board(screen)
 	draw_buffers(screen)
-	draw_pieces(screen, gamestate.board)
+	draw_pieces(screen, gamestate)
+
 	return
 
 
@@ -148,13 +177,26 @@ def draw_buffers(screen):
 		gamestate - curernt local game state of board
 	return:
 """
-def draw_pieces(screen, gamestate_board):
+def draw_pieces(screen, gamestate):
+	# pieces on the board
 	for row in range(DIMENSIONS):
 		for column in range(DIMENSIONS):
-			piece = gamestate_board[row][column]
+			piece = gamestate.board[row][column]
 			if piece != "--":
 				# draw pieces on top of the board; offsets used to center pieces into correct cells
 				screen.blit(images[piece], (column*cellSize + xchessboardOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
+
+	# pieces on the capture zones
+	for row in range(BUFFER_DIMENSIONSy):
+		for column in range(BUFFER_DIMENSIONSx):
+			whitePiece = gamestate.whiteBuffer[row][column]
+			if whitePiece != "--":
+				screen.blit(images[whitePiece], (column*cellSize + leftbufferOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
+
+			blackPiece = gamestate.blackBuffer[row][column]
+			if blackPiece != "--":
+				screen.blit(images[blackPiece], (column*cellSize + rightbufferOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
+
 	return
 
 

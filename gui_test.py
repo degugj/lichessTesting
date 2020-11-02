@@ -41,7 +41,7 @@ class MainApp(tk.Tk):
         self.frames = {}
         
         for F in (pages.StartupPage, pages.SigninPage, pages.MainMenuPage, pages.PlayBotPage, pages.PlayRandomPage,
-                  pages.ChallengePage, pages.WaitChallengerPage):
+                  pages.ChallengePage):
             
             #create startup page frame and update frame dictionary
             frame = F(container, self)
@@ -81,6 +81,9 @@ def main():
     mainWindow = MainApp()
     mainWindow.title("MagiChess")
     mainWindow.geometry(f"{WIDTH}x{HEIGHT}")   #main window dimensions
+
+    # map closing 'window closing' event to quit_program function
+    mainWindow.protocol("WM_DELETE_WINDOW", pages.quit_program)
 
     # program will terminate and close GUI if no loop (terminal only)
     mainWindow.mainloop()

@@ -1,2 +1,1 @@
-gameid = '667667'
-api_key = '2tQ0zLiWpJSSsF89'
+api_key = 'WG0qG4i5PMTioYaw'

@@ -13,6 +13,7 @@ VARIABLES
 -------------------------------
 """
 api_key = settings.api_key
+
 """
 -------------------------------
 LICHESS API FUNCTIONS
@@ -31,31 +32,34 @@ def get_accountinfo(user, password):
 	return r.content
 
 
+
+
 """ create_eventstream: creating an event stream using the API key (run this as a seperate process)
 	params: 
 		controlQueue
 	return:
 """
-def create_eventstream(controlQueue):
-	while 1:
-		try:
-			# api call to start an event stream
-			response = requests.get('https://lichess.org/api/stream/event', headers={'Authorization': 'Bearer {}'.format(settings.api_key)}, stream=True)
+def create_eventstream():
+	response = requests.get('https://lichess.org/api/stream/event', headers={'Authorization': 'Bearer {}'.format(api_key)}, stream=True)
+	return response
 
-			lines = response.iter_lines()
-			# iterate through the response message
-			for line in lines:
-				# place response events in control queue
-				if line:
-					event = json.loads(line.decode('utf-8'))
-					controlQueue.put_nowait(event)
-				else:
-					controlQueue.put_nowait({"type": "ping"})
 
-				time.sleep(2)
 
-		except:
-			pass
+
+
+""" create_gamestream: creating an game stream using the gameid (run this as a seperate process)
+	params:
+		gameEventsQueue
+	return:
+"""
+def create_gamestream():
+	gameid = open('gameid.txt', 'r')
+	response = requests.get('https://lichess.org/api/board/game/stream/{}'.format(gameid.read()), headers={'Authorization': 'Bearer {}'.format(api_key)}, stream=True)
+	gameid.close()
+	return response
+			
+
+
 
 
 """ challenge_user
@@ -70,19 +74,37 @@ def challenge_user(username, **kwargs):
 	# match configurations
 	configurations = {     
 	    'time': 15,
-	    'increment': 0, 
+	    'increment': 0,
+	    'color': 'white',
 	}
-	r = requests.post('https://lichess.org/api/challenge/' + username, json=configurations, headers={'Authorization': 'Bearer {}'.format(api_key)})
-	if r.status_code == 200:
+	try:
+		r = requests.post('https://lichess.org/api/challenge/' + username, json=configurations, headers={'Authorization': 'Bearer {}'.format(api_key)})
+		print(r.content)
+		# check for successful challenge response
+		if r.status_code == 200:
 
-		# response message from challenge request to LiChess
-		json_response = r.json()
-		gameid = json_response["challenge"]["id"]
-		return gameid
+			# response message from challenge request to LiChess
+			json_response = r.json()
+			gameid = json_response["challenge"]["id"]
+			return gameid
 
-	# user was not found
-	else:
-		return 0
+		# user was not found
+		else:
+			return 0
+	except:
+		print("Problem with challenge")
+
+
+
+
+
+""" create_seek: start a seek for random opponent
+	params:
+	return:
+"""
+def create_seek():
+	response = request.post('https://lichess.org/api/board/seek', headers={'Authorization': 'Bearer {}'.format(api_key)})
+
 
 
 """ make_move: request to make move to lichess server
@@ -90,12 +112,52 @@ def challenge_user(username, **kwargs):
 	return:
 """
 def make_move(move):
-	r = requests.post('https://lichess.org/api/board/game/{id}/move/{move}'.format(id=settings.gameid, move=move), headers={'Authorization': 'Bearer {}'.format(api_key)})
-	if r.status_code == '200':
-		return
+	gameid = open('gameid.txt', 'r')
+	r = requests.post('https://lichess.org/api/board/game/{id}/move/{move}'.format(id=gameid.read(), move=move), headers={'Authorization': 'Bearer {}'.format(api_key)})
+	gameid.close()
+	if r.ok:
+		print(r.content)
+		return 1
 	# error code 400
 	else:
-		print("move is not valid")
+		print(r.content)
+		return 0
+
+
+
+""" leave_game: either abort or resign
+	params:
+		option: either abort or resign
+	return:
+		1: game successfully aborted
+		0: game successfully resigned
+		-1: error
+"""
+def leave_game(option):
+	gameid = open('gameid.txt', 'r')
+	if option == "abort":
+		try:
+			r = request.post('https://lichess.org/api/board/game/{gameId}/abort'.format(gameId=gameid.read()), headers={'Authorization': 'Bearer {}'.format(api_key)})
+			print(r.content)
+			if r.ok:
+				return 1
+			else:
+				return -1
+		except:
+			print("Request Error")
+
+	if option == "resign":
+		try:
+			r = request.post('https://lichess.org/api/board/game/{gameId}/resign'.format(gameId=gameid.read()), headers={'Authorization': 'Bearer {}'.format(api_key)})
+			print(r.content)
+			if r.ok:
+				return 0
+			else:
+				return -1
+		except:
+			print("Request Error")
+
+
 
 
 """ change_gameid
