@@ -2,6 +2,8 @@
 # Authors: Weishan Li, Jack DeGuglielmo
 # Date: 2020-11-01
 
+import math
+import time
 letterToColumn = {'a':6, 'b':8,'c':10,'d':12,'e':14,'f':16,'g':18,'h':20}  # To translate cell to posMap location
 # easy translation from number to row ((number * 2) + 1)
 
@@ -26,9 +28,20 @@ def gamestate_to_position_map(gamestate):
 
 
 # Creates a heuristic map of weights equal to the distance from the destination position
-def create_heuristic_map(endPos):
-    heurMap = [[0]*27]*25
-    return 0
+def create_heuristic_map(posMap, endPos):
+    heurMap = posMap
+    for i in range(len(posMap)):
+        for j in range(len(posMap[i])):
+            if posMap[i][j] == '. ':
+                # time.sleep(1)
+                straightLineDist = math.sqrt(math.pow(endPos[0]-i,2) + math.pow(endPos[1]-j, 2))
+                posMap[i][j] = str(straightLineDist)[0:3]
+                # print_posMap(posMap)
+            else:
+                posMap[i][j] = math.inf
+
+    posMap[endPos[0]][endPos[1]] = ' G '
+    return heurMap
 
 
 # Returns the Astar path of
@@ -43,14 +56,14 @@ def send_to_328p(path):
 def print_posMap(map):
     print("\tBlack \t\t\t\t\t\t\t\tBoard \t\t\t\t\t\t\tWhite")
     for i in range(16, -1, -1):
-        for j in range(4, -1, -1):
+        for j in range(5):
             print(map[i][j], end=' ')
         print("\t", end = '')
-        for x in range(16, -1, -1):
+        for x in range(16):
             print(map[i][5 + x], end=' ')
         print("\t", end = '')
-        for j in range(4, -1, -1):
-            print(map[i][22 + j], end=' ')
+        for j in range(5):
+            print(map[i][21 + j], end=' ')
         print("\t")
 
 

@@ -8,5 +8,7 @@ interface = __import__('328p_interface')
 gamestate = gs() # Instantiate test gamestate
 
 posMap = interface.gamestate_to_position_map(gamestate) # convert 8x8 to position map
-
 interface.print_posMap(posMap)
+print('')
+heurMap = interface.create_heuristic_map(posMap, [10,10])
+interface.print_posMap(heurMap)
