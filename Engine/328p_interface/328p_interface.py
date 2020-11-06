@@ -3,6 +3,7 @@
 # Date: 2020-11-01
 
 import math
+import heapq
 import time
 letterToColumn = {'a':6, 'b':8,'c':10,'d':12,'e':14,'f':16,'g':18,'h':20}  # To translate cell to posMap location
 # easy translation from number to row ((number * 2) + 1)
@@ -10,10 +11,65 @@ letterToColumn = {'a':6, 'b':8,'c':10,'d':12,'e':14,'f':16,'g':18,'h':20}  # To 
 # self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
 # self.number_to_y = {'1':7, '2':6, '3':5, '4':4, '5':3, '6':2, '7':1, '8':0}
 
+
+class Node:
+    def __init__(self, state='. ', parent=None, pos=[0,0]):
+        self.state = state      # Value
+        self.parent = parent    # parent node
+        self.heuristic = math.inf
+        self.pos = pos
+        self.cost = 0
+        self.isGoal = 0
+
+    def successors(self, map):
+        succs = []
+        x = self.pos[0]
+        y = self.pos[1]
+
+        if y-1 >= 0:
+            child = map[self.pos[0]][self.pos[1]-1]
+            succs.append(child)
+
+        if x - 1 >= 0:
+            child = map[self.pos[0]-1][self.pos[1]]
+            succs.append(child)
+
+        if y - 1 >= 0 and x - 1 >= 0:
+            child = map[self.pos[0]-1][self.pos[1]-1]
+            succs.append(child)
+
+        if y + 1 <= 26:
+            child = map[self.pos[0]][self.pos[1]+1]
+            succs.append(child)
+
+        if x + 1 <= 16:
+            child = map[self.pos[0]+1][self.pos[1]]
+            succs.append(child)
+
+        if x + 1 <= 16 and y + 1 <= 26:
+            child = map[self.pos[0]+1][self.pos[1]+1]
+            succs.append(child)
+
+        if x + 1 <= 16 and y - 1 >= 0:
+            child = map[self.pos[0]+1][self.pos[1]-1]
+            succs.append(child)
+
+        if x - 1 >= 0 and y + 1 <= 26:
+            child = map[self.pos[0]-1][self.pos[1]+1]
+            succs.append(child)
+
+        return succs
+
+    def __str__(self):
+        return str(self.state)
+
+
 # Translates an 8x8 gamestate to a 24x24 piece position map
 def gamestate_to_position_map(gamestate):
-    posMap = [['. ']*27 for _ in range(17)]
-
+    posMap = [[Node() for _ in range(27)] for _ in range(17)]
+    for i in range(len(posMap)):
+        for j in range(len(posMap[i])):
+            posMap[i][j].pos = [i,j]
     # TODO add buffer translations
     for i in range(8):
         for j in range(8):
@@ -21,50 +77,113 @@ def gamestate_to_position_map(gamestate):
             posJ = (j*2)+1
             # print(gamestate.board[i][j])
             if(gamestate.board[i][j] != "--"):
-                posMap[16 - posI][posJ+5] = gamestate.board[i][j]
+                node = posMap[16 - posI][posJ+5]
+                node.state = gamestate.board[i][j]
+                node.pos = [16 - posI, posJ+5]
             else:
-                posMap[posI][posJ + 5] = '. '
+                posMap[posI][posJ + 5].state = '. '
     return posMap
 
 
 # Creates a heuristic map of weights equal to the distance from the destination position
-def create_heuristic_map(posMap, endPos):
-    heurMap = posMap
+def create_heuristic_map(posMap, dest):
+    endPos = [0,0]
+    endPos[0] = (int(dest[1])*2)-1
+    endPos[1] = letterToColumn[dest[0]]
     for i in range(len(posMap)):
         for j in range(len(posMap[i])):
-            if posMap[i][j] == '. ':
+            if posMap[i][j].state == '. ':
                 # time.sleep(1)
                 straightLineDist = math.sqrt(math.pow(endPos[0]-i,2) + math.pow(endPos[1]-j, 2))
-                posMap[i][j] = str(straightLineDist)[0:3]
+                posMap[i][j].heuristic = straightLineDist
                 # print_posMap(posMap)
             else:
-                posMap[i][j] = math.inf
+                posMap[i][j].heuristic = math.inf
 
-    posMap[endPos[0]][endPos[1]] = ' G '
-    return heurMap
+    posMap[endPos[0]][endPos[1]].isGoal = 1
+    print(posMap[endPos[0]][endPos[1]].pos)
+    return posMap
 
 
 # Returns the Astar path of
-def find_astar_path(posMap, heurMap, startPos, endPos):
-    return 0
+def astar(heurMap, startNode):
+    # print(inputPuzzle.pretty())
 
+    solution = []
+    frontier = []
+    explored = set()
+
+    solution.append(startNode)  # Start is first solution
+    heapq.heappush(frontier, (0,id(startNode),startNode))
+    frontierCount = 1
+    expandCount = 0
+
+    if startNode.isGoal:
+        return solution
+
+    while len(frontier) != 0:
+        node = heapq.heappop(frontier)
+        print("Checking: ", node[2].pos)
+        # time.sleep(.5)
+        # print("Heur: ", node[1].heuristic)
+        if node[2].isGoal:
+            tmpNode = node[2]
+            while tmpNode.parent is not None:
+                solution.insert(1, tmpNode)
+                tmpNode = tmpNode.parent
+            return solution
+
+        explored.add(node[2])
+        succ = node[2].successors(heurMap)
+        # for i in succ:
+        #     print(i.pos)
+        expandCount += 1
+        if expandCount >= 100000:
+            print("Search halted")
+            return -1
+        for n in succ:
+            # print(succ)
+            n.parent = node[2]
+            if n.parent is not None:
+                n.cost = 1 + n.parent.cost
+            else:
+                n.cost = 0
+            test = False
+            for i in frontier:
+                if(i[2] == n):
+                    test = True
+            if not test and (n not in explored):
+                # print("pos added: ",n.pos)
+                heapq.heappush(frontier, (n.heuristic + n.cost,id(n), n))
+                frontierCount += 1
+
+    print("no solution")
+    # print("path cost: N/A since no solution was found")
+    print("frontier: " + str(frontierCount))
+    print("expandCount: " + str(expandCount))
+    return -1
 
 # Sends 328P a path via UART
 def send_to_328p(path):
     return 0
 
-def print_posMap(map):
+def print_posMap(map, path=None):
+    if (path != None):
+        for i in range(len(path)):
+            solNode = path[i]
+            map[solNode.pos[0]][solNode.pos[1]].state = '+'
     print("\tBlack \t\t\t\t\t\t\t\tBoard \t\t\t\t\t\t\tWhite")
     for i in range(16, -1, -1):
         for j in range(5):
             print(map[i][j], end=' ')
         print("\t", end = '')
-        for x in range(16):
+        for x in range(17):
             print(map[i][5 + x], end=' ')
         print("\t", end = '')
         for j in range(5):
-            print(map[i][21 + j], end=' ')
+            print(map[i][22 + j], end=' ')
         print("\t")
+
 
 
 
