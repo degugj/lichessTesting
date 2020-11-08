@@ -20,6 +20,7 @@ class Node:
         self.pos = pos
         self.cost = 0
         self.isGoal = 0
+        self.costCreated = 0
 
     def successors(self, map):
         succs = []
@@ -106,7 +107,7 @@ def create_heuristic_map(posMap, dest):
 
 
 # Returns the Astar path of
-def astar(heurMap, startNode):
+def greedy(heurMap, startNode):
     # print(inputPuzzle.pretty())
 
     solution = []
@@ -114,7 +115,8 @@ def astar(heurMap, startNode):
     explored = set()
 
     solution.append(startNode)  # Start is first solution
-    heapq.heappush(frontier, (0,id(startNode),startNode))
+    # heapq.heappush(frontier, (0,id(startNode),startNode))
+    frontier.append(startNode)
     frontierCount = 1
     expandCount = 0
 
@@ -123,39 +125,60 @@ def astar(heurMap, startNode):
 
     while len(frontier) != 0:
         node = heapq.heappop(frontier)
-        print("Checking: ", node[2].pos)
-        # time.sleep(.5)
+        solution.append(node)
+        # print_posMap(heurMap)
+        print("Checking: ", node.pos)
+        # time.sleep(1)
         # print("Heur: ", node[1].heuristic)
-        if node[2].isGoal:
-            tmpNode = node[2]
-            while tmpNode.parent is not None:
-                solution.insert(1, tmpNode)
-                tmpNode = tmpNode.parent
+        if node.isGoal:
+            # tmpNode = node[2]
+            # while tmpNode.parent is not None:
+            #     solution.insert(1, tmpNode)
+            #     print("Node added: ", tmpNode.pos)
+            #     tmpNode = tmpNode.parent
+            #     time.sleep(1)
             return solution
 
-        explored.add(node[2])
-        succ = node[2].successors(heurMap)
+        explored.add(node)
+        succ = node.successors(heurMap)
         # for i in succ:
         #     print(i.pos)
         expandCount += 1
         if expandCount >= 100000:
             print("Search halted")
             return -1
+        bestNode = Node()
         for n in succ:
+            if bestNode.heuristic > n.heuristic:
+                bestNode = n
+        frontier.append(bestNode)
             # print(succ)
-            n.parent = node[2]
-            if n.parent is not None:
-                n.cost = 1 + n.parent.cost
-            else:
-                n.cost = 0
-            test = False
-            for i in frontier:
-                if(i[2] == n):
-                    test = True
-            if not test and (n not in explored):
-                # print("pos added: ",n.pos)
-                heapq.heappush(frontier, (n.heuristic + n.cost,id(n), n))
-                frontierCount += 1
+            # if n is not None:
+            #     # print(n.pos)
+            #     # print(n)
+            #     if n.parent is not None:
+            #         tmpCost = 1 + n.parent.cost
+            #         if tmpCost < n.cost:
+            #             n.cost = tmpCost
+            #             n.parent = node[2]
+            #         else:
+            #             pass  # Cost created and new cost is not better. Dont update cost or rset parent
+            #         # n.cost = 1 + n.parent.cost
+            #         # n.parent = node[2]
+            #         # n.costCreated = 1
+            #     else:
+            #         n.cost = 1
+
+            # else:
+            #     n.cost = 0
+            # test = False
+            # for i in frontier:
+            #     if(i[2] == n):
+            #         test = True
+            # if not test and (n not in explored):
+            #     # print("pos added: ",n.pos)
+            #     heapq.heappush(frontier, (n.heuristic + n.cost,id(n), n))
+            #     frontierCount += 1
 
     print("no solution")
     # print("path cost: N/A since no solution was found")
@@ -171,7 +194,7 @@ def print_posMap(map, path=None):
     if (path != None):
         for i in range(len(path)):
             solNode = path[i]
-            map[solNode.pos[0]][solNode.pos[1]].state = '+'
+            map[solNode.pos[0]][solNode.pos[1]].state = '+ '
     print("\tBlack \t\t\t\t\t\t\t\tBoard \t\t\t\t\t\t\tWhite")
     for i in range(16, -1, -1):
         for j in range(5):
