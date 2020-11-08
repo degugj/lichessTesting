@@ -122,10 +122,10 @@ def greedy(heurMap, startNode):
 
     if startNode.isGoal:
         return solution
-
     while len(frontier) != 0:
         node = heapq.heappop(frontier)
         solution.append(node)
+        # time.sleep(1)
         # print_posMap(heurMap)
         print("Checking: ", node.pos)
         # time.sleep(1)
@@ -149,8 +149,18 @@ def greedy(heurMap, startNode):
             return -1
         bestNode = Node()
         for n in succ:
-            if bestNode.heuristic > n.heuristic:
-                bestNode = n
+            print("Child: ", n.pos)
+            if n.heuristic != math.inf and n not in explored:
+                print("Good to check")
+
+                if bestNode.heuristic > n.heuristic:
+                    print("better heur node")
+                    bestNode = n
+            else:
+                print("skip child")
+            if n.isGoal == 1:
+                solution.append(n)
+                return solution
         frontier.append(bestNode)
             # print(succ)
             # if n is not None:
