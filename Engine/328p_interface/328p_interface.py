@@ -4,6 +4,7 @@
 
 import math
 import heapq
+# import serial
 import time
 letterToColumn = {'a':6, 'b':8,'c':10,'d':12,'e':14,'f':16,'g':18,'h':20}  # To translate cell to posMap location
 # easy translation from number to row ((number * 2) + 1)
@@ -87,10 +88,8 @@ def gamestate_to_position_map(gamestate):
 
 
 # Creates a heuristic map of weights equal to the distance from the destination position
-def create_heuristic_map(posMap, dest):
-    endPos = [0,0]
-    endPos[0] = (int(dest[1])*2)-1
-    endPos[1] = letterToColumn[dest[0]]
+def create_heuristic_map(posMap, endPos):
+
     for i in range(len(posMap)):
         for j in range(len(posMap[i])):
             if posMap[i][j].state == '. ':
@@ -102,7 +101,7 @@ def create_heuristic_map(posMap, dest):
                 posMap[i][j].heuristic = math.inf
 
     posMap[endPos[0]][endPos[1]].isGoal = 1
-    print(posMap[endPos[0]][endPos[1]].pos)
+    # print(posMap[endPos[0]][endPos[1]].pos)
     return posMap
 
 
@@ -114,7 +113,7 @@ def greedy(heurMap, startNode):
     frontier = []
     explored = set()
 
-    solution.append(startNode)  # Start is first solution
+    # solution.append(startNode)  # Start is first solution
     # heapq.heappush(frontier, (0,id(startNode),startNode))
     frontier.append(startNode)
     frontierCount = 1
@@ -127,7 +126,7 @@ def greedy(heurMap, startNode):
         solution.append(node)
         # time.sleep(1)
         # print_posMap(heurMap)
-        print("Checking: ", node.pos)
+        # print("Checking: ", node.pos)
         # time.sleep(1)
         # print("Heur: ", node[1].heuristic)
         if node.isGoal:
@@ -145,19 +144,20 @@ def greedy(heurMap, startNode):
         #     print(i.pos)
         expandCount += 1
         if expandCount >= 100000:
-            print("Search halted")
+            # print("Search halted")
             return -1
         bestNode = Node()
         for n in succ:
-            print("Child: ", n.pos)
+            # print("Child: ", n.pos)
             if n.heuristic != math.inf and n not in explored:
-                print("Good to check")
+                # print("Good to check")
 
                 if bestNode.heuristic > n.heuristic:
-                    print("better heur node")
+                    # print("better heur node")
                     bestNode = n
             else:
-                print("skip child")
+                pass
+                # print("skip child")
             if n.isGoal == 1:
                 solution.append(n)
                 return solution
@@ -198,6 +198,20 @@ def greedy(heurMap, startNode):
 
 # Sends 328P a path via UART
 def send_to_328p(path):
+    """"
+    ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
+    while True:
+        received_data = ser.read()  # read serial port
+        sleep(0.03)
+        data_left = ser.inWaiting()  # check for remaining byte
+        received_data += ser.read(data_left)
+        print(received_data)  # print received data
+        ser.write(received_data)  # transmit data serially
+    """
+    for i in path:
+        print(i.pos)
+
+    # Maybe use length to confirm path or some kind of checksum
     return 0
 
 def print_posMap(map, path=None):
@@ -223,6 +237,31 @@ def print_posMap(map, path=None):
 # External function used to interface with GUI and game execution. Takes current gamestate and string move (ie 'e4e5')
 def make_physical_move(gamestate, move, capturedPiece=None):
     # TODO Extract and interpret move as start and end pos
+    posMap = gamestate_to_position_map(gamestate)  # convert 8x8 to position map
+    print("Move: ", move)
+    print("Position State: ")
+    print_posMap(posMap)
+
+    print('')
+    startPos = [0,0]
+    startPos[0] = (int(move[1]) * 2) - 1
+    startPos[1] = letterToColumn[move[0]]
+    print("Start Node: ", startPos, "(Cell: " + move[0:2] +")")
+
+    endPos = [0, 0]
+    endPos[0] = (int(move[3]) * 2) - 1
+    endPos[1] = letterToColumn[move[2]]
+    print("Goal Node: ", endPos, "(Cell: " + move[2:4] +")")
+
+    heurMap = create_heuristic_map(posMap, endPos)
+    # interface.print_posMap(heurMap)
+
+    solution = greedy(heurMap, heurMap[startPos[0]][startPos[1]])
+    print("Path: ")
+    print_posMap(heurMap, solution)
+
+    print("Sending path via UART...")
+    send_to_328p(solution)
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
     # TODO Call find_astar_path() using the arguments obtained above
