@@ -52,9 +52,6 @@ void setup() {
   pinMode(pinB, INPUT_PULLUP);
   attachInterrupt(0,PinA,RISING);
   attachInterrupt(1,PinB,RISING);
-
-
-
 }
 
 //Interrupt for Rotatry Encoder
