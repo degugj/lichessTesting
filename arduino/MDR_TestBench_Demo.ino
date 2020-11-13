@@ -31,7 +31,7 @@ Arm Electromagnet and RFID reader attached. Allows for free movement to mimic ga
 #define d7 7
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
   
-//HALL SENSORr
+//Analog Hall SENSOR
 #define hall A2
 int sensorValue;
 int calibrate;
@@ -46,7 +46,8 @@ int PWR;
 const int offsetA = 1;
 Motor motor = Motor(AIN1, AIN2, PWMA, offsetA, STBY);
 int driveStrength;  //MAX 255
-#define vPot A6   //Electromagnet Control
+#define vPot A6   //Electromagnet Power Control
+#define EM_Switch A4  //Activate/Deactivate Electromagnet
 
 // RFID
 #include <SPI.h>
@@ -57,14 +58,12 @@ byte readCard[4];
 String tagID = "";
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
-
-
 void setup() {
   pinMode(A4,INPUT); //Digital Hall Sensor
   SPI.begin();       // Initialize SPI bus
   mfrc522.PCD_Init(); // Initialize MFRC522
-
-
+  
+//Initialize LCD
   lcd.begin(16, 2);
   lcd.print("Team10 Testbench");
   delay(500);
@@ -80,16 +79,16 @@ void setup() {
   lcd.print("Remove Magnets");
   lcd.setCursor(0,1);
   lcd.print("Calibrating...");
-  lcd.setCursor(15,1);
+  
   int var=4;
   while (var > -1) {
-  // do something repetitive 200 times
+  //Countdown
   lcd.setCursor(15,1);
   lcd.print(var);
   var--;
   delay(800);
 }
-
+  //Calibrate so that if no Magnet Present, Reading should be 0
   calibrate = analogRead(hall);
   lcd.clear();
   lcd.print("Calibrated");
@@ -98,6 +97,7 @@ void setup() {
   delay(1000);
   lcd.clear();
   lcd.print("Ready");
+  delay(500);
   lcd.clear();
   
 }
