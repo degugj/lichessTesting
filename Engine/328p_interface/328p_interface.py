@@ -6,6 +6,7 @@ import math
 import heapq
 # import serial
 import time
+import sys
 letterToColumn = {'a':6, 'b':8,'c':10,'d':12,'e':14,'f':16,'g':18,'h':20}  # To translate cell to posMap location
 # easy translation from number to row ((number * 2) + 1)
 
@@ -208,6 +209,7 @@ def send_to_328p(path):
         print(received_data)  # print received data
         ser.write(received_data)  # transmit data serially
     """
+    print("Solution Path:")
     for i in path:
         print(i.pos)
 
@@ -218,8 +220,8 @@ def print_posMap(map, path=None):
     if (path != None):
         for i in range(len(path)):
             solNode = path[i]
-            map[solNode.pos[0]][solNode.pos[1]].state = '+ '
-    print("\tBlack \t\t\t\t\t\t\t\tBoard \t\t\t\t\t\t\tWhite")
+            map[solNode.pos[0]][solNode.pos[1]].state = u"\u26AA"
+    print("\033[1m\tBlack \t\t\t\t\t\t\t\tBoard \t\t\t\t\t\t\tWhite")
     for i in range(16, -1, -1):
         for j in range(5):
             print(map[i][j], end=' ')
@@ -238,29 +240,43 @@ def print_posMap(map, path=None):
 def make_physical_move(gamestate, move, capturedPiece=None):
     # TODO Extract and interpret move as start and end pos
     posMap = gamestate_to_position_map(gamestate)  # convert 8x8 to position map
-    print("Move: ", move)
-    print("Position State: ")
-    print_posMap(posMap)
+    # print("Move: ", move)
+    # print("Position State: ")
 
-    print('')
+
+    # print('')
     startPos = [0,0]
     startPos[0] = (int(move[1]) * 2) - 1
     startPos[1] = letterToColumn[move[0]]
     print("Start Node: ", startPos, "(Cell: " + move[0:2] +")")
 
     endPos = [0, 0]
-    endPos[0] = (int(move[3]) * 2) - 1
+    endPos[0] = (int(move[3:len(move)]) * 2) - 1
+    # print(move[3:len(move)])
     endPos[1] = letterToColumn[move[2]]
+    # print(endPos[1])
     print("Goal Node: ", endPos, "(Cell: " + move[2:4] +")")
 
     heurMap = create_heuristic_map(posMap, endPos)
     # interface.print_posMap(heurMap)
 
     solution = greedy(heurMap, heurMap[startPos[0]][startPos[1]])
-    print("Path: ")
-    print_posMap(heurMap, solution)
-
-    print("Sending path via UART...")
+    # print("Path: ")
+    # print_posMap(heurMap, solution)
+    print("Initial Position Map: ")
+    print_posMap(posMap)
+    time.sleep(5)
+    for i in range(len(solution)):
+        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+        solNode = solution[i]
+        sys.stdout.write("\n\r{0}".format(str(i)))
+        posMap[solNode.pos[0]][solNode.pos[1]].state = u"\u26AA"
+        print_posMap(heurMap)
+        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+        # sys.stdout.flush()
+        time.sleep(1)
+    time
+    # print("Sending path via UART...")
     send_to_328p(solution)
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()

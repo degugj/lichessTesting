@@ -6,6 +6,6 @@ from Engine.gameState import GameState as gs
 interface = __import__('328p_interface')
 
 currentGamestate = gs()  # Instantiate test gamestate
-move = 'e3e5'
+move = 'a1h8'
 
 interface.make_physical_move(currentGamestate, move)
