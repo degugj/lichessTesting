@@ -7,7 +7,7 @@ import heapq
 # import serial
 import time
 import sys
-letterToColumn = {'a':6, 'b':8,'c':10,'d':12,'e':14,'f':16,'g':18,'h':20}  # To translate cell to posMap location
+letterToColumn = {'a':4, 'b':8,'c':10,'d':12,'e':14,'f':16,'g':18,'h':20}  # To translate cell to posMap location
 # easy translation from number to row ((number * 2) + 1)
 
 # self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
@@ -64,12 +64,22 @@ class Node:
         return succs
 
     def __str__(self):
-        return str(self.state)
+        # if self.isGoal:
+        #     return " G  "
+        # if self.heuristic == math.inf:
+        #     return "null"
+        # else:
+        #     if len(str(self.heuristic)) == 3:
+        #         return str(self.state)[0:4] + " "
+        #     else:
+        #         return str(self.state)[0:4]
+        return self.state
+
 
 
 # Translates an 8x8 gamestate to a 24x24 piece position map
 def gamestate_to_position_map(gamestate):
-    posMap = [[Node() for _ in range(27)] for _ in range(17)]
+    posMap = [[Node() for _ in range(25)] for _ in range(17)]
     for i in range(len(posMap)):
         for j in range(len(posMap[i])):
             posMap[i][j].pos = [i,j]
@@ -80,9 +90,9 @@ def gamestate_to_position_map(gamestate):
             posJ = (j*2)+1
             # print(gamestate.board[i][j])
             if(gamestate.board[i][j] != "--"):
-                node = posMap[16 - posI][posJ+5]
+                node = posMap[16 - posI][posJ+4]
                 node.state = gamestate.board[i][j]
-                node.pos = [16 - posI, posJ+5]
+                node.pos = [16 - posI, posJ+4]
             else:
                 posMap[posI][posJ + 5].state = '. '
     return posMap
@@ -90,16 +100,18 @@ def gamestate_to_position_map(gamestate):
 
 # Creates a heuristic map of weights equal to the distance from the destination position
 def create_heuristic_map(posMap, endPos):
-
+    # posMap[endPos[0]][endPos[1]].heuristic = " G  "
     for i in range(len(posMap)):
         for j in range(len(posMap[i])):
             if posMap[i][j].state == '. ':
-                # time.sleep(1)
                 straightLineDist = math.sqrt(math.pow(endPos[0]-i,2) + math.pow(endPos[1]-j, 2))
                 posMap[i][j].heuristic = straightLineDist
-                # print_posMap(posMap)
             else:
                 posMap[i][j].heuristic = math.inf
+        # time.sleep(.7)
+        # print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+        # print_posMap(posMap)
+        # print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
     posMap[endPos[0]][endPos[1]].isGoal = 1
     # print(posMap[endPos[0]][endPos[1]].pos)
@@ -221,16 +233,16 @@ def print_posMap(map, path=None):
         for i in range(len(path)):
             solNode = path[i]
             map[solNode.pos[0]][solNode.pos[1]].state = u"\u26AA"
-    print("\033[1m\tBlack \t\t\t\t\t\t\t\tBoard \t\t\t\t\t\t\tWhite")
+    print("\033[1m\tBlack \t\t\t\t\t\t\tBoard \t\t\t\t\t\tWhite")
     for i in range(16, -1, -1):
-        for j in range(5):
+        for j in range(4):
             print(map[i][j], end=' ')
         print("\t", end = '')
         for x in range(17):
-            print(map[i][5 + x], end=' ')
+            print(map[i][4 + x], end=' ')
         print("\t", end = '')
-        for j in range(5):
-            print(map[i][22 + j], end=' ')
+        for j in range(4):
+            print(map[i][21 + j], end=' ')
         print("\t")
 
 
@@ -246,16 +258,16 @@ def make_physical_move(gamestate, move, capturedPiece=None):
 
     # print('')
     startPos = [0,0]
-    startPos[0] = (int(move[1]) * 2) - 1
+    startPos[0] = (int(move[1]) * 2)
     startPos[1] = letterToColumn[move[0]]
-    print("Start Node: ", startPos, "(Cell: " + move[0:2] +")")
+    # print("Start Node: ", startPos, "(Cell: " + move[0:2] +")")
 
     endPos = [0, 0]
     endPos[0] = (int(move[3:len(move)]) * 2) - 1
     # print(move[3:len(move)])
     endPos[1] = letterToColumn[move[2]]
     # print(endPos[1])
-    print("Goal Node: ", endPos, "(Cell: " + move[2:4] +")")
+    # print("Goal Node: ", endPos, "(Cell: " + move[2:4] +")")
 
     heurMap = create_heuristic_map(posMap, endPos)
     # interface.print_posMap(heurMap)
@@ -265,19 +277,19 @@ def make_physical_move(gamestate, move, capturedPiece=None):
     # print_posMap(heurMap, solution)
     print("Initial Position Map: ")
     print_posMap(posMap)
-    time.sleep(5)
-    for i in range(len(solution)):
-        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-        solNode = solution[i]
-        sys.stdout.write("\n\r{0}".format(str(i)))
-        posMap[solNode.pos[0]][solNode.pos[1]].state = u"\u26AA"
-        print_posMap(heurMap)
-        print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-        # sys.stdout.flush()
-        time.sleep(1)
-    time
+    # print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    # time.sleep(5)
+    # for i in range(len(solution)):
+    #     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    #     solNode = solution[i]
+    #     sys.stdout.write("\n\r{0}".format(str(i)))
+    #     posMap[solNode.pos[0]][solNode.pos[1]].state = u"\u26AA"
+    #     print_posMap(heurMap)
+    #     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    #     # sys.stdout.flush()
+    #     time.sleep(1)
     # print("Sending path via UART...")
-    send_to_328p(solution)
+    # send_to_328p(solution)
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
     # TODO Call find_astar_path() using the arguments obtained above

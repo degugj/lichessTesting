@@ -18,14 +18,17 @@ GameState Class
 -------------------------------
 """
 class GameState():
-    def __init__(self, gameQueue):
+    def __init__(self, gameQueue=None):
 
         # set user color (i.e 'w', 'b')
-        self.gameQueue = gameQueue
-        if self.gameQueue.get()["white"]["id"] == 'degugbot':     # <---------------------------------------------------------------------------------------DEGUGJ-----------------------------------
+        if gameQueue is None:
             self.userColor = 'w'
         else:
-            self.userColor = 'b'
+            self.gameQueue = gameQueue
+            if self.gameQueue.get()["white"]["id"] == 'degugbot':     # <---------------------------------------------------------------------------------------DEGUGJ-----------------------------------
+                self.userColor = 'w'
+            else:
+                self.userColor = 'b'
 
         # letter and number conversion to index self.board
         self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
