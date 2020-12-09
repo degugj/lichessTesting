@@ -209,6 +209,22 @@ def greedy(heurMap, startNode):
     print("expandCount: " + str(expandCount))
     return -1
 
+
+# 328P UART conversation for controlling EM
+def transmit_path(path):
+    # ADD X (path[0])
+    # ADD Y
+    # GO
+    # Wait for ARRIVED
+    # Check RFID, compare to my state
+    # EM ON
+    # Loop path[1] and on:
+    #    ADD X
+    #    ADD Y
+    #    GO
+    # EM OFF
+    return
+
 # Sends 328P a path via UART
 def send_to_328p(path):
     """"
@@ -289,7 +305,8 @@ def make_physical_move(gamestate, move, capturedPiece=None):
     #     # sys.stdout.flush()
     #     time.sleep(1)
     # print("Sending path via UART...")
-    # send_to_328p(solution)
+    send_to_328p(solution)
+    transmit_path(solution)
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
     # TODO Call find_astar_path() using the arguments obtained above
