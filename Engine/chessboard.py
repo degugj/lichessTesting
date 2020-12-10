@@ -8,7 +8,7 @@ import multiprocessing as mp
 import time
 
 from Engine import gameState as gs
-#import gameState as gs
+from Engine import gui_pages as pages
 
 """
 -------------------------------
@@ -41,6 +41,8 @@ FUNCTIONS
 
 """ init_chessboard():
 	params:
+		challengerName - name of opponent
+		gamestate - local gamestate object
 	return:
 """
 def init_chessboard(challengerName, gamestate):
@@ -105,11 +107,16 @@ def init_chessboard(challengerName, gamestate):
 			pg.display.flip()
 
 			# update gamestate of the board (i.e user/opponent makes move)
-			gamestate.update_gamestate()
+			gamestateUpdate = gamestate.update_gamestate()
+			if gamestateUpdate != 'ok':
+				display_gameover(screen, gamestateUpdate)
+				pg.display.flip()
+				time.sleep(10)
+				break
 
+	pages.terminate_gamestream()
 	pg.display.quit()
 	pg.quit()
-
 
 
 """ load_images: loads chesspiece images into images dictionary
@@ -152,6 +159,7 @@ def draw_board(screen):
 			# draw chess board; offsets used to center the board
 			pg.draw.rect(screen, color, pg.Rect(column*cellSize + xchessboardOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
 	return
+
 
 """ draw_buffers: draw the capture buffers on either side of the board
 	params:
@@ -213,4 +221,33 @@ def display_text(screen, message, color, size, x, y):
 	textBox = textSurface.get_rect()
 	textBox.center = x, y
 	screen.blit(textSurface, textBox)
+
+
+""" display_gameover: displays game over screen
+	params:
+		screen - game window
+		reason - reason for game over
+"""
+def display_gameover(screen, reason):
+	# clear screen
+	screen.fill(pg.Color("white"))
+
+	# game over text
+	if reason == "opponentresign":
+		text = "Opponent has resigned. You have won."
+		color = pg.Color("red")
+	elif reason == "userresign":
+		text = "You have resigned. Opponent has won."
+		color = pg.Color("green")
+	elif reason == "opponentcheckmate":
+		text = "Opponent has won by checkmate"
+		color = pg.Color("red")
+	elif reason == "usercheckmate":
+		text = "You have won by checkmate."
+		color = pg.Color("green")
+	else:
+		text = "Opponent has aborted the game. You win by default."
+		color = pg.Color("black")
+
+	display_text(screen, text, color, 25, WIN_WIDTH//2, WIN_HEIGHT//2)
 
