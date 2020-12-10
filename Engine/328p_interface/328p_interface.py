@@ -7,7 +7,7 @@ import heapq
 # import serial
 import time
 import sys
-letterToColumn = {'a':4, 'b':8,'c':10,'d':12,'e':14,'f':16,'g':18,'h':20}  # To translate cell to posMap location
+letterToColumn = {'a':3, 'b':7,'c':9,'d':11,'e':13,'f':15,'g':17,'h':19}  # To translate cell to posMap location
 # easy translation from number to row ((number * 2) + 1)
 
 # self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
@@ -15,7 +15,7 @@ letterToColumn = {'a':4, 'b':8,'c':10,'d':12,'e':14,'f':16,'g':18,'h':20}  # To 
 message_types = {'XADDRESS':0b00011111, 'YADDRESS':0b00111111, 'RFID':0b01011111, 'EM':0b01111111, 'GO':0b10011111, 'ARRIVED':10111111,'ELSE':11011111}
 
 class Node:
-    def __init__(self, state='. ', parent=None, pos=[0,0]):
+    def __init__(self, state='. ', parent=None, pos=[0, 0]):
         self.state = state      # Value
         self.parent = parent    # parent node
         self.heuristic = math.inf
@@ -82,7 +82,7 @@ def gamestate_to_position_map(gamestate):
     posMap = [[Node() for _ in range(25)] for _ in range(17)]
     for i in range(len(posMap)):
         for j in range(len(posMap[i])):
-            posMap[i][j].pos = [i,j]
+            posMap[i][j].pos = [i, j]
     # TODO add buffer translations
     for i in range(8):
         for j in range(8):
@@ -220,16 +220,25 @@ def message_encode(value, type):
 # 328P UART conversation for controlling EM
 def transmit_path(path):
     # ADD X (path[0])
-    print("XADD Message: ",bin(message_encode(1,"XADDRESS")))
+    print("XADD Message: ",bin(message_encode(path[0].pos[1],"XADDRESS")))
     # ADD Y
-    print("YADD Message: ",bin(message_encode(1,"YADDRESS")))
+    print("YADD Message: ",bin(message_encode(path[0].pos[0],"YADDRESS")))
     # GO
     print("GO Message: ",bin(message_encode(0b11111,"GO")))
     # Wait for ARRIVED
+    print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
+    time.sleep(1)
     # Check RFID, compare to my state
+    print("Recieve and confirm RFID (Mocking with sleep for now)")
+    time.sleep(1)
     # EM ON
     print("EM Message: ",bin(message_encode(0b11111,"EM")))
     # Loop path[1] and on:
+    for i in path[1:len(path)]:
+        print("XADD Message: ", bin(message_encode(i.pos[1], "XADDRESS")))
+        print("YADD Message: ", bin(message_encode(i.pos[0], "YADDRESS")))
+        print("GO Message: ", bin(message_encode(i.pos[0], "GO")))
+
     #    ADD X
     #    ADD Y
     #    GO
@@ -285,10 +294,10 @@ def make_physical_move(gamestate, move, capturedPiece=None):
 
     # print('')
     startPos = [0,0]
-    startPos[0] = (int(move[1]) * 2)
+    startPos[0] = (int(move[1]) * 2) - 1
     startPos[1] = letterToColumn[move[0]]
     # print("Start Node: ", startPos, "(Cell: " + move[0:2] +")")
-
+    print("start: ", str(startPos))
     endPos = [0, 0]
     endPos[0] = (int(move[3:len(move)]) * 2) - 1
     # print(move[3:len(move)])
@@ -301,10 +310,10 @@ def make_physical_move(gamestate, move, capturedPiece=None):
 
     solution = greedy(heurMap, heurMap[startPos[0]][startPos[1]])
     # print("Path: ")
-    # print_posMap(heurMap, solution)
     print("Initial Position Map: ")
     print_posMap(posMap)
     # print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    print_posMap(heurMap, solution)
     # time.sleep(5)
     # for i in range(len(solution)):
     #     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
