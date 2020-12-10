@@ -297,7 +297,7 @@ def make_physical_move(gamestate, move, capturedPiece=None):
     startPos[0] = (int(move[1]) * 2) - 1
     startPos[1] = letterToColumn[move[0]]
     # print("Start Node: ", startPos, "(Cell: " + move[0:2] +")")
-    print("start: ", str(startPos))
+    # print("start: ", str(startPos))
     endPos = [0, 0]
     endPos[0] = (int(move[3:len(move)]) * 2) - 1
     # print(move[3:len(move)])
