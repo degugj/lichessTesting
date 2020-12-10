@@ -259,8 +259,6 @@ def ingame(challengerName, controller):
 	return:
 """
 def event_stream(eventQueue):
-    # get process id
-    print("os.getpid", os.getpid)
     
     iterator = 0
 
@@ -300,9 +298,6 @@ def game_stream(gameQueue):
     lines = response.iter_lines()
     initialState = json.loads(next(lines).decode('utf-8'))
 
-    # get process id
-    print("os.getpid", os.getpid)
-
     # run in background
     while not terminated:
         time.sleep(3)
@@ -315,8 +310,7 @@ def game_stream(gameQueue):
             if line:
                 event = json.loads(line.decode('utf-8'))
                 gameQueue.put_nowait(event)
-
-                
+ 
     return
 
 
@@ -327,20 +321,24 @@ def game_stream(gameQueue):
 """
 def quit_program():
     global terminated
-    global eventstream
-    global gamestream
 
     terminated = True
     if eventstream != None:
-        eventstream.terminate()
-        eventstream.join()
+        terminate_eventstream()
         print("TERMINATED EVENT STREAM")
     if gamestream != None:
-        gamestream.terminate()
-        gamestream.join()
+        terminate_gamestream()
         print("TERMINATED GAME STREAM")
+
     print("Quit Program")
     exit()
 
+def terminate_gamestream():
+    global gamestream
+    gamestream.terminate()
+    gamestream.join()
 
-
+def terminate_eventstream():
+    global eventstream
+    eventstream.terminate
+    eventstream.join()
