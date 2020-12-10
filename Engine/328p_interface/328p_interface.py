@@ -12,7 +12,7 @@ letterToColumn = {'a':4, 'b':8,'c':10,'d':12,'e':14,'f':16,'g':18,'h':20}  # To 
 
 # self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
 # self.number_to_y = {'1':7, '2':6, '3':5, '4':4, '5':3, '6':2, '7':1, '8':0}
-
+message_types = {'XADDRESS':0b00011111, 'YADDRESS':0b00111111, 'RFID':0b01011111, 'EM':0b01111111, 'GO':0b10011111, 'ARRIVED':10111111,'ELSE':11011111}
 
 class Node:
     def __init__(self, state='. ', parent=None, pos=[0,0]):
@@ -209,15 +209,26 @@ def greedy(heurMap, startNode):
     print("expandCount: " + str(expandCount))
     return -1
 
+# Returns an 8-bit address message
+def message_encode(value, type):
+    justValue = 0b11100000 | int(value)  # Populate hot bits in message type bits
+    message = justValue& message_types[type]
+    return message
+
+
 
 # 328P UART conversation for controlling EM
 def transmit_path(path):
     # ADD X (path[0])
+    print("XADD Message: ",bin(message_encode(1,"XADDRESS")))
     # ADD Y
+    print("YADD Message: ",bin(message_encode(1,"YADDRESS")))
     # GO
+    print("GO Message: ",bin(message_encode(0b11111,"GO")))
     # Wait for ARRIVED
     # Check RFID, compare to my state
     # EM ON
+    print("EM Message: ",bin(message_encode(0b11111,"EM")))
     # Loop path[1] and on:
     #    ADD X
     #    ADD Y
