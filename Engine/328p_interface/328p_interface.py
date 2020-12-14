@@ -9,10 +9,11 @@ import time
 import sys
 letterToColumn = {'a':3, 'b':7,'c':9,'d':11,'e':13,'f':15,'g':17,'h':19}  # To translate cell to posMap location
 # easy translation from number to row ((number * 2) + 1)
+ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 
 # self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
 # self.number_to_y = {'1':7, '2':6, '3':5, '4':4, '5':3, '6':2, '7':1, '8':0}
-message_types = {'XADDRESS':0b00011111, 'YADDRESS':0b00111111, 'RFID':0b01011111, 'EM':0b01111111, 'GO':0b10011111, 'ARRIVED':10111111,'ELSE':11011111}
+message_types = {'XADDRESS':0b00111111, 'YADDRESS':0b01011111, 'RFID':0b01111111, 'EM':0b10011111, 'GO':0b10111111, 'ARRIVED':11011111,'ELSE':11111111}
 
 class Node:
     def __init__(self, state='. ', parent=None, pos=[0, 0]):
@@ -212,7 +213,7 @@ def greedy(heurMap, startNode):
 # Returns an 8-bit address message
 def message_encode(value, type):
     justValue = 0b11100000 | int(value)  # Populate hot bits in message type bits
-    print(justValue& message_types[type])
+    #print(justValue& message_types[type])
     message = justValue& message_types[type]
     return message
 
@@ -222,42 +223,55 @@ def message_encode(value, type):
 def transmit_path(path):
     # ADD X (path[0])
     print("XADD Message: ",format(message_encode(path[0].pos[1],"XADDRESS"), '#010b'))
-    #send_to_328p(bin(message_encode(path[0].pos[1],"XADDRESS")))
+    send_to_328p(message_encode(path[0].pos[1],"XADDRESS"))
     # ADD Y
     print("YADD Message: ",format(message_encode(path[0].pos[0],"YADDRESS"), '#010b'))
+    send_to_328p(message_encode(path[0].pos[0],"YADDRESS"))
     # GO
-    print("GO Message: ",format(message_encode(0b11111,"GO")))
+    print("GO Message: ",format(message_encode(0b11111,"GO"), '#010b'))
+    send_to_328p(message_encode(0b11111,"GO"))
     # Wait for ARRIVED
     print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
-    time.sleep(1)
+    time.sleep(.5)
+    # Request RFID
+    print("ELSE Message (RFID Req): ",format(message_encode(0b00010,"ELSE"), '#010b'))
+    send_to_328p(message_encode(0b11111,"GO"))
     # Check RFID, compare to my state
     print("Recieve and confirm RFID (Mocking with sleep for now)")
-    time.sleep(1)
+    time.sleep(.5)
     # EM ON
     print("EM Message: ",format(message_encode(0b11111,"EM"), '#010b'))
+    send_to_328p(message_encode(0b11111,"EM"))
+    print("Wait for EM ON message (Mocking with sleep for now)")
     # Loop path[1] and on:
     for i in path[1:len(path)]:
         print("XADD Message: ", format(message_encode(i.pos[1], "XADDRESS"), '#010b'))
+        send_to_328p(message_encode(i.pos[1], "XADDRESS"))
         print("YADD Message: ", format(message_encode(i.pos[0], "YADDRESS"), '#010b'))
+        send_to_328p(message_encode(i.pos[0], "YADDRESS"))
         print("GO Message: ", format(message_encode(i.pos[0], "GO"), '#010b'))
-
-    #    ADD X
-    #    ADD Y
-    #    GO
+        send_to_328p(message_encode(i.pos[0], "GO"))
+        print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
+        time.sleep(.5)
     # EM OFF
+    print("EM Message: ",format(message_encode(0b00000,"EM"), '#010b'))
+    send_to_328p(message_encode(0b00000,"EM"))
     return
 
 # Sends 328P a path via UART
 def send_to_328p(data):
     
-    ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
+    
+    ser.flush()
+    print("0x" + str(data))
     #while True:
-        #received_data = ser.read()  # read serial port
-        #sleep(0.03)
-        #data_left = ser.inWaiting()  # check for remaining byte
-        #received_data += ser.read(data_left)
-    print(data)  # print received data
-    ser.write(data)  # transmit data serially
+    #    received_data = ser.read()  # read serial port
+    #    sleep(0.03)
+    #    data_left = ser.inWaiting()  # check for remaining byte
+    #    received_data += ser.read(data_left)
+        #print("Sent Data: ",format(data, '#010b'))  # print received data
+    ser.write(data.to_bytes(1, 'little'))  # transmit data serially
+
     
     #print("Solution Path:")
     #for i in path:
