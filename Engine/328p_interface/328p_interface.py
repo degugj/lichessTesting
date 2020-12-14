@@ -4,7 +4,7 @@
 
 import math
 import heapq
-# import serial
+import serial
 import time
 import sys
 letterToColumn = {'a':3, 'b':7,'c':9,'d':11,'e':13,'f':15,'g':17,'h':19}  # To translate cell to posMap location
@@ -212,6 +212,7 @@ def greedy(heurMap, startNode):
 # Returns an 8-bit address message
 def message_encode(value, type):
     justValue = 0b11100000 | int(value)  # Populate hot bits in message type bits
+    print(justValue& message_types[type])
     message = justValue& message_types[type]
     return message
 
@@ -220,11 +221,12 @@ def message_encode(value, type):
 # 328P UART conversation for controlling EM
 def transmit_path(path):
     # ADD X (path[0])
-    print("XADD Message: ",bin(message_encode(path[0].pos[1],"XADDRESS")))
+    print("XADD Message: ",format(message_encode(path[0].pos[1],"XADDRESS"), '#010b'))
+    #send_to_328p(bin(message_encode(path[0].pos[1],"XADDRESS")))
     # ADD Y
-    print("YADD Message: ",bin(message_encode(path[0].pos[0],"YADDRESS")))
+    print("YADD Message: ",format(message_encode(path[0].pos[0],"YADDRESS"), '#010b'))
     # GO
-    print("GO Message: ",bin(message_encode(0b11111,"GO")))
+    print("GO Message: ",format(message_encode(0b11111,"GO")))
     # Wait for ARRIVED
     print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
     time.sleep(1)
@@ -232,12 +234,12 @@ def transmit_path(path):
     print("Recieve and confirm RFID (Mocking with sleep for now)")
     time.sleep(1)
     # EM ON
-    print("EM Message: ",bin(message_encode(0b11111,"EM")))
+    print("EM Message: ",format(message_encode(0b11111,"EM"), '#010b'))
     # Loop path[1] and on:
     for i in path[1:len(path)]:
-        print("XADD Message: ", bin(message_encode(i.pos[1], "XADDRESS")))
-        print("YADD Message: ", bin(message_encode(i.pos[0], "YADDRESS")))
-        print("GO Message: ", bin(message_encode(i.pos[0], "GO")))
+        print("XADD Message: ", format(message_encode(i.pos[1], "XADDRESS"), '#010b'))
+        print("YADD Message: ", format(message_encode(i.pos[0], "YADDRESS"), '#010b'))
+        print("GO Message: ", format(message_encode(i.pos[0], "GO"), '#010b'))
 
     #    ADD X
     #    ADD Y
@@ -246,20 +248,20 @@ def transmit_path(path):
     return
 
 # Sends 328P a path via UART
-def send_to_328p(path):
-    """"
+def send_to_328p(data):
+    
     ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
-    while True:
-        received_data = ser.read()  # read serial port
-        sleep(0.03)
-        data_left = ser.inWaiting()  # check for remaining byte
-        received_data += ser.read(data_left)
-        print(received_data)  # print received data
-        ser.write(received_data)  # transmit data serially
-    """
-    print("Solution Path:")
-    for i in path:
-        print(i.pos)
+    #while True:
+        #received_data = ser.read()  # read serial port
+        #sleep(0.03)
+        #data_left = ser.inWaiting()  # check for remaining byte
+        #received_data += ser.read(data_left)
+    print(data)  # print received data
+    ser.write(data)  # transmit data serially
+    
+    #print("Solution Path:")
+    #for i in path:
+    #    print(i.pos)
 
     # Maybe use length to confirm path or some kind of checksum
     return 0
@@ -325,7 +327,7 @@ def make_physical_move(gamestate, move, capturedPiece=None):
     #     # sys.stdout.flush()
     #     time.sleep(1)
     # print("Sending path via UART...")
-    send_to_328p(solution)
+    # send_to_328p(solution)
     transmit_path(solution)
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
