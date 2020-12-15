@@ -7,7 +7,7 @@ import heapq
 import serial
 import time
 import sys
-letterToColumn = {'a':3, 'b':7,'c':9,'d':11,'e':13,'f':15,'g':17,'h':19}  # To translate cell to posMap location
+letterToColumn = {'a':5, 'b':7,'c':9,'d':11,'e':13,'f':15,'g':17,'h':19}  # To translate cell to posMap location
 # easy translation from number to row ((number * 2) + 1)
 ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 
@@ -32,35 +32,35 @@ class Node:
 
         if y-1 >= 0:
             child = map[self.pos[0]][self.pos[1]-1]
-            succs.append(child)
+            succs.append((child, 's'))
 
         if x - 1 >= 0:
             child = map[self.pos[0]-1][self.pos[1]]
-            succs.append(child)
+            succs.append((child, 'w'))
 
         if y - 1 >= 0 and x - 1 >= 0:
             child = map[self.pos[0]-1][self.pos[1]-1]
-            succs.append(child)
+            succs.append((child, 'sw'))
 
         if y + 1 <= 26:
             child = map[self.pos[0]][self.pos[1]+1]
-            succs.append(child)
+            succs.append((child, 'n'))
 
         if x + 1 <= 16:
             child = map[self.pos[0]+1][self.pos[1]]
-            succs.append(child)
+            succs.append((child, 'e'))
 
         if x + 1 <= 16 and y + 1 <= 26:
             child = map[self.pos[0]+1][self.pos[1]+1]
-            succs.append(child)
+            succs.append((child, 'ne'))
 
         if x + 1 <= 16 and y - 1 >= 0:
             child = map[self.pos[0]+1][self.pos[1]-1]
-            succs.append(child)
+            succs.append((child, 'se'))
 
         if x - 1 >= 0 and y + 1 <= 26:
             child = map[self.pos[0]-1][self.pos[1]+1]
-            succs.append(child)
+            succs.append((child, 'nw'))
 
         return succs
 
@@ -118,6 +118,20 @@ def create_heuristic_map(posMap, endPos):
     # print(posMap[endPos[0]][endPos[1]].pos)
     return posMap
 
+# Straightline path compression for gantry optimization
+def sl_compression(solution):
+    compressed_path = []
+    compressed_path.append(solution[0])
+    for i in range(1,len(solution)-1):
+        #print('Hello: ',solution[i], solution[i-1])
+        if solution[i][1] == solution[i+1][1]:
+            pass
+        else:
+            #print("Added: ", solution[i])
+            compressed_path.append(solution[i])
+    compressed_path.append(solution[len(solution)-1])
+    #print(len(solution), len(compressed_path))
+    return compressed_path
 
 # Returns the Astar path of
 def greedy(heurMap, startNode):
@@ -129,7 +143,7 @@ def greedy(heurMap, startNode):
 
     # solution.append(startNode)  # Start is first solution
     # heapq.heappush(frontier, (0,id(startNode),startNode))
-    frontier.append(startNode)
+    frontier.append((startNode, ''))
     frontierCount = 1
     expandCount = 0
 
@@ -143,7 +157,7 @@ def greedy(heurMap, startNode):
         # print("Checking: ", node.pos)
         # time.sleep(1)
         # print("Heur: ", node[1].heuristic)
-        if node.isGoal:
+        if node[0].isGoal:
             # tmpNode = node[2]
             # while tmpNode.parent is not None:
             #     solution.insert(1, tmpNode)
@@ -153,26 +167,28 @@ def greedy(heurMap, startNode):
             return solution
 
         explored.add(node)
-        succ = node.successors(heurMap)
+        succ = node[0].successors(heurMap)
         # for i in succ:
         #     print(i.pos)
         expandCount += 1
         if expandCount >= 100000:
             # print("Search halted")
             return -1
-        bestNode = Node()
+        bestNode = (Node(), '')
         for n in succ:
+            #print(n)
+            succNode = n[0]
             # print("Child: ", n.pos)
-            if n.heuristic != math.inf and n not in explored:
+            if succNode.heuristic != math.inf and n not in explored:
                 # print("Good to check")
 
-                if bestNode.heuristic > n.heuristic:
+                if bestNode[0].heuristic > succNode.heuristic:
                     # print("better heur node")
                     bestNode = n
             else:
                 pass
                 # print("skip child")
-            if n.isGoal == 1:
+            if succNode.isGoal == 1:
                 solution.append(n)
                 return solution
         frontier.append(bestNode)
@@ -222,11 +238,12 @@ def message_encode(value, type):
 # 328P UART conversation for controlling EM
 def transmit_path(path):
     # ADD X (path[0])
-    print("XADD Message: ",format(message_encode(path[0].pos[1],"XADDRESS"), '#010b'))
-    send_to_328p(message_encode(path[0].pos[1],"XADDRESS"))
+    node = path[0][0]
+    print("XADD Message: ",format(message_encode(node.pos[1],"XADDRESS"), '#010b'))
+    send_to_328p(message_encode(node.pos[1],"XADDRESS"))
     # ADD Y
-    print("YADD Message: ",format(message_encode(path[0].pos[0],"YADDRESS"), '#010b'))
-    send_to_328p(message_encode(path[0].pos[0],"YADDRESS"))
+    print("YADD Message: ",format(message_encode(node.pos[0],"YADDRESS"), '#010b'))
+    send_to_328p(message_encode(node.pos[0],"YADDRESS"))
     # GO
     print("GO Message: ",format(message_encode(0b11111,"GO"), '#010b'))
     send_to_328p(message_encode(0b11111,"GO"))
@@ -245,12 +262,13 @@ def transmit_path(path):
     print("Wait for EM ON message (Mocking with sleep for now)")
     # Loop path[1] and on:
     for i in path[1:len(path)]:
-        print("XADD Message: ", format(message_encode(i.pos[1], "XADDRESS"), '#010b'))
-        send_to_328p(message_encode(i.pos[1], "XADDRESS"))
-        print("YADD Message: ", format(message_encode(i.pos[0], "YADDRESS"), '#010b'))
-        send_to_328p(message_encode(i.pos[0], "YADDRESS"))
-        print("GO Message: ", format(message_encode(i.pos[0], "GO"), '#010b'))
-        send_to_328p(message_encode(i.pos[0], "GO"))
+        node = i[0]
+        print("XADD Message: ", format(message_encode(node.pos[1], "XADDRESS"), '#010b'))
+        send_to_328p(message_encode(node.pos[1], "XADDRESS"))
+        print("YADD Message: ", format(message_encode(node.pos[0], "YADDRESS"), '#010b'))
+        send_to_328p(message_encode(node.pos[0], "YADDRESS"))
+        print("GO Message: ", format(message_encode(node.pos[0], "GO"), '#010b'))
+        send_to_328p(message_encode(node.pos[0], "GO"))
         print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
         time.sleep(.5)
     # EM OFF
@@ -283,7 +301,7 @@ def send_to_328p(data):
 def print_posMap(map, path=None):
     if (path != None):
         for i in range(len(path)):
-            solNode = path[i]
+            solNode = path[i][0]
             map[solNode.pos[0]][solNode.pos[1]].state = u"\u26AA"
     print("\033[1m\tBlack \t\t\t\t\t\t\tBoard \t\t\t\t\t\tWhite")
     for i in range(16, -1, -1):
@@ -329,7 +347,11 @@ def make_physical_move(gamestate, move, capturedPiece=None):
     print("Initial Position Map: ")
     print_posMap(posMap)
     # print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    print("\nBefore Straightline Path Compression: ")
     print_posMap(heurMap, solution)
+    #print("\nAfter Straightline Path Compression: ")
+    #print_posMap(heurMap, sl_compression(solution))
+    
     # time.sleep(5)
     # for i in range(len(solution)):
     #     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
@@ -342,7 +364,8 @@ def make_physical_move(gamestate, move, capturedPiece=None):
     #     time.sleep(1)
     # print("Sending path via UART...")
     # send_to_328p(solution)
-    transmit_path(solution)
+    #transmit_path(solution)
+    
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
     # TODO Call find_astar_path() using the arguments obtained above
