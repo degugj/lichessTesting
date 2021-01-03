@@ -249,10 +249,10 @@ def transmit_path(path):
     send_to_328p(message_encode(0b11111,"GO"))
     # Wait for ARRIVED
     print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
-    time.sleep(.5)
+    time.sleep(5)
     # Request RFID
     print("ELSE Message (RFID Req): ",format(message_encode(0b00010,"ELSE"), '#010b'))
-    send_to_328p(message_encode(0b11111,"GO"))
+    #send_to_328p(message_encode(0b11111,"GO"))
     # Check RFID, compare to my state
     print("Recieve and confirm RFID (Mocking with sleep for now)")
     time.sleep(.5)
@@ -261,16 +261,19 @@ def transmit_path(path):
     send_to_328p(message_encode(0b11111,"EM"))
     print("Wait for EM ON message (Mocking with sleep for now)")
     # Loop path[1] and on:
+    time.sleep(.5)
     for i in path[1:len(path)]:
         node = i[0]
         print("XADD Message: ", format(message_encode(node.pos[1], "XADDRESS"), '#010b'))
         send_to_328p(message_encode(node.pos[1], "XADDRESS"))
+        time.sleep(.03)
         print("YADD Message: ", format(message_encode(node.pos[0], "YADDRESS"), '#010b'))
         send_to_328p(message_encode(node.pos[0], "YADDRESS"))
+        time.sleep(.03)
         print("GO Message: ", format(message_encode(node.pos[0], "GO"), '#010b'))
         send_to_328p(message_encode(node.pos[0], "GO"))
         print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
-        time.sleep(.5)
+        time.sleep(5)
     # EM OFF
     print("EM Message: ",format(message_encode(0b00000,"EM"), '#010b'))
     send_to_328p(message_encode(0b00000,"EM"))
@@ -364,7 +367,7 @@ def make_physical_move(gamestate, move, capturedPiece=None):
     #     time.sleep(1)
     # print("Sending path via UART...")
     # send_to_328p(solution)
-    #transmit_path(solution)
+    transmit_path(sl_compression(solution))
     
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
