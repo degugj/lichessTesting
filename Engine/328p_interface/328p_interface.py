@@ -249,17 +249,18 @@ def transmit_path(path):
     send_to_328p(message_encode(0b11111,"GO"))
     # Wait for ARRIVED
     print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
-    time.sleep(5)
+    recv_from_328p("ARRIVED", 10)
     # Request RFID
     print("ELSE Message (RFID Req): ",format(message_encode(0b00010,"ELSE"), '#010b'))
-    #send_to_328p(message_encode(0b11111,"GO"))
+    send_to_328p(message_encode(0b11010,"RFID"))
     # Check RFID, compare to my state
     print("Recieve and confirm RFID (Mocking with sleep for now)")
-    time.sleep(.5)
+    recv_from_328p("RFID", 10)
     # EM ON
     print("EM Message: ",format(message_encode(0b11111,"EM"), '#010b'))
     send_to_328p(message_encode(0b11111,"EM"))
     print("Wait for EM ON message (Mocking with sleep for now)")
+    recv_from_328p("EM", 10)
     # Loop path[1] and on:
     time.sleep(.5)
     for i in path[1:len(path)]:
@@ -273,15 +274,53 @@ def transmit_path(path):
         print("GO Message: ", format(message_encode(node.pos[0], "GO"), '#010b'))
         send_to_328p(message_encode(node.pos[0], "GO"))
         print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
+        recv_from_328p("ARRIVED", 10)
         time.sleep(5)
     # EM OFF
     print("EM Message: ",format(message_encode(0b00000,"EM"), '#010b'))
     send_to_328p(message_encode(0b00000,"EM"))
+    # Wait for EM OFF?
+    recv_from_328p("EM", 10)
     return
+
+
+# Receive message from 328P via UART
+def recv_from_328p(messageType, timeout):
+    while True:
+        x = ser.read()
+        if messageType == "RFID":
+            if ((int(x) & 0b11100000) | 0b00011111) == message_types(messageType):
+                print("Confirmed RFID Message")  # Need code to verify piece
+                return
+        if messageType == "ARRIVED":
+        # we need to recieve additional messages confirming position
+            if ((int(x) & 0b11100000) | 0b00011111) == message_types(messageType):
+                print("Confirmed message type: ", messageType, "Now checking addresses (", format(x, '#010b'), ")")
+                recv_from_328p("XADDRESS")
+                recv_from_328p("YADDRESS")
+                # Verify addresses
+                print("Confirmed Arrived (pseudo)")
+                return
+        if messageType == "XADDRESS":
+            print("Confirmed X (pseudo)")
+            return  # Fill this in
+        if messageType == "YADDRESS":
+            print("Confirmed Y (pseudo)")
+            return  # Fill this in
+        else:
+            if ((int(x) & 0b11100000)|0b00011111) == message_types(messageType):
+                print("Confirmed message type: ",messageType," (",format(x, '#010b'),")")
+                return
+            else:
+                print("Error*")  # Need more detail on error
+                time.sleep(.03)
+
+    return -1 # timeout or error
+
+
 
 # Sends 328P a path via UART
 def send_to_328p(data):
-    
     
     ser.flush()
     print("0x" + str(data))
