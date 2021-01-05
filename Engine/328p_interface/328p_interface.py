@@ -260,7 +260,8 @@ def transmit_path(path):
     send_to_328p(message_encode(0b11010,"RFID"))
     # Check RFID, compare to my state
     #print("Recieve and confirm RFID (Mocking with sleep for now)")
-    recv_from_328p("RFID", 10)
+    print("Skip RFID wait for now...")
+    #recv_from_328p("RFID", 10)
     # EM ON
     #print("EM Message: ",format(message_encode(0b11111,"EM"), '#010b'))
     send_to_328p(message_encode(0b11111,"EM"))
@@ -340,6 +341,9 @@ def recv_from_328p(messageType, timeout):
             else:
                 print("Confirmed y address ({})".format(recY_Addr))
                 return
+        elif messageType == "EM":
+            print("EM confirmed")
+            return
         else:
             print("Received unsupported message type:",recType,"expected:",messageType)
             time.sleep(.3)
