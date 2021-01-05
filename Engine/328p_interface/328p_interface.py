@@ -13,7 +13,9 @@ ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 
 # self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
 # self.number_to_y = {'1':7, '2':6, '3':5, '4':4, '5':3, '6':2, '7':1, '8':0}
-message_types = {'XADDRESS':0b00111111, 'YADDRESS':0b01011111, 'RFID':0b01111111, 'EM':0b10011111, 'GO':0b10111111, 'ARRIVED':11011111,'ELSE':11111111}
+message_types = {'XADDRESS':0b00111111, 'YADDRESS':0b01011111, 'RFID':0b01111111, 'EM':0b10011111, 'GO':0b10111111, 'ARRIVED':0b11011111,'ELSE':11111111}
+
+currentGantryPos=[0,0]
 
 class Node:
     def __init__(self, state='. ', parent=None, pos=[0, 0]):
@@ -231,6 +233,7 @@ def message_encode(value, type):
     justValue = 0b11100000 | int(value)  # Populate hot bits in message type bits
     #print(justValue& message_types[type])
     message = justValue& message_types[type]
+    print("\nEncoded", type, "message:", format(message, '#010b'))
     return message
 
 
@@ -239,81 +242,107 @@ def message_encode(value, type):
 def transmit_path(path):
     # ADD X (path[0])
     node = path[0][0]
-    print("XADD Message: ",format(message_encode(node.pos[1],"XADDRESS"), '#010b'))
+    global currentGantryPos
+    currentGantryPos = node.pos
+    #print("XADD Message: ",format(message_encode(node.pos[1],"XADDRESS"), '#010b'))
     send_to_328p(message_encode(node.pos[1],"XADDRESS"))
     # ADD Y
-    print("YADD Message: ",format(message_encode(node.pos[0],"YADDRESS"), '#010b'))
+    #print("YADD Message: ",format(message_encode(node.pos[0],"YADDRESS"), '#010b'))
     send_to_328p(message_encode(node.pos[0],"YADDRESS"))
     # GO
-    print("GO Message: ",format(message_encode(0b11111,"GO"), '#010b'))
+    #print("GO Message: ",format(message_encode(0b11111,"GO"), '#010b'))
     send_to_328p(message_encode(0b11111,"GO"))
     # Wait for ARRIVED
-    print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
+    #print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
     recv_from_328p("ARRIVED", 10)
     # Request RFID
-    print("ELSE Message (RFID Req): ",format(message_encode(0b00010,"ELSE"), '#010b'))
+    #print("RFID Req: ",format(message_encode(0b11010,"RFID"), '#010b'))
     send_to_328p(message_encode(0b11010,"RFID"))
     # Check RFID, compare to my state
-    print("Recieve and confirm RFID (Mocking with sleep for now)")
+    #print("Recieve and confirm RFID (Mocking with sleep for now)")
     recv_from_328p("RFID", 10)
     # EM ON
-    print("EM Message: ",format(message_encode(0b11111,"EM"), '#010b'))
+    #print("EM Message: ",format(message_encode(0b11111,"EM"), '#010b'))
     send_to_328p(message_encode(0b11111,"EM"))
-    print("Wait for EM ON message (Mocking with sleep for now)")
+    #print("Wait for EM ON message (Mocking with sleep for now)")
     recv_from_328p("EM", 10)
     # Loop path[1] and on:
     time.sleep(.5)
     for i in path[1:len(path)]:
         node = i[0]
-        print("XADD Message: ", format(message_encode(node.pos[1], "XADDRESS"), '#010b'))
+        currentGantryPos = node.pos
+        #print("XADD Message: ", format(message_encode(node.pos[1], "XADDRESS"), '#010b'))
         send_to_328p(message_encode(node.pos[1], "XADDRESS"))
         time.sleep(.03)
-        print("YADD Message: ", format(message_encode(node.pos[0], "YADDRESS"), '#010b'))
+        #print("YADD Message: ", format(message_encode(node.pos[0], "YADDRESS"), '#010b'))
         send_to_328p(message_encode(node.pos[0], "YADDRESS"))
         time.sleep(.03)
-        print("GO Message: ", format(message_encode(node.pos[0], "GO"), '#010b'))
+        #print("GO Message: ", format(message_encode(node.pos[0], "GO"), '#010b'))
         send_to_328p(message_encode(node.pos[0], "GO"))
-        print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
+        #print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
         recv_from_328p("ARRIVED", 10)
         time.sleep(5)
     # EM OFF
-    print("EM Message: ",format(message_encode(0b00000,"EM"), '#010b'))
+    #print("EM Message: ",format(message_encode(0b00000,"EM"), '#010b'))
     send_to_328p(message_encode(0b00000,"EM"))
     # Wait for EM OFF?
     recv_from_328p("EM", 10)
     return
 
 
+def find_message_type(message):
+    for key in message_types:
+        if (message&0b11100000) == (message_types[key]&0b11100000):
+            return key
+    return "Unknown"
+
+
 # Receive message from 328P via UART
 def recv_from_328p(messageType, timeout):
+    print("\nWaiting for message:", messageType)
     while True:
+        time.sleep(0.03)
         x = ser.read()
+        intMessage = int.from_bytes(x, 'little')
+        recType = find_message_type(intMessage)
+        print(recType, "message recieved", format(intMessage, '#010b'))
+        if recType != messageType:
+            print("WARNING: Recieved message:",recType,"; expected:",messageType)
         if messageType == "RFID":
-            if ((int(x) & 0b11100000) | 0b00011111) == message_types(messageType):
-                print("Confirmed RFID Message")  # Need code to verify piece
-                return
-        if messageType == "ARRIVED":
+            print("Do nothing...")
+            return
+        elif messageType == "ARRIVED":
         # we need to recieve additional messages confirming position
-            if ((int(x) & 0b11100000) | 0b00011111) == message_types(messageType):
-                print("Confirmed message type: ", messageType, "Now checking addresses (", format(x, '#010b'), ")")
-                recv_from_328p("XADDRESS")
-                recv_from_328p("YADDRESS")
-                # Verify addresses
-                print("Confirmed Arrived (pseudo)")
-                return
-        if messageType == "XADDRESS":
-            print("Confirmed X (pseudo)")
-            return  # Fill this in
-        if messageType == "YADDRESS":
-            print("Confirmed Y (pseudo)")
-            return  # Fill this in
-        else:
-            if ((int(x) & 0b11100000)|0b00011111) == message_types(messageType):
-                print("Confirmed message type: ",messageType," (",format(x, '#010b'),")")
-                return
+            #print((int.from_bytes(x, 'little')& 0b11100000)| 0b00011111)
+            #print(int(message_types[messageType]))
+            xTrue = recv_from_328p("XADDRESS", 10)
+            yTrue = recv_from_328p("YADDRESS", 10)
+            if xTrue or yTrue == -1:
+                print("Exiting, current address is not verified") # This could be where we try to move it back or call a scan
+                exit()
+            # Verify addresses
+            return
+        elif messageType == "XADDRESS":
+            expectedX_Addr = currentGantryPos[1]
+            recX_Addr = (intMessage&0b00011111)
+            if expectedX_Addr != recX_Addr:
+                print("ERROR: Received x address:",recX_Addr,"expected x address:",expectedX_Addr)
+                return -1
             else:
-                print("Error*")  # Need more detail on error
-                time.sleep(.03)
+                print("Confirmed x address ({})".format(recX_Addr))
+                return
+        elif messageType == "YADDRESS":
+            expectedY_Addr = currentGantryPos[0]
+            recY_Addr = (intMessage&0b00011111)
+            if expectedY_Addr != recY_Addr:
+                print("ERROR: Received y address:",recY_Addr,"expected y address:",expectedY_Addr)
+                return -1
+            else:
+                print("Confirmed y address ({})".format(recY_Addr))
+                return
+        else:
+            print("Received unsupported message type:",recType,"expected:",messageType)
+            time.sleep(.3)
 
     return -1 # timeout or error
 
@@ -321,9 +350,8 @@ def recv_from_328p(messageType, timeout):
 
 # Sends 328P a path via UART
 def send_to_328p(data):
-    
     ser.flush()
-    print("0x" + str(data))
+    print("Message sent (0x" + str(data)+")")
     #while True:
     #    received_data = ser.read()  # read serial port
     #    sleep(0.03)
