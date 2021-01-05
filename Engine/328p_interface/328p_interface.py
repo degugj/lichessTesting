@@ -303,6 +303,7 @@ def recv_from_328p(messageType, timeout):
     print("\nWaiting for message:", messageType)
     while True:
         time.sleep(0.03)
+        ser.flush()
         x = ser.read()
         intMessage = int.from_bytes(x, 'little')
         recType = find_message_type(intMessage)
@@ -355,7 +356,7 @@ def recv_from_328p(messageType, timeout):
 # Sends 328P a path via UART
 def send_to_328p(data):
     ser.flush()
-    print("Message sent (0x" + str(data)+")")
+    print("Message sent (" + hex(data)+")")
     #while True:
     #    received_data = ser.read()  # read serial port
     #    sleep(0.03)
