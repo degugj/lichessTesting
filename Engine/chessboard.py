@@ -24,11 +24,14 @@ BUFFER_DIMENSIONSy = 8
 MAX_FPS = 15
 
 xchessboardOffset = (WIN_WIDTH - CB_WIDTH) // 2
-ychessboardOffset = (WIN_HEIGHT - CB_HEIGHT) // 2
+ychessboardOffset = (WIN_HEIGHT - CB_HEIGHT) // 4
 cellSize = CB_HEIGHT // DIMENSIONS
 
 leftbufferOffset = (xchessboardOffset - (2*cellSize)) // 2
 rightbufferOffset = WIN_WIDTH - (2*cellSize) - leftbufferOffset
+
+alertwindowOffsetx = xchessboardOffset
+alertwindowOffsety = (WIN_HEIGHT - ychessboardOffset) - 50
 
 images = {}
 
@@ -61,6 +64,9 @@ def init_chessboard(challengerName, gamestate):
 	# load chesspiece images into dictionary
 	load_images()
 
+	# draw Alerts window
+	draw_alertswindow(screen)
+
 	# on-screen text
 	leftbuffertextOffset = 	(WIN_WIDTH - CB_WIDTH) // 4
 	rightbuffertextOffset =  WIN_WIDTH - leftbuffertextOffset
@@ -78,13 +84,13 @@ def init_chessboard(challengerName, gamestate):
 	
 
 	letterOffsetx = ((WIN_WIDTH - CB_WIDTH)//2) + (cellSize//2)
-	letterOffsety = WIN_HEIGHT - ((WIN_HEIGHT - CB_HEIGHT)//2) + 10
+	letterOffsety = WIN_HEIGHT - ((WIN_HEIGHT - CB_HEIGHT)//2) - 50
 	for letter in letters:
 		display_text(screen, letter, (255,0,0), 12, letterOffsetx, letterOffsety)
 		letterOffsetx += 64
 
 	numberOffsetx = WIN_WIDTH - ((WIN_WIDTH - CB_WIDTH)//2) + 10
-	numberOffsety = WIN_HEIGHT -  ((WIN_HEIGHT - CB_HEIGHT)//2) - (cellSize//2)
+	numberOffsety = WIN_HEIGHT - (3*(WIN_HEIGHT - CB_HEIGHT)//4) - (cellSize//2)
 	for number in numbers:
 		display_text(screen, str(number), (255,0,0), 12, numberOffsetx, numberOffsety)
 		numberOffsety -= 64
@@ -107,14 +113,16 @@ def init_chessboard(challengerName, gamestate):
 			pg.display.flip()
 
 			# update gamestate of the board (i.e user/opponent makes move)
-			gamestateUpdate = gamestate.update_gamestate()
+			gamestateUpdate = gamestate.update_gamestate(screen)
 			if gamestateUpdate != 'ok':
 				display_gameover(screen, gamestateUpdate)
 				pg.display.flip()
 				time.sleep(10)
 				break
 
+	# terminate gamestream
 	pages.terminate_gamestream()
+	# quit pygame
 	pg.display.quit()
 	pg.quit()
 
@@ -129,6 +137,31 @@ def load_images():
 	for piece in pieces:
 		image = pg.image.load("Engine/chessboard/chessboard_images/" + piece + ".png")
 		images[piece] = pg.transform.scale(image, (cellSize, cellSize))
+
+
+
+""" draw_alertswindow: draw alerts window where alerts will appear
+	params:
+		screen
+	return:
+"""
+def draw_alertswindow(screen):
+	color = pg.Color("light grey")
+	pg.draw.rect(screen, color, pg.Rect(alertwindowOffsetx, alertwindowOffsety, CB_WIDTH, cellSize+30))
+	return
+
+""" display_alert: display alert text in alerts window
+	params:
+	return:
+"""
+def display_alert(screen, message):
+	draw_alertswindow(screen)
+	font = pg.font.Font("freesansbold.ttf", 15)
+	# center the text
+	textSurface = font.render(message, True, pg.Color("black"))
+	textBox = textSurface.get_rect()
+	textBox.center = WIN_WIDTH//2, alertwindowOffsety + 30
+	screen.blit(textSurface, textBox)
 
 
 """ draw_gamestate
@@ -197,11 +230,12 @@ def draw_pieces(screen, gamestate):
 	# pieces on the capture zones
 	for row in range(BUFFER_DIMENSIONSy):
 		for column in range(BUFFER_DIMENSIONSx):
-			whitePiece = gamestate.whiteBuffer[row][column]
+			# draw white pieces
+			whitePiece = gamestate.wBuffer[row][column]
 			if whitePiece != "--":
 				screen.blit(images[whitePiece], (column*cellSize + leftbufferOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
-
-			blackPiece = gamestate.blackBuffer[row][column]
+			# draw black pieces
+			blackPiece = gamestate.bBuffer[row][column]
 			if blackPiece != "--":
 				screen.blit(images[blackPiece], (column*cellSize + rightbufferOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
 
@@ -217,6 +251,7 @@ def draw_pieces(screen, gamestate):
 """
 def display_text(screen, message, color, size, x, y):
 	font = pg.font.Font("freesansbold.ttf", size)
+	# center the text
 	textSurface = font.render(message, True, color)
 	textBox = textSurface.get_rect()
 	textBox.center = x, y
@@ -233,17 +268,17 @@ def display_gameover(screen, reason):
 	screen.fill(pg.Color("white"))
 
 	# game over text
-	if reason == "opponentresign":
-		text = "Opponent has resigned. You have won."
+	if reason == "blackresign":
+		text = "White has resigned. Black has won."
 		color = pg.Color("red")
-	elif reason == "userresign":
-		text = "You have resigned. Opponent has won."
+	elif reason == "whiteresign":
+		text = "Black have resigned. White has won."
 		color = pg.Color("green")
-	elif reason == "opponentcheckmate":
-		text = "Opponent has won by checkmate"
+	elif reason == "whitemate":
+		text = "White has won by checkmate"
 		color = pg.Color("red")
-	elif reason == "usercheckmate":
-		text = "You have won by checkmate."
+	elif reason == "blackmate":
+		text = "Black has won by checkmate."
 		color = pg.Color("green")
 	else:
 		text = "Opponent has aborted the game. You win by default."

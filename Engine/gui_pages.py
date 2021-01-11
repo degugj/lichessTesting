@@ -179,7 +179,7 @@ class ChallengePage(tk.Frame):
                                             text="Return to Main Menu", bgcolor="sky blue")
         returnButton.pack(pady=10)
 
-
+    """ challenge user """
     def challenge(self, controller, username=""):
 
         if username == "":
@@ -212,16 +212,8 @@ class ChallengePage(tk.Frame):
                     except:
                         pass
 
-
                 if accepted:
                     ingame(username, controller)
-
-                    
-                # initialGameStreamProcess = mp.Process(target=initialgame_stream)
-                # initialGameStreamProcess.start()
-            
-                
-
         return
 
 
@@ -325,10 +317,8 @@ def quit_program():
     terminated = True
     if eventstream != None:
         terminate_eventstream()
-        print("TERMINATED EVENT STREAM")
     if gamestream != None:
         terminate_gamestream()
-        print("TERMINATED GAME STREAM")
 
     print("Quit Program")
     exit()
@@ -337,8 +327,12 @@ def terminate_gamestream():
     global gamestream
     gamestream.terminate()
     gamestream.join()
+    print("TERMINATED GAME STREAM")
+    gamestream = None
 
 def terminate_eventstream():
     global eventstream
-    eventstream.terminate
+    eventstream.terminate()
     eventstream.join()
+    print("TERMINATED EVENT STREAM")
+    eventstream = None
