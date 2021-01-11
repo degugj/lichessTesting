@@ -6,6 +6,7 @@ IMPORTS
 import requests, time, json, os
 
 from Engine.lichess import settings
+from Engine import chessboard
 
 """
 -------------------------------
@@ -79,7 +80,6 @@ def challenge_user(username, **kwargs):
 	}
 	try:
 		r = requests.post('https://lichess.org/api/challenge/' + username, json=configurations, headers={'Authorization': 'Bearer {}'.format(api_key)})
-		print(r.content)
 		# check for successful challenge response
 		if r.status_code == 200:
 
@@ -111,16 +111,16 @@ def create_seek():
 	params:
 	return:
 """
-def make_move(move):
+def make_move(move, screen):
 	gameid = open('gameid.txt', 'r')
 	r = requests.post('https://lichess.org/api/board/game/{id}/move/{move}'.format(id=gameid.read(), move=move), headers={'Authorization': 'Bearer {}'.format(api_key)})
 	gameid.close()
 	if r.ok:
-		print(r.content)
+		chessboard.display_alert(screen, "Okay")
 		return 1
 	# error code 400
 	else:
-		print(r.content)
+		chessboard.display_alert(screen, r.content)
 		return 0
 
 
@@ -138,7 +138,6 @@ def leave_game(option):
 	if option == "abort":
 		try:
 			r = request.post('https://lichess.org/api/board/game/{gameId}/abort'.format(gameId=gameid.read()), headers={'Authorization': 'Bearer {}'.format(api_key)})
-			print(r.content)
 			if r.ok:
 				return 1
 			else:
@@ -149,7 +148,6 @@ def leave_game(option):
 	if option == "resign":
 		try:
 			r = request.post('https://lichess.org/api/board/game/{gameId}/resign'.format(gameId=gameid.read()), headers={'Authorization': 'Bearer {}'.format(api_key)})
-			print(r.content)
 			if r.ok:
 				return 0
 			else:
