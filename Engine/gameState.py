@@ -22,7 +22,7 @@ GameState Class
 -------------------------------
 """
 class GameState():
-    def __init__(self, gameQueue):
+    def __init__(self, gameQueue=None):
 
         # set user color (i.e 'w', 'b')
         self.gameQueue = gameQueue

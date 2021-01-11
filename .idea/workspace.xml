@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="8ff659b2-d0f7-4a7e-86dc-2d39cc014c34" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Engine/328p_interface/328p_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/328p_interface/328p_interface.py" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Engine/gui_pages.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2601">
+              <caret line="161" selection-start-line="161" selection-end-line="161" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Engine/lichess/lichessInterface_new.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="18" column="21" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
+              <folding>
+                <element signature="e#80#111#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gui_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1445">
+              <caret line="88" column="25" selection-start-line="88" selection-start-column="25" selection-end-line="88" selection-end-column="25" />
+              <folding>
+                <element signature="e#80#100#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Engine/gameState.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="391">
+              <caret line="24" selection-start-line="24" selection-end-line="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Engine/Communication_Testing/i2ctest.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Engine/328p_interface/328p_interface_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="10" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Engine/328p_interface/328p_interface.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="73">
+              <caret line="292" lean-forward="true" selection-start-line="292" selection-end-line="292" />
+              <folding>
+                <element signature="e#134#145#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>buff</find>
+    </findStrings>
+    <dirStrings>
+      <dir>C:\Users\jackd\PycharmProjects\lichessTesting\Engine</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="UPDATE_TYPE" value="MERGE" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/GUI/gui_pages.py" />
+        <option value="$PROJECT_DIR$/lichessStream.py" />
+        <option value="$PROJECT_DIR$/lichessInterface.py" />
+        <option value="$PROJECT_DIR$/magiChess.py" />
+        <option value="$PROJECT_DIR$/gameState.py" />
+        <option value="$PROJECT_DIR$/piecePosition.py" />
+        <option value="$PROJECT_DIR$/Engine/chessboard/chessboard.py" />
+        <option value="$PROJECT_DIR$/Engine/chessboard/gameState.py" />
+        <option value="$PROJECT_DIR$/Engine/stream_processes.py" />
+        <option value="$PROJECT_DIR$/gui_test.py" />
+        <option value="$PROJECT_DIR$/Engine/Jack_Testing/test.py" />
+        <option value="$PROJECT_DIR$/Engine/lichess/lichessStream.py" />
+        <option value="$PROJECT_DIR$/Engine/lichess/lichessInterface_new.py" />
+        <option value="$PROJECT_DIR$/test_jack.py" />
+        <option value="$PROJECT_DIR$/Engine/lichess/settings.py" />
+        <option value="$PROJECT_DIR$/gameStream.py" />
+        <option value="$PROJECT_DIR$/Engine/gui_pages.py" />
+        <option value="$PROJECT_DIR$/Engine/328P_Interface/328p_interface.py" />
+        <option value="$PROJECT_DIR$/Engine/328p_interface/328p_unit_test.py" />
+        <option value="$PROJECT_DIR$/Engine/gameState.py" />
+        <option value="$PROJECT_DIR$/arduino/readme.txt" />
+        <option value="$PROJECT_DIR$/Engine/328p_interface/328p_interface_test.py" />
+        <option value="$PROJECT_DIR$/Engine/328p_interface/328p_interface.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-12" />
+    <option name="width" value="1390" />
+    <option name="height" value="1754" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="lichessTesting" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lichessTesting" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lichessTesting" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lichessTesting" type="462c0819:PsiDirectoryNode" />
+              <item name="arduino" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lichessTesting" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lichessTesting" type="462c0819:PsiDirectoryNode" />
+              <item name="Engine" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lichessTesting" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lichessTesting" type="462c0819:PsiDirectoryNode" />
+              <item name="Engine" type="462c0819:PsiDirectoryNode" />
+              <item name="Communication_Testing" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="full.screen.before.presentation.mode" value="false" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/383homework5" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jackd\PycharmProjects\lichessTesting\Engine\Communication_Testing" />
+      <recent name="C:\Users\jackd\PycharmProjects\lichessTesting\arduino" />
+      <recent name="C:\Users\jackd\PycharmProjects\lichessTesting" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python.328p_interface_test">
+    <configuration name="328p_interface_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="lichessTesting" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Engine/328p_interface" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Engine/328p_interface/328p_interface_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="gameStream" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="lichessTesting" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/gameStream.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="magiChess" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="lichessTesting" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Engine" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Engine/magiChess.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="lichessTesting" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Engine/Jack_Testing" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Engine/Jack_Testing/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_jack" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="lichessTesting" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_jack.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.328p_interface_test" />
+        <item itemvalue="Python.gameStream" />
+        <item itemvalue="Python.test_jack" />
+        <item itemvalue="Python.test" />
+        <item itemvalue="Python.magiChess" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8ff659b2-d0f7-4a7e-86dc-2d39cc014c34" name="Default Changelist" comment="" />
+      <created>1601848978566</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1601848978566</updated>
+    </task>
+    <task id="LOCAL-00001" summary="testing git vcs">
+      <created>1601849117467</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1601849117467</updated>
+    </task>
+    <task id="LOCAL-00002" summary="testing git vcs">
+      <created>1602650198546</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1602650198546</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Implemented move function for local gamestate. Fixed orientation of the board (Row 1 is white)">
+      <created>1602740839027</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1602740839028</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Implemented move function for local gamestate. Fixed orientation of the board (Row 1 is white)">
+      <created>1604292130051</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1604292130051</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Working on Astar and interface with 328p. Test will not work without modification to gamestate class (talk to Jack)">
+      <created>1604345678138</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1604345678138</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Added argument to make_physical_move()">
+      <created>1604346068629</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1604346068629</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Created function to visualize position map. Translated 8x8 gamestate to map without buffer zones for now. Next step is heuristic map and astar implementation. Will upload outputs to drive.">
+      <created>1604356015230</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1604356015230</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Fixes to print position map. Implemented a successful heuristic (using straight line distance). Now we can implement astar for game board pathplanning.">
+      <created>1604446502548</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1604446502548</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Can reach goal state. Working on returning solution path.">
+      <created>1604645915675</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1604645915675</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Implemented move function for local gamestate. Fixed orientation of the board (Row 1 is white)">
+      <created>1604876387102</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1604876387103</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Implemented move function for local gamestate. Fixed orientation of the board (Row 1 is white)">
+      <created>1605072520212</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1605072520212</updated>
+    </task>
+    <task id="LOCAL-00012" summary="New dir for Sam and Sai's arduino code">
+      <created>1605302716426</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1605302716426</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Updated outputs for MDR">
+      <created>1605332708516</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1605332708516</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Implemented move function for local gamestate. Fixed orientation of the board (Row 1 is white)">
+      <created>1605399572597</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1605399572597</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Updates to position map (removed leftmost and rightmost columns). Time to work on supporting the UART protocol.">
+      <created>1607551086807</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1607551086807</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Skeleton code for path transmission using custom UART protocol">
+      <created>1607554697245</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1607554697245</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Message encodings for UART protocol complete. I have to implement them with a full path. Then I can work on using the pi to see if we can transmit this info to 328p.">
+      <created>1607574804704</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1607574804704</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Encodings ready for transmission. I used Sai's document example, but I'm going to do some unit testing to confirm robustness of the PosMap and new code.">
+      <created>1607577646192</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1607577646192</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-6" y="0" width="695" height="877" extended-state="0" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" weight="0.36157337" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" order="0" />
+      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="Find" order="2" weight="0.328877" />
+      <window_info anchor="bottom" x="102" y="380" width="1163" height="111" id="Run" maximized="true" order="3" sideWeight="0.49740162" weight="0.46256685" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.3994709" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.4988864" weight="0.32804233" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.37169313" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50259835" side_tool="true" weight="0.35185185" />
+      <window_info anchor="bottom" id="Python Console" order="11" weight="0.32804233" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="testing git vcs" />
+    <MESSAGE value="Working on Astar and interface with 328p. Test will not work without modification to gamestate class (talk to Jack)" />
+    <MESSAGE value="Added argument to make_physical_move()" />
+    <MESSAGE value="Created function to visualize position map. Translated 8x8 gamestate to map without buffer zones for now. Next step is heuristic map and astar implementation. Will upload outputs to drive." />
+    <MESSAGE value="Fixes to print position map. Implemented a successful heuristic (using straight line distance). Now we can implement astar for game board pathplanning." />
+    <MESSAGE value="Can reach goal state. Working on returning solution path." />
+    <MESSAGE value="New dir for Sam and Sai's arduino code" />
+    <MESSAGE value="Updated outputs for MDR" />
+    <MESSAGE value="Implemented move function for local gamestate. Fixed orientation of the board (Row 1 is white)" />
+    <MESSAGE value="Updates to position map (removed leftmost and rightmost columns). Time to work on supporting the UART protocol." />
+    <MESSAGE value="Skeleton code for path transmission using custom UART protocol" />
+    <MESSAGE value="Message encodings for UART protocol complete. I have to implement them with a full path. Then I can work on using the pi to see if we can transmit this info to 328p." />
+    <MESSAGE value="Encodings ready for transmission. I used Sai's document example, but I'm going to do some unit testing to confirm robustness of the PosMap and new code." />
+    <option name="LAST_COMMIT_MESSAGE" value="Encodings ready for transmission. I used Sai's document example, but I'm going to do some unit testing to confirm robustness of the PosMap and new code." />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/chessPiece.py" />
+    <entry file="file://$PROJECT_DIR$/GUI/icon.gif" />
+    <entry file="file://$PROJECT_DIR$/GUI/gui_test.py" />
+    <entry file="file://$PROJECT_DIR$/gameid.txt" />
+    <entry file="file://$PROJECT_DIR$/lichessInterface.py" />
+    <entry file="file://$PROJECT_DIR$/magiChess.py" />
+    <entry file="file://$PROJECT_DIR$/lichessInterface_new.py" />
+    <entry file="file://$PROJECT_DIR$/GUI/gui_pages.py" />
+    <entry file="file://$PROJECT_DIR$/lichessStream.py" />
+    <entry file="file://$PROJECT_DIR$/settings.py" />
+    <entry file="file://$PROJECT_DIR$/GUI/gui_widgets.py" />
+    <entry file="file://$PROJECT_DIR$/config.txt" />
+    <entry file="file://$PROJECT_DIR$/gameState.py" />
+    <entry file="file://$PROJECT_DIR$/piecePosition.py" />
+    <entry file="file://D:/Users/gugs5/AppData/Local/Programs/Python/Python37-32/Lib/tkinter/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="1277" column="8" selection-start-line="1277" selection-start-column="8" selection-end-line="1277" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/Jack_Testing/test.py" />
+    <entry file="file://$PROJECT_DIR$/Engine/config.txt" />
+    <entry file="file://$PROJECT_DIR$/Engine/stream_processes.py" />
+    <entry file="file://$PROJECT_DIR$/test_jack.py" />
+    <entry file="file://D:/Users/gugs5/AppData/Local/Programs/Python/Python37-32/Lib/multiprocessing/spawn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="114" selection-start-line="114" selection-end-line="114" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameStream.py" />
+    <entry file="file://$PROJECT_DIR$/Engine/lichess/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="27" selection-start-line="1" selection-start-column="27" selection-end-line="1" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/GUI/gui_widgets.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/magiChess.py" />
+    <entry file="file://$PROJECT_DIR$/Engine/chessboard/chessboard.py" />
+    <entry file="file://$PROJECT_DIR$/Engine/lichess/lichessInterface.py" />
+    <entry file="file://$PROJECT_DIR$/Engine/lichess/lichessStream.py" />
+    <entry file="file://$PROJECT_DIR$/Engine/chessboard/gameState.py" />
+    <entry file="file://$PROJECT_DIR$/Engine/chessboard/chessPiece.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arduino/Preview attachment i2ctest.py [Text] 1 KB.URL" />
+    <entry file="file://$PROJECT_DIR$/arduino/MDR_TestBench_Demo.ino">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arduino/MDR_Gantry_Demo.ino">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arduino/readme.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/gui_pages.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2601">
+          <caret line="161" selection-start-line="161" selection-end-line="161" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/lichess/lichessInterface_new.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="18" column="21" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
+          <folding>
+            <element signature="e#80#111#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gui_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1445">
+          <caret line="88" column="25" selection-start-line="88" selection-start-column="25" selection-end-line="88" selection-end-column="25" />
+          <folding>
+            <element signature="e#80#100#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/gameState.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/Communication_Testing/i2ctest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/328p_interface/328p_interface_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="10" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/328p_interface/328p_interface.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="73">
+          <caret line="292" lean-forward="true" selection-start-line="292" selection-end-line="292" />
+          <folding>
+            <element signature="e#134#145#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
