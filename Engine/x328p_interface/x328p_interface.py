@@ -8,6 +8,7 @@ import serial
 import time
 import sys
 letterToColumn = {'a':5, 'b':7,'c':9,'d':11,'e':13,'f':15,'g':17,'h':19}  # To translate cell to posMap location
+pieceToBuffer = {'wP':[15,0], 'bP': [15, 24], 'bP': [15, 22]}
 # easy translation from number to row ((number * 2) + 1)
 ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 
@@ -301,6 +302,7 @@ def find_message_type(message):
 # Receive message from 328P via UART
 def recv_from_328p(messageType, timeout):
     print("\nWaiting for message:", messageType)
+
     while True:
         time.sleep(0.03)
         ser.flush()
@@ -357,12 +359,12 @@ def recv_from_328p(messageType, timeout):
 def send_to_328p(data):
     ser.flush()
     print("Message sent (" + hex(data)+")")
-    #while True:
-    #    received_data = ser.read()  # read serial port
-    #    sleep(0.03)
-    #    data_left = ser.inWaiting()  # check for remaining byte
-    #    received_data += ser.read(data_left)
-        #print("Sent Data: ",format(data, '#010b'))  # print received data
+    while True:
+        received_data = ser.read()  # read serial port
+        sleep(0.03)
+        data_left = ser.inWaiting()  # check for remaining byte
+        received_data += ser.read(data_left)
+        print("Sent Data: ",format(data, '#010b'))  # print received data
     ser.write(data.to_bytes(1, 'little'))  # transmit data serially
 
     
@@ -394,24 +396,42 @@ def print_posMap(map, path=None):
 
 
 # External function used to interface with GUI and game execution. Takes current gamestate and string move (ie 'e4e5')
-def make_physical_move(gamestate, move, capturedPiece=None):
+def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     # TODO Extract and interpret move as start and end pos
     posMap = gamestate_to_position_map(gamestate)  # convert 8x8 to position map
+
     # print("Move: ", move)
     # print("Position State: ")
 
 
     # print('')
     startPos = [0,0]
-    startPos[0] = (int(move[1]) * 2) - 1
-    startPos[1] = letterToColumn[move[0]]
-    # print("Start Node: ", startPos, "(Cell: " + move[0:2] +")")
-    # print("start: ", str(startPos))
     endPos = [0, 0]
-    endPos[0] = (int(move[3:len(move)]) * 2) - 1
-    # print(move[3:len(move)])
-    endPos[1] = letterToColumn[move[2]]
-    # print(endPos[1])
+    if move is not None:
+        startPos[0] = (int(move[1]) * 2) - 1
+        startPos[1] = letterToColumn[move[0]]
+        # print("Start Node: ", startPos, "(Cell: " + move[0:2] +")")
+        # print("start: ", str(startPos))
+
+        endPos[0] = (int(move[3:len(move)]) * 2) - 1
+        # print(move[3:len(move)])
+        endPos[1] = letterToColumn[move[2]]
+    else:
+        startPos = startOverride
+        endPos = destOveride
+
+    destNode = posMap[endPos[0]][endPos[1]]
+
+    if destNode.state != '. ':
+        print("Moving Captured piece to buffer zone")
+        capturedPos = destNode.pos
+        #bufferPos = pieceToBuffer[destNode.state]
+        if destNode.state[0] == 'b':
+            bufferPos = [8,23]
+        else:
+            bufferPos = [8,0]
+        make_physical_move(gamestate, None, capturedPos, bufferPos)
+
     # print("Goal Node: ", endPos, "(Cell: " + move[2:4] +")")
 
     heurMap = create_heuristic_map(posMap, endPos)
@@ -426,7 +446,7 @@ def make_physical_move(gamestate, move, capturedPiece=None):
     print_posMap(heurMap, solution)
     #print("\nAfter Straightline Path Compression: ")
     #print_posMap(heurMap, sl_compression(solution))
-    
+
     # time.sleep(5)
     # for i in range(len(solution)):
     #     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
@@ -440,7 +460,7 @@ def make_physical_move(gamestate, move, capturedPiece=None):
     # print("Sending path via UART...")
     # send_to_328p(solution)
     transmit_path(sl_compression(solution))
-    
+
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
     # TODO Call find_astar_path() using the arguments obtained above
