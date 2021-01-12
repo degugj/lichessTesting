@@ -77,7 +77,7 @@ MAIN
 """
 def main():
     
-    if 0:
+    if 1:
         pages.test()
     else:
         #GUI window
