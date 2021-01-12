@@ -153,6 +153,10 @@ class GameState():
                 # check if castling; returns corresponding rook move if castling
                 rookMove = self.castling(startpiece, move)
                 if rookMove != '':
+                    # update gamestate after king's move/before rook's move
+                    self.board[startcell_x][startcell_y] = "--"
+                    self.board[destcell_x][destcell_y] = startpiece
+                    # move the rook
                     self.move_piece(rookMove, castling=True)
                     return
 
