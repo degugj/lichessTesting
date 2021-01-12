@@ -77,19 +77,22 @@ MAIN
 """
 def main():
     
-    #GUI window
-    mainWindow = MainApp()
-    mainWindow.title("MagiChess")
-    mainWindow.geometry(f"{WIDTH}x{HEIGHT}")   #main window dimensions
+    if 0:
+        pages.test()
+    else:
+        #GUI window
+        mainWindow = MainApp()
+        mainWindow.title("MagiChess")
+        mainWindow.geometry(f"{WIDTH}x{HEIGHT}")   #main window dimensions
 
-    # map closing 'window closing' event to quit_program function
-    mainWindow.protocol("WM_DELETE_WINDOW", pages.quit_program)
 
-    # program will terminate and close GUI if no loop (terminal only)
-    mainWindow.mainloop()
+        # map closing 'window closing' event to quit_program function
+        mainWindow.protocol("WM_DELETE_WINDOW", pages.quit_program)
+
+        # program will terminate and close GUI if no loop (terminal only)
+        mainWindow.mainloop()
 
 
 if __name__ == '__main__':
     main();
-
 

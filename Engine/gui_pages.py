@@ -278,7 +278,6 @@ def event_stream(eventQueue):
 
 
 
-
 """ game_stream: seperate process for game stream
     params:
     return:
@@ -304,6 +303,43 @@ def game_stream(gameQueue):
                 gameQueue.put_nowait(event)
  
     return
+
+
+def test():
+
+
+    # create and start an event stream process
+    global eventstream
+    eventstream = mp.Process(target = event_stream, args = (eventQueue,))
+    eventstream.start()
+    print("EVENT STREAM PID: ", eventstream.pid)
+
+    gameid = interface.challenge_user('wayli2')
+
+    if not gameid:
+        print("Unable to complete challenge")
+    else:
+
+        interface.change_gameid(gameid)
+
+        # wait until challenger accepts or declines challenge
+        accepted = False
+        while not accepted:
+            try:
+                event = eventQueue.get_nowait()
+                if event["type"] == "gameStart":
+                    if event["game"]["id"] == gameid:
+                        print("game accepted")
+                        accepted = True
+
+                if event["type"] == "challengeDeclined":
+                    print("Challenge declined by: ", "username")
+                    break
+            except:
+                pass
+
+        if accepted:
+            ingame("username", None)
 
 
 
