@@ -121,8 +121,9 @@ class GameState():
     """ make a move on local gamestate """
     def move_piece(self, move, castling = False):
 
-        # return: '1' = ok, '0' = wrong scan, '-1' = hardware error 
-        gantry_interface.make_physical_move(self, move)
+        # return: '1' = ok, '0' = wrong scan, '-1' = hardware error
+        if !self.userMove:
+            gantry_interface.make_physical_move(self, move)
 
         # length of move string (normally 4, pawn promotion 5)
         moveLength = len(move)
@@ -311,6 +312,7 @@ class GameState():
             # make move on local gamestate board
             self.move_piece(move)
 
+            self.userMove = False
             return "ok"
 
         # opponent's move
@@ -355,7 +357,6 @@ class GameState():
         # send move to LiChess server
         valid = interface.make_move(move, screen)
         if valid:
-            self.userMove = False
             return move
 
 
