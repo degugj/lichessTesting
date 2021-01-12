@@ -283,7 +283,7 @@ def transmit_path(path):
         send_to_328p(message_encode(node.pos[0], "GO"))
         #print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
         recv_from_328p("ARRIVED", 10)
-        time.sleep(5)
+        #time.sleep(1)
     # EM OFF
     #print("EM Message: ",format(message_encode(0b00000,"EM"), '#010b'))
     send_to_328p(message_encode(0b00000,"EM"))
