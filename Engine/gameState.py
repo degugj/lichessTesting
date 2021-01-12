@@ -1,4 +1,4 @@
-# Weishan Li
+ # Weishan Li
 # Jack DeGuglielmo
 # September 2020
 # Description: GameState class for storing the local state of the chess board
@@ -153,6 +153,7 @@ class GameState():
                 rookMove = self.castling(startpiece, move)
                 if rookMove != '':
                     self.move_piece(rookMove, castling=True)
+                    return
 
             # check for promotion
             if moveLength == 5:
