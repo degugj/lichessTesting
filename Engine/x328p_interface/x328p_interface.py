@@ -283,7 +283,7 @@ def transmit_path(path):
         send_to_328p(message_encode(node.pos[0], "GO"))
         #print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
         recv_from_328p("ARRIVED", 10)
-        time.sleep(5)
+        #time.sleep(1)
     # EM OFF
     #print("EM Message: ",format(message_encode(0b00000,"EM"), '#010b'))
     send_to_328p(message_encode(0b00000,"EM"))
@@ -359,12 +359,12 @@ def recv_from_328p(messageType, timeout):
 def send_to_328p(data):
     ser.flush()
     print("Message sent (" + hex(data)+")")
-    while True:
-        received_data = ser.read()  # read serial port
-        sleep(0.03)
-        data_left = ser.inWaiting()  # check for remaining byte
-        received_data += ser.read(data_left)
-        print("Sent Data: ",format(data, '#010b'))  # print received data
+    #while True:
+        #received_data = ser.read()  # read serial port
+        #time.sleep(0.03)
+        #data_left = ser.inWaiting()  # check for remaining byte
+        #received_data += ser.read(data_left)
+        #print("Sent Data: ",format(data, '#010b'))  # print received data
     ser.write(data.to_bytes(1, 'little'))  # transmit data serially
 
     

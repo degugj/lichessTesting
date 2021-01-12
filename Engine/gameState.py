@@ -13,9 +13,9 @@ import time
 from Engine import chessboard
 
 from Engine.lichess import lichessInterface_new as interface
-from Engine.mcu_interfaces import fastScan_interface as fastScan
+#from Engine.mcu_interfaces import fastScan_interface as fastScan
 
-#from Engine.x328p_interface import x328p_interface as gantry_interface
+from Engine.x328p_interface import x328p_interface as gantry_interface
 
 """
 -------------------------------
@@ -27,6 +27,7 @@ class GameState():
 
         # set user color (i.e 'w', 'b')
         self.gameQueue = gameQueue
+
         if self.gameQueue.get()["white"]["id"] == 'degugbot':
             self.userColor = 'w'
         else:
@@ -121,7 +122,7 @@ class GameState():
     def move_piece(self, move, castling = False):
 
         # return: '1' = ok, '0' = wrong scan, '-1' = hardware error 
-        #gantry_interface.make_physical_move(self, move)
+        gantry_interface.make_physical_move(self, move)
 
         # length of move string (normally 4, pawn promotion 5)
         moveLength = len(move)
