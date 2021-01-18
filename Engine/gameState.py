@@ -15,7 +15,7 @@ from Engine import chessboard
 from Engine.lichess import lichessInterface_new as interface
 #from Engine.mcu_interfaces import fastScan_interface as fastScan
 
-from Engine.x328p_interface import x328p_interface as gantry_interface
+#from Engine.x328p_interface import x328p_interface as gantry_interface
 
 """
 -------------------------------
@@ -122,8 +122,8 @@ class GameState():
     def move_piece(self, move, castling = False):
 
         # return: '1' = ok, '0' = wrong scan, '-1' = hardware error
-        if not self.userMove:
-            gantry_interface.make_physical_move(self, move)
+        #if not self.userMove:
+            #gantry_interface.make_physical_move(self, move)
 
         # length of move string (normally 4, pawn promotion 5)
         moveLength = len(move)
@@ -165,7 +165,7 @@ class GameState():
             if moveLength == 5:
                 startpiece = self.promotion(startpiece, move)
 
-            
+
         self.board[startcell_x][startcell_y] = "--"
         self.board[destcell_x][destcell_y] = startpiece
 
@@ -309,8 +309,9 @@ class GameState():
             chessboard.display_alert(screen, "User's Turn")
             move = self.get_usermove(screen)
 
-            # make move on local gamestate board
-            self.move_piece(move)
+            if move:
+                # make move on local gamestate board
+                self.move_piece(move)
 
             self.userMove = False
             return "ok"
@@ -343,16 +344,19 @@ class GameState():
         move = input("User's turn - Enter Move: ")
 
         # check for pawn move and promotion
-        piece = self.board[self.number_to_x[move[1]]][self.letter_to_y[move[0]]]
-        if piece[1] == 'P' and (move[3] == '1' or move[3] == '8'):
-            while 1:
-                # prompt user for promotion piece
-                inputPiece = input("Promotion piece; bishop(b), knight(n), rook(r), queen(q): ")
-                if inputPiece == 'b' or inputPiece == 'k' or inputPiece == 'r' or inputPiece == 'q':
-                    break
-                chessboard.display_alert(screen, "Invalid promotion piece argument")
-            # append promotion piece to move
-            move += inputPiece
+        try:
+            piece = self.board[self.number_to_x[move[1]]][self.letter_to_y[move[0]]]
+            if piece[1] == 'P' and (move[3] == '1' or move[3] == '8'):
+                while 1:
+                    # prompt user for promotion piece
+                    inputPiece = input("Promotion piece; bishop(b), knight(n), rook(r), queen(q): ")
+                    if inputPiece == 'b' or inputPiece == 'k' or inputPiece == 'r' or inputPiece == 'q':
+                        break
+                    chessboard.display_alert(screen, "Invalid promotion piece argument")
+                # append promotion piece to move
+                move += inputPiece
+        except:
+            pass
 
         # send move to LiChess server
         valid = interface.make_move(move, screen)
