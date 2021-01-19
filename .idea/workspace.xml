@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8ff659b2-d0f7-4a7e-86dc-2d39cc014c34" name="Default Changelist" comment="Removing time.sleep">
+    <list default="true" id="8ff659b2-d0f7-4a7e-86dc-2d39cc014c34" name="Default Changelist" comment="Removing sleep delay for EM for demo.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/gameState.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/gameState.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/x328p_interface_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/x328p_interface_test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,8 +18,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Engine/gui_pages.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="424">
-              <caret line="161" selection-start-line="161" selection-end-line="161" />
+            <state relative-caret-position="342">
+              <caret line="144" column="31" lean-forward="true" selection-start-line="144" selection-start-column="31" selection-end-line="144" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -25,7 +27,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Engine/lichess/lichessInterface_new.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
+            <state relative-caret-position="272">
               <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
               <folding>
                 <element signature="e#80#111#0" expanded="true" />
@@ -37,7 +39,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gui_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="118">
+            <state relative-caret-position="1258">
               <caret line="77" column="11" lean-forward="true" selection-start-line="77" selection-start-column="11" selection-end-line="77" selection-end-column="11" />
               <folding>
                 <element signature="e#80#100#0" expanded="true" />
@@ -49,11 +51,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Engine/gameState.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
-              <folding>
-                <element signature="e#208#219#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-51">
+              <caret line="28" column="34" lean-forward="true" selection-start-line="28" selection-start-column="34" selection-end-line="28" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -70,8 +69,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="274">
-              <caret line="285" column="9" selection-start-line="285" selection-start-column="9" selection-end-line="285" selection-end-column="9" />
+            <state relative-caret-position="286">
+              <caret line="393" column="63" selection-start-line="393" selection-start-column="63" selection-end-line="393" selection-end-column="63" />
               <folding>
                 <element signature="e#134#145#0" expanded="true" />
               </folding>
@@ -82,8 +81,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/x328p_interface_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="13" lean-forward="true" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+            <state relative-caret-position="340">
+              <caret line="20" column="35" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
               <folding>
                 <element signature="e#161#177#0" expanded="true" />
               </folding>
@@ -130,16 +129,16 @@
         <option value="$PROJECT_DIR$/test_jack.py" />
         <option value="$PROJECT_DIR$/Engine/lichess/settings.py" />
         <option value="$PROJECT_DIR$/gameStream.py" />
-        <option value="$PROJECT_DIR$/Engine/gui_pages.py" />
         <option value="$PROJECT_DIR$/Engine/328P_Interface/328p_interface.py" />
         <option value="$PROJECT_DIR$/Engine/328p_interface/328p_unit_test.py" />
         <option value="$PROJECT_DIR$/arduino/readme.txt" />
         <option value="$PROJECT_DIR$/Engine/328p_interface/328p_interface_test.py" />
         <option value="$PROJECT_DIR$/Engine/328p_interface/328p_interface.py" />
         <option value="$PROJECT_DIR$/Engine/x328p_interface_test.py" />
-        <option value="$PROJECT_DIR$/x328p_interface_test.py" />
         <option value="$PROJECT_DIR$/gui_test.py" />
         <option value="$PROJECT_DIR$/Engine/gameState.py" />
+        <option value="$PROJECT_DIR$/Engine/gui_pages.py" />
+        <option value="$PROJECT_DIR$/x328p_interface_test.py" />
         <option value="$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py" />
       </list>
     </option>
@@ -512,27 +511,34 @@
       <option name="project" value="LOCAL" />
       <updated>1610484601280</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Removing sleep delay for EM for demo.">
+      <created>1610484991314</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1610484991314</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1381" height="885" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21232368" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21232368" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Messages" order="0" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.32804233" />
-      <window_info anchor="bottom" x="102" y="380" width="1163" height="111" id="Run" maximized="true" order="3" sideWeight="0.49740162" weight="0.4616402" />
+      <window_info active="true" anchor="bottom" x="102" y="380" width="1163" height="111" id="Run" maximized="true" order="3" sideWeight="0.49740162" visible="true" weight="0.29232803" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.3994709" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="7" />
-      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.4988864" visible="true" weight="0.33068782" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49814403" weight="0.33068782" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.20634921" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50259835" side_tool="true" weight="0.35185185" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50185597" side_tool="true" weight="0.33068782" />
       <window_info anchor="bottom" id="Python Console" order="11" weight="0.32804233" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -570,7 +576,8 @@
     <MESSAGE value="Removed old interface file" />
     <MESSAGE value="Adding test file back and code for buffer demo." />
     <MESSAGE value="Modifying files to work with Pi and gantry test" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modifying files to work with Pi and gantry test" />
+    <MESSAGE value="Removing sleep delay for EM for demo." />
+    <option name="LAST_COMMIT_MESSAGE" value="Removing sleep delay for EM for demo." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/chessPiece.py" />
@@ -640,43 +647,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Engine/328p_interface/328p_interface_test.py" />
     <entry file="file://$PROJECT_DIR$/328p_interface_test.py" />
-    <entry file="file://$PROJECT_DIR$/Engine/Communication_Testing/i2ctest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/x328p_interface_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="13" lean-forward="true" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-          <folding>
-            <element signature="e#161#177#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/gui_pages.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="161" selection-start-line="161" selection-end-line="161" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/lichess/lichessInterface_new.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
-          <folding>
-            <element signature="e#80#111#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gui_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
+        <state relative-caret-position="1258">
           <caret line="77" column="11" lean-forward="true" selection-start-line="77" selection-start-column="11" selection-end-line="77" selection-end-column="11" />
           <folding>
             <element signature="e#80#100#0" expanded="true" />
@@ -684,20 +657,51 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/gameState.py">
+    <entry file="file://$PROJECT_DIR$/Engine/Communication_Testing/i2ctest.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
-          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/lichess/lichessInterface_new.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
           <folding>
-            <element signature="e#208#219#0" expanded="true" />
+            <element signature="e#80#111#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/gui_pages.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="144" column="31" lean-forward="true" selection-start-line="144" selection-start-column="31" selection-end-line="144" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/gameState.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-51">
+          <caret line="28" column="34" lean-forward="true" selection-start-line="28" selection-start-column="34" selection-end-line="28" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/x328p_interface_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="35" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
+          <folding>
+            <element signature="e#161#177#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="274">
-          <caret line="285" column="9" selection-start-line="285" selection-start-column="9" selection-end-line="285" selection-end-column="9" />
+        <state relative-caret-position="286">
+          <caret line="393" column="63" selection-start-line="393" selection-start-column="63" selection-end-line="393" selection-end-column="63" />
           <folding>
             <element signature="e#134#145#0" expanded="true" />
           </folding>
