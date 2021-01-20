@@ -461,11 +461,11 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     destNode = posMap[endPos[0]][endPos[1]]
 
     if destNode.state != '. ':
-        print("Moving Captured piece to buffer zone")
+        #print("Moving Captured piece to buffer zone")
         capturedPos = destNode.pos
         #bufferPos = pieceToBuffer[destNode.state]
         bufferPos = next_buffer_pos(gamestate, destNode.state)
-        print(bufferPos)
+        #print(bufferPos)
         if destNode.state[0] == 'b':
             bufferPosMap = [(15 - (bufferPos[0] * 2)), (bufferPos[1] * 2) + 22]
         else:
@@ -480,8 +480,8 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
 
     solution = greedy(heurMap, heurMap[startPos[0]][startPos[1]])
     # print("Path: ")
-    print("Initial Position Map: ")
-    print_posMap(posMap)
+    #print("Initial Position Map: ")
+    #print_posMap(posMap)
     # print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
     print("\nBefore Straightline Path Compression: ")
     print_posMap(heurMap, solution)
