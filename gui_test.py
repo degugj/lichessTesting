@@ -4,6 +4,7 @@ IMPORTS
 -------------------------------
 """
 import tkinter as tk
+import signal, os
 
 from Engine.GUI import gui_widgets as widgets
 from Engine import gui_pages as pages
@@ -16,6 +17,7 @@ VARIABLES AND DEFINITIONS
 # width and height of gui window
 WIDTH = 600
 HEIGHT = 400
+
 
 """
 -------------------------------
@@ -77,7 +79,7 @@ MAIN
 """
 def main():
     
-    if 1:
+    if 0:
         pages.test()
     else:
         #GUI window
@@ -90,8 +92,11 @@ def main():
         mainWindow.protocol("WM_DELETE_WINDOW", pages.quit_program)
 
         # program will terminate and close GUI if no loop (terminal only)
+        mainWindow.after(50, lambda: check(mainWindow))
         mainWindow.mainloop()
 
+def check(mainWindow):
+    mainWindow.after(50, lambda: check(mainWindow))
 
 if __name__ == '__main__':
     main();

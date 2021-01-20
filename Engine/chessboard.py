@@ -64,37 +64,15 @@ def init_chessboard(challengerName, gamestate):
 	# load chesspiece images into dictionary
 	load_images()
 
-	# draw Alerts window
-	draw_alertswindow(screen)
-
 	# on-screen text
-	leftbuffertextOffset = 	(WIN_WIDTH - CB_WIDTH) // 4
-	rightbuffertextOffset =  WIN_WIDTH - leftbuffertextOffset
-	display_text(screen, "Currently Playing: " + challengerName, (0,0,0), 20, WIN_WIDTH // 2, 40)
-	display_text(screen, "White Capture Buffer", (0,0,0), 15, leftbuffertextOffset, ychessboardOffset-25)
-	display_text(screen, "Black Capture Buffer", (0,0,0), 15, rightbuffertextOffset, ychessboardOffset-25)
+	draw_gametext(screen, challengerName, gamestate)
 
+	# draw buttons
+	draw_buttons(screen)
 
-	# letter and number chess gridding
-	letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-	numbers = list(range(1,9))
-	if gamestate.get_usercolor() == 'b':
-		letters = letters[::-1]
-		numbers = numbers[::-1]
-	
-
-	letterOffsetx = ((WIN_WIDTH - CB_WIDTH)//2) + (cellSize//2)
-	letterOffsety = WIN_HEIGHT - ((WIN_HEIGHT - CB_HEIGHT)//2) - 50
-	for letter in letters:
-		display_text(screen, letter, (255,0,0), 12, letterOffsetx, letterOffsety)
-		letterOffsetx += 64
-
-	numberOffsetx = WIN_WIDTH - ((WIN_WIDTH - CB_WIDTH)//2) + 10
-	numberOffsety = WIN_HEIGHT - (3*(WIN_HEIGHT - CB_HEIGHT)//4) - (cellSize//2)
-	for number in numbers:
-		display_text(screen, str(number), (255,0,0), 12, numberOffsetx, numberOffsety)
-		numberOffsety -= 64
-
+	# draw section for alerts
+	color = pg.Color("light grey")
+	pg.draw.rect(screen, color, pg.Rect(alertwindowOffsetx, alertwindowOffsety, CB_WIDTH, cellSize+30))
 
 	# always run until quit event
 	run = draw = True
@@ -138,35 +116,70 @@ def load_images():
 		image = pg.image.load("Engine/chessboard/chessboard_images/" + piece + ".png")
 		images[piece] = pg.transform.scale(image, (cellSize, cellSize))
 
+	return
 
 
-""" draw_alertswindow: draw alerts window where alerts will appear
-	params:
-		screen
+""" draw_gametext: draws the game text onto window
+	params: screen (pygame screen), challengerName (name of opponent), gamestate (local gamestate of board)
 	return:
 """
-def draw_alertswindow(screen):
-	color = pg.Color("light grey")
-	pg.draw.rect(screen, color, pg.Rect(alertwindowOffsetx, alertwindowOffsety, CB_WIDTH, cellSize+30))
+def draw_gametext(screen, challengerName, gamestate):
+	# draw headings
+	leftbuffertextOffset = 	(WIN_WIDTH - CB_WIDTH) // 4
+	rightbuffertextOffset =  WIN_WIDTH - leftbuffertextOffset
+	display_text(screen, "Currently Playing: " + challengerName, (0,0,0), 20, WIN_WIDTH // 2, 40)
+	display_text(screen, "White Capture Buffer", (0,0,0), 15, leftbuffertextOffset, ychessboardOffset-25)
+	display_text(screen, "Black Capture Buffer", (0,0,0), 15, rightbuffertextOffset, ychessboardOffset-25)
+
+	# draw letter and number coordinates
+	letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+	numbers = list(range(1,9))
+	if gamestate.get_usercolor() == 'b':
+		letters = letters[::-1]
+		numbers = numbers[::-1]
+	
+	# find letter offsets and draw
+	letterOffsetx = ((WIN_WIDTH - CB_WIDTH)//2) + (cellSize//2)
+	letterOffsety = WIN_HEIGHT - ((WIN_HEIGHT - CB_HEIGHT)//2) - 50
+	for letter in letters:
+		display_text(screen, letter, (255,0,0), 12, letterOffsetx, letterOffsety)
+		letterOffsetx += 64
+
+	# find number offsets and draw
+	numberOffsetx = WIN_WIDTH - ((WIN_WIDTH - CB_WIDTH)//2) + 10
+	numberOffsety = WIN_HEIGHT - (3*(WIN_HEIGHT - CB_HEIGHT)//4) - (cellSize//2)
+	for number in numbers:
+		display_text(screen, str(number), (255,0,0), 12, numberOffsetx, numberOffsety)
+		numberOffsety -= 64
+
 	return
+
+
+""" draw_buttons: draw necessary buttons on window
+	params: screen
+	return:
+"""
+def draw_buttons(screen):
+	# terminate gamestream and quit pygame button
+	pg.draw.rect(screen, pg.Color("blue"), pg.Rect(xchessboardOffset+(cellSize*3), alertwindowOffsety-40, cellSize*2, cellSize//2))
+	display_text(screen, "Resign Game", pg.Color("black"), 12, WIN_WIDTH//2, ychessboardOffset+82)
 
 """ display_alert: display alert text in alerts window
 	params:
 	return:
 """
 def display_alert(screen, message):
-	draw_alertswindow(screen)
-	font = pg.font.Font("freesansbold.ttf", 15)
-	# center the text
-	textSurface = font.render(message, True, pg.Color("black"))
-	textBox = textSurface.get_rect()
-	textBox.center = WIN_WIDTH//2, alertwindowOffsety + 30
-	screen.blit(textSurface, textBox)
+
+	# clear alert section
+	pg.draw.rect(screen, pg.Color("light grey"), pg.Rect(alertwindowOffsetx, alertwindowOffsety, CB_WIDTH, cellSize+30))
+	# display alert message
+	display_text(screen, message, pg.Color("black"), 15, WIN_WIDTH//2, alertwindowOffsety+30)
+
+	return
 
 
 """ draw_gamestate
-	params:
-		screen - game window
+	params: screen
 	return:
 """
 def draw_gamestate(screen, gamestate):
@@ -179,10 +192,8 @@ def draw_gamestate(screen, gamestate):
 
 
 """ draw_board
-	params:
-		screen - game window
+	params: screen
 	return:
-		none
 """
 def draw_board(screen):
 	colors = [pg.Color("white"), pg.Color("dark grey")]
@@ -195,8 +206,7 @@ def draw_board(screen):
 
 
 """ draw_buffers: draw the capture buffers on either side of the board
-	params:
-		screen
+	params: screen
 	return:
 """
 def draw_buffers(screen):
@@ -213,9 +223,7 @@ def draw_buffers(screen):
 
 
 """ draw_pieces: draw game pieces on top of the chess board
-	params:
-		screen - game window
-		gamestate - curernt local game state of board
+	params: screen (pygame screen), gamestate (current local game state of board)
 	return:
 """
 def draw_pieces(screen, gamestate):
@@ -243,11 +251,8 @@ def draw_pieces(screen, gamestate):
 
 
 """ display_text: displays desired text to screen
-	params:
-		screen - game window
-		message - text contents
-		color - color of text
-	return
+	params: screen (pygame screen), message (text contents), color (color of text)
+	return:
 """
 def display_text(screen, message, color, size, x, y):
 	font = pg.font.Font("freesansbold.ttf", size)
@@ -259,9 +264,8 @@ def display_text(screen, message, color, size, x, y):
 
 
 """ display_gameover: displays game over screen
-	params:
-		screen - game window
-		reason - reason for game over
+	params: screen (pygame screen), reason (reason for game over)
+	return:
 """
 def display_gameover(screen, reason):
 	# clear screen
