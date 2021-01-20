@@ -8,5 +8,16 @@ interface = importlib.import_module('.x328p_interface.x328p_interface', 'Engine'
 
 currentGamestate = gs()  # Instantiate test gamestate
 move = 'e2f2'
+currentGamestate.wBuffer[0][0] = 'wP'
+currentGamestate.wBuffer[0][1] = 'wP'
+currentGamestate.wBuffer[1][0] = 'wP'
+currentGamestate.wBuffer[1][1] = 'wP'
+currentGamestate.wBuffer[2][0] = 'wP'
+
+currentGamestate.bBuffer[0][0] = 'bP'
+currentGamestate.bBuffer[0][1] = 'bP'
+currentGamestate.bBuffer[1][0] = 'bP'
+currentGamestate.bBuffer[1][1] = 'bP'
+currentGamestate.bBuffer[2][0] = 'bP'
 
 interface.make_physical_move(currentGamestate, move)

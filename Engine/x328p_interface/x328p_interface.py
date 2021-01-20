@@ -4,13 +4,13 @@
 
 import math
 import heapq
-import serial
+#import serial
 import time
 import sys
 letterToColumn = {'a':5, 'b':7,'c':9,'d':11,'e':13,'f':15,'g':17,'h':19}  # To translate cell to posMap location
 pieceToBuffer = {'wP':[15,0], 'bP': [15, 24], 'bP': [15, 22]}
 # easy translation from number to row ((number * 2) + 1)
-ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
+#ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 
 # self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
 # self.number_to_y = {'1':7, '2':6, '3':5, '4':4, '5':3, '6':2, '7':1, '8':0}
@@ -99,6 +99,17 @@ def gamestate_to_position_map(gamestate):
                 node.pos = [16 - posI, posJ+4]
             else:
                 posMap[posI][posJ + 5].state = '. '
+    for i in range(len(gamestate.wBuffer)):
+        for p in range(len(gamestate.wBuffer[i])):
+            #print(gamestate.wBuffer[i][p])
+            if gamestate.wBuffer[i][p] != '--':
+                posMap[(15-(i*2))][p*2].state = gamestate.wBuffer[i][p]
+
+    for i in range(len(gamestate.bBuffer)):
+        for p in range(len(gamestate.bBuffer[i])):
+            #print(gamestate.wBuffer[i][p])
+            if gamestate.bBuffer[i][p] != '--':
+                posMap[(15-(i*2))][(p*2)+22].state = gamestate.bBuffer[i][p]
     return posMap
 
 
@@ -380,7 +391,7 @@ def print_posMap(map, path=None):
         for i in range(len(path)):
             solNode = path[i][0]
             map[solNode.pos[0]][solNode.pos[1]].state = u"\u26AA"
-    print("\033[1m\tBlack \t\t\t\t\t\t\tBoard \t\t\t\t\t\tWhite")
+    print("\033[1m\tWhite \t\t\t\t\t\t\tBoard \t\t\t\t\t\tBlack")
     for i in range(16, -1, -1):
         for j in range(4):
             print(map[i][j], end=' ')
@@ -459,7 +470,8 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     #     time.sleep(1)
     # print("Sending path via UART...")
     # send_to_328p(solution)
-    transmit_path(sl_compression(solution))
+
+    #transmit_path(sl_compression(solution))
 
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
