@@ -27,7 +27,8 @@ gamestream = None
 
 terminated = False
 
-
+eventstream_pid = None
+gamestream_pid = None
 """
 -------------------------------
 PAGE CLASSES
@@ -69,7 +70,6 @@ class SigninPage(tk.Frame):
         passwordEntry.pack()
         """
 
-
         """ buttons """
         loginButton = widgets.createButton(self, function=lambda: self.submit(controller=controller, username="degugBot"),
         text="Login as degugBot", bgcolor="seashell3")
@@ -91,7 +91,8 @@ class SigninPage(tk.Frame):
             global eventstream
             eventstream = mp.Process(target = event_stream, args = (eventQueue,))
             eventstream.start()
-            print("EVENT STREAM PID: ", eventstream.pid)
+            eventstream_pid = eventstream.pid
+            print("EVENT STREAM PID: ", eventstream_pid)
 
         else:
             print("User not found. Invalid username/password")
@@ -234,7 +235,8 @@ def ingame(challengerName, controller):
     global gamestream
     gamestream = mp.Process(target=game_stream, args=(gameQueue,))
     gamestream.start()
-    print("GAME STREAM PID: ", gamestream.pid)
+    gamestream_pid = gamestream.pid
+    print("GAME STREAM PID: ", gamestream_pid)
 
     # create a game state
     gamestate = gameState.GameState(gameQueue=gameQueue)
@@ -372,3 +374,22 @@ def terminate_eventstream():
     eventstream.join()
     print("TERMINATED EVENT STREAM")
     eventstream = None
+
+
+"""
+signal_handler: maps keyboard interrupt to terminate event/game streams
+"""
+def signal_handler(sig, frame):
+    global eventstream_pid
+    global gamestream_pid
+    print("signal handler")
+    if eventstream_pid != None:
+        os.kill(eventstream_pid, 9)
+        print("Event Stream Terminated")
+    if gamestream_pid != None:
+        os.kill(gamestream_pid, 9)
+        print("Game Stream Terminated")
+
+    exit()
+
+signal.signal(signal.SIGINT, signal_handler)

@@ -314,8 +314,8 @@ class GameState():
             if move:
                 # make move on local gamestate board
                 self.move_piece(move)
+                self.userMove = False
 
-            self.userMove = False
             return "ok"
 
         # opponent's move
@@ -333,6 +333,7 @@ class GameState():
                 self.move_piece(move)
                 self.userMove = True
                 return "ok"
+            # other responses (i.e resgination, checkmate)
             else:
                 return move
 
@@ -373,7 +374,7 @@ class GameState():
             # get event from game queue and check the type of event
             event = self.gameQueue.get_nowait()
             if event["type"] == 'gameState':
-                print("OPPONENT EVENT", event)
+                print("Event Response: ", event)
                 # handles first turn
                 if self.firstTurn:
                     # user starts the game with first move; opponent is second
