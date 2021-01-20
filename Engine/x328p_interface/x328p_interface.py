@@ -342,8 +342,8 @@ def recv_from_328p(messageType, timeout):
     print("\nWaiting for message:", messageType)
 
     while True:
-        time.sleep(0.03)
         ser.flush()
+        #time.sleep(0.03)
         x = ser.read()
         intMessage = int.from_bytes(x, 'little')
         recType = find_message_type(intMessage)
