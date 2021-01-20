@@ -93,7 +93,7 @@ def next_buffer_pos(gamestate, piece):
         else:
             for column in range(2):
                 if gamestate.bBuffer[gamestate.bufferMap[piece[1]]][column] == '--':
-                    return [piece[1], column]
+                    return [gamestate.bufferMap[piece[1]], column]
     # if captured piece is white
     elif pieceColor == 'w':
         # check if captured piece is pawn, bishop, knight, rook, or queen and place into buffer accordingly
@@ -106,7 +106,7 @@ def next_buffer_pos(gamestate, piece):
         else:
             for column in range(2):
                 if gamestate.wBuffer[gamestate.bufferMap[piece[1]]][column] == '--':
-                    return [piece[1], column]
+                    return [gamestate.bufferMap[piece[1]], column]
 
 # Translates an 8x8 gamestate to a 24x24 piece position map
 def gamestate_to_position_map(gamestate):
@@ -467,9 +467,9 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
         bufferPos = next_buffer_pos(gamestate, destNode.state)
         #print(bufferPos)
         if destNode.state[0] == 'b':
-            bufferPosMap = [(15 - (bufferPos[0] * 2)), (bufferPos[1] * 2) + 22]
+            bufferPosMap = [(15 - (int(bufferPos[0]) * 2)), (int(bufferPos[1]) * 2) + 22]
         else:
-            bufferPosMap = [(15-(bufferPos[0]*2)), bufferPos[1]*2]
+            bufferPosMap = [(15-(int(bufferPos[0])*2)), int(bufferPos[1])*2]
         make_physical_move(gamestate, None, capturedPos, bufferPosMap)
 
 
@@ -500,7 +500,7 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     #     time.sleep(1)
     # print("Sending path via UART...")
     # send_to_328p(solution)
-    #transmit_path(sl_compression(solution))
+    transmit_path(sl_compression(solution))
 
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
