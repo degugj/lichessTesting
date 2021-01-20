@@ -396,7 +396,7 @@ def recv_from_328p(messageType, timeout):
 # Sends 328P a path via UART
 def send_to_328p(data):
     ser.flush()
-    print("Message sent (" + hex(data)+")")
+    print("Message sent (" + hex(data)+")","(Header:", (data&0b11100000),"Payload:",(data&0b00011111),')')
     #while True:
         #received_data = ser.read()  # read serial port
         #time.sleep(0.03)
