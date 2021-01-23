@@ -104,6 +104,7 @@ def challenge_user(username, **kwargs):
 """
 def create_seek():
 	response = request.post('https://lichess.org/api/board/seek', headers={'Authorization': 'Bearer {}'.format(api_key)})
+	return
 
 
 
@@ -125,7 +126,7 @@ def make_move(move, screen):
 
 
 
-""" leave_game: either abort or resign
+""" game_over: either abort or resign
 	params:
 		option: either abort or resign
 	return:
@@ -133,28 +134,23 @@ def make_move(move, screen):
 		0: game successfully resigned
 		-1: error
 """
-def leave_game(option):
+def gameover(option):
 	gameid = open('gameid.txt', 'r')
-	if option == "abort":
-		try:
+	try:
+		if option == "abort":
+			# send abort message
 			r = request.post('https://lichess.org/api/board/game/{gameId}/abort'.format(gameId=gameid.read()), headers={'Authorization': 'Bearer {}'.format(api_key)})
-			if r.ok:
-				return 1
-			else:
-				return -1
-		except:
-			print("Request Error")
 
-	if option == "resign":
-		try:
+		elif option == "resign":
+			# send resign message
 			r = request.post('https://lichess.org/api/board/game/{gameId}/resign'.format(gameId=gameid.read()), headers={'Authorization': 'Bearer {}'.format(api_key)})
-			if r.ok:
-				return 0
-			else:
-				return -1
-		except:
-			print("Request Error")
 
+		gameid.close()
+		return 1
+
+	except:
+		print("Unable to complete, request issue")
+		return 0
 
 
 

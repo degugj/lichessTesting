@@ -282,7 +282,6 @@ class GameState():
             self.promotion(pawn, move)
 
 
-
     """ handles en passant move by pawns """
     def enpassant(self, destpiece, move):
         # check if pawn has moved diagonally
@@ -321,7 +320,8 @@ class GameState():
         # opponent's move
         else:
             chessboard.display_alert(screen, "Opponent's Turn...")
-            move = self.get_opponentmove(screen)
+            # read game stream for opponent event
+            move = self.read_gamestream(screen)
 
             # move has not been received by opponent
             if move == "none":
@@ -333,7 +333,7 @@ class GameState():
                 self.move_piece(move)
                 self.userMove = True
                 return "ok"
-            # other responses (i.e resgination, checkmate)
+            # other responses (i.e resgination, checkmate, abort)
             else:
                 return move
 
@@ -367,12 +367,13 @@ class GameState():
             return move
 
 
-    """ read game stream for opponent move """
-    def get_opponentmove(self, screen):
+    """ read the game stream """
+    def read_gamestream(self, screen):
 
         try:
-            # get event from game queue and check the type of event
+            # get event from game queue
             event = self.gameQueue.get_nowait()
+            # gamestate has changed; either user or opponent has moved
             if event["type"] == 'gameState':
                 print("Event Response: ", event)
                 # handles first turn
@@ -403,18 +404,21 @@ class GameState():
                         self.previousMovesEvent = event
                         return move
 
-                # check for resignation
+                # check for resignation or checkmate; return winner color and reason
                 if event["status"] == "resign":
                     self.gameOver = True
                     return event["winner"] + "resign"
                 if event["status"] == "mate":
                     self.gameOver = True
                     return event["winner"] + "mate"
-            
-        except:
-            pass
+                # check for abort
+                if event["status"] == "abort":
+                    self.gameOver = True
+                    return "abort"
 
-        return "none"
+            return "none"
+        except:
+            return "none"
 
 
     """ reset board to original state """ 
