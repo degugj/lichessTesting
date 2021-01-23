@@ -4,13 +4,13 @@
 
 import math
 import heapq
-#import serial
+import serial
 import time
 import sys
 letterToColumn = {'a':5, 'b':7,'c':9,'d':11,'e':13,'f':15,'g':17,'h':19}  # To translate cell to posMap location
 pieceToBuffer = {'wP':[15,0], 'bP': [15, 24], 'bP': [15, 22]}
 # easy translation from number to row ((number * 2) + 1)
-#ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
+ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 
 # self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
 # self.number_to_y = {'1':7, '2':6, '3':5, '4':4, '5':3, '6':2, '7':1, '8':0}
@@ -79,7 +79,34 @@ class Node:
         #         return str(self.state)[0:4]
         return self.state
 
-
+def next_buffer_pos(gamestate, piece):
+    pieceColor = piece[0]
+    # if captured piece is black
+    if pieceColor == 'b':
+        # check if captured piece is pawn
+        if piece[1] == 'P':
+            for row in range(4):
+                for column in range(2):
+                    if gamestate.bBuffer[row][column] == '--':
+                        return [row, column]
+        # all pieces other than pawn; bishop, knight, rook, queen
+        else:
+            for column in range(2):
+                if gamestate.bBuffer[gamestate.bufferMap[piece[1]]][column] == '--':
+                    return [gamestate.bufferMap[piece[1]], column]
+    # if captured piece is white
+    elif pieceColor == 'w':
+        # check if captured piece is pawn, bishop, knight, rook, or queen and place into buffer accordingly
+        if piece[1] == 'P':
+            for row in range(4):
+                for column in range(2):
+                    if gamestate.wBuffer[row][column] == '--':
+                        return [row, column]
+        # all pieces other than pawn; bishop, knight, rook, queen
+        else:
+            for column in range(2):
+                if gamestate.wBuffer[gamestate.bufferMap[piece[1]]][column] == '--':
+                    return [gamestate.bufferMap[piece[1]], column]
 
 # Translates an 8x8 gamestate to a 24x24 piece position map
 def gamestate_to_position_map(gamestate):
@@ -369,7 +396,7 @@ def recv_from_328p(messageType, timeout):
 # Sends 328P a path via UART
 def send_to_328p(data):
     ser.flush()
-    print("Message sent (" + hex(data)+")")
+    print("Message sent (" + hex(data)+")","(Header:", (data&0b11100000),"Payload:",(data&0b00011111),')')
     #while True:
         #received_data = ser.read()  # read serial port
         #time.sleep(0.03)
@@ -434,14 +461,17 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     destNode = posMap[endPos[0]][endPos[1]]
 
     if destNode.state != '. ':
-        print("Moving Captured piece to buffer zone")
+        #print("Moving Captured piece to buffer zone")
         capturedPos = destNode.pos
         #bufferPos = pieceToBuffer[destNode.state]
+        bufferPos = next_buffer_pos(gamestate, destNode.state)
+        #print(bufferPos)
         if destNode.state[0] == 'b':
-            bufferPos = [8,23]
+            bufferPosMap = [(15 - (int(bufferPos[0]) * 2)), (int(bufferPos[1]) * 2) + 22]
         else:
-            bufferPos = [8,0]
-        make_physical_move(gamestate, None, capturedPos, bufferPos)
+            bufferPosMap = [(15-(int(bufferPos[0])*2)), int(bufferPos[1])*2]
+        make_physical_move(gamestate, None, capturedPos, bufferPosMap)
+
 
     # print("Goal Node: ", endPos, "(Cell: " + move[2:4] +")")
 
@@ -450,8 +480,8 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
 
     solution = greedy(heurMap, heurMap[startPos[0]][startPos[1]])
     # print("Path: ")
-    print("Initial Position Map: ")
-    print_posMap(posMap)
+    #print("Initial Position Map: ")
+    #print_posMap(posMap)
     # print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
     print("\nBefore Straightline Path Compression: ")
     print_posMap(heurMap, solution)
@@ -470,8 +500,7 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     #     time.sleep(1)
     # print("Sending path via UART...")
     # send_to_328p(solution)
-
-    #transmit_path(sl_compression(solution))
+    transmit_path(sl_compression(solution))
 
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()

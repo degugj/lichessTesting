@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8ff659b2-d0f7-4a7e-86dc-2d39cc014c34" name="Default Changelist" comment="Removing sleep delay for EM for demo.">
+    <list default="true" id="8ff659b2-d0f7-4a7e-86dc-2d39cc014c34" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/gameState.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/gameState.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/x328p_interface_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/x328p_interface_test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,8 +17,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Engine/gui_pages.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="144" column="31" lean-forward="true" selection-start-line="144" selection-start-column="31" selection-end-line="144" selection-end-column="31" />
+            <state relative-caret-position="359">
+              <caret line="145" column="31" lean-forward="true" selection-start-line="145" selection-start-column="31" selection-end-line="145" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -39,8 +38,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gui_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1258">
-              <caret line="77" column="11" lean-forward="true" selection-start-line="77" selection-start-column="11" selection-end-line="77" selection-end-column="11" />
+            <state relative-caret-position="1292">
+              <caret line="79" column="11" lean-forward="true" selection-start-line="79" selection-start-column="11" selection-end-line="79" selection-end-column="11" />
               <folding>
                 <element signature="e#80#100#0" expanded="true" />
               </folding>
@@ -51,8 +50,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Engine/gameState.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-51">
-              <caret line="28" column="34" lean-forward="true" selection-start-line="28" selection-start-column="34" selection-end-line="28" selection-end-column="34" />
+            <state relative-caret-position="-901">
+              <caret line="56" column="59" selection-start-line="56" selection-start-column="59" selection-end-line="56" selection-end-column="59" />
             </state>
           </provider>
         </entry>
@@ -69,8 +68,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
-              <caret line="393" column="63" selection-start-line="393" selection-start-column="63" selection-end-line="393" selection-end-column="63" />
+            <state relative-caret-position="111">
+              <caret line="398" column="84" selection-start-line="398" selection-start-column="84" selection-end-line="398" selection-end-column="84" />
               <folding>
                 <element signature="e#134#145#0" expanded="true" />
               </folding>
@@ -81,8 +80,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/x328p_interface_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="20" column="35" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
+            <state relative-caret-position="57">
+              <caret line="9" column="12" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
               <folding>
                 <element signature="e#161#177#0" expanded="true" />
               </folding>
@@ -102,6 +101,8 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>buff</find>
+      <find>make_</find>
+      <find>next_buffer_pos</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\jackd\PycharmProjects\lichessTesting\Engine</dir>
@@ -136,9 +137,9 @@
         <option value="$PROJECT_DIR$/Engine/328p_interface/328p_interface.py" />
         <option value="$PROJECT_DIR$/Engine/x328p_interface_test.py" />
         <option value="$PROJECT_DIR$/gui_test.py" />
-        <option value="$PROJECT_DIR$/Engine/gameState.py" />
         <option value="$PROJECT_DIR$/Engine/gui_pages.py" />
         <option value="$PROJECT_DIR$/x328p_interface_test.py" />
+        <option value="$PROJECT_DIR$/Engine/gameState.py" />
         <option value="$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py" />
       </list>
     </option>
@@ -518,20 +519,48 @@
       <option name="project" value="LOCAL" />
       <updated>1610484991314</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Added buffer zone translation. I just need to change where captured pieces go.">
+      <created>1611092175077</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1611092175077</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Fixed position map piece capture. Finds appropriate position based on piece captured.">
+      <created>1611109353862</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1611109353862</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Removed long sys out prints for testing and video.">
+      <created>1611109557113</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1611109557113</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Fixes to buffer zone position resolution.">
+      <created>1611115213451</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1611115213451</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1381" height="885" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21232368" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.21232368" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Messages" order="0" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.32804233" />
-      <window_info active="true" anchor="bottom" x="102" y="380" width="1163" height="111" id="Run" maximized="true" order="3" sideWeight="0.49740162" visible="true" weight="0.29232803" />
+      <window_info active="true" anchor="bottom" x="102" y="380" width="1163" height="111" id="Run" maximized="true" order="3" sideWeight="0.49740162" visible="true" weight="0.43386245" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.3994709" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
@@ -544,6 +573,26 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21232368" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" order="0" />
+      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="Find" order="2" weight="0.32804233" />
+      <window_info anchor="bottom" x="102" y="380" width="1163" height="111" id="Run" maximized="true" order="3" sideWeight="0.49740162" visible="true" weight="0.09920635" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.3994709" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49814403" weight="0.33068782" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.20634921" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50185597" side_tool="true" weight="0.33068782" />
+      <window_info anchor="bottom" id="Python Console" order="11" weight="0.32804233" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout-to-restore>
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
@@ -577,7 +626,11 @@
     <MESSAGE value="Adding test file back and code for buffer demo." />
     <MESSAGE value="Modifying files to work with Pi and gantry test" />
     <MESSAGE value="Removing sleep delay for EM for demo." />
-    <option name="LAST_COMMIT_MESSAGE" value="Removing sleep delay for EM for demo." />
+    <MESSAGE value="Added buffer zone translation. I just need to change where captured pieces go." />
+    <MESSAGE value="Fixed position map piece capture. Finds appropriate position based on piece captured." />
+    <MESSAGE value="Removed long sys out prints for testing and video." />
+    <MESSAGE value="Fixes to buffer zone position resolution." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixes to buffer zone position resolution." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/chessPiece.py" />
@@ -649,8 +702,8 @@
     <entry file="file://$PROJECT_DIR$/328p_interface_test.py" />
     <entry file="file://$PROJECT_DIR$/gui_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1258">
-          <caret line="77" column="11" lean-forward="true" selection-start-line="77" selection-start-column="11" selection-end-line="77" selection-end-column="11" />
+        <state relative-caret-position="1292">
+          <caret line="79" column="11" lean-forward="true" selection-start-line="79" selection-start-column="11" selection-end-line="79" selection-end-column="11" />
           <folding>
             <element signature="e#80#100#0" expanded="true" />
           </folding>
@@ -676,32 +729,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Engine/gui_pages.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="144" column="31" lean-forward="true" selection-start-line="144" selection-start-column="31" selection-end-line="144" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/gameState.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-51">
-          <caret line="28" column="34" lean-forward="true" selection-start-line="28" selection-start-column="34" selection-end-line="28" selection-end-column="34" />
+        <state relative-caret-position="359">
+          <caret line="145" column="31" lean-forward="true" selection-start-line="145" selection-start-column="31" selection-end-line="145" selection-end-column="31" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/x328p_interface_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="35" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
+        <state relative-caret-position="57">
+          <caret line="9" column="12" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
           <folding>
             <element signature="e#161#177#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/gameState.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-901">
+          <caret line="56" column="59" selection-start-line="56" selection-start-column="59" selection-end-line="56" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="393" column="63" selection-start-line="393" selection-start-column="63" selection-end-line="393" selection-end-column="63" />
+        <state relative-caret-position="111">
+          <caret line="398" column="84" selection-start-line="398" selection-start-column="84" selection-end-line="398" selection-end-column="84" />
           <folding>
             <element signature="e#134#145#0" expanded="true" />
           </folding>

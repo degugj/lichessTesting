@@ -54,7 +54,7 @@ class GameState():
                         ["--", "--"],
                         ["--", "--"]]
         # dictionary that maps bishop to row 4, knight to row 5, rook to row 6, and queen to row 7
-        self.bufferMap = {'B':4, 'H':5, 'R':6, 'Q':7}
+        self.bufferMap = {'B':4, 'H':5, 'R':6, 'Q':7, 'K':7}
         
         # user is white
         if self.userColor == 'w':
