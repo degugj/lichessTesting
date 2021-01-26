@@ -228,7 +228,7 @@ def check_buttons(screen, mouse):
 		time.sleep(0.5)
 		return "resign"
 	# check if button hovering is abort button
-	if resignButtonX < mouse[0] < resignButtonX + cellSize*2 and resignButtonY < mouse[1] < (resignButtonY) + cellSize//2:
+	if abortButtonX < mouse[0] < (abortButtonX + cellSize*2) and abortButtonY < mouse[1] < (abortButtonY + cellSize//2):
 		# change button color if pressed
 		draw_button(screen, pg.Color("grey"), abortButtonX, abortButtonY, 
 					cellSize*2, cellSize//2, "Abort Game")
@@ -346,7 +346,7 @@ def gameover(screen, reason, color, gamestate):
 		# user has resigned
 		if reason == "resign":
 			if lichessinterface.gameover("resign"):
-				display_alert(screen, "GAME OVER! You have lost due to resignation!")
+				display_alert(screen, "GAME OVER! You have resigned!")
 			return
 		# user has aborted
 		if reason == "abort":
