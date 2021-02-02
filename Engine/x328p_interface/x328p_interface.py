@@ -43,7 +43,8 @@ class Node:
 
         if y - 1 >= 0 and x - 1 >= 0:
             child = map[self.pos[0]-1][self.pos[1]-1]
-            succs.append((child, 'sw'))
+            if map[self.pos[0] - 1][self.pos[1]].state == '. ' and map[self.pos[0]][self.pos[1] - 1].state == '. ':
+                succs.append((child, 'sw'))
 
         if y + 1 <= 26:
             child = map[self.pos[0]][self.pos[1]+1]
@@ -55,15 +56,19 @@ class Node:
 
         if x + 1 <= 16 and y + 1 <= 26:
             child = map[self.pos[0]+1][self.pos[1]+1]
-            succs.append((child, 'ne'))
+            if map[self.pos[0]+1][self.pos[1]].state == '. ' and map[self.pos[0]][self.pos[1]+1].state == '. ':
+                print(map[self.pos[0]+1][self.pos[1]].state)
+                succs.append((child, 'ne'))
 
         if x + 1 <= 16 and y - 1 >= 0:
             child = map[self.pos[0]+1][self.pos[1]-1]
-            succs.append((child, 'se'))
+            if map[self.pos[0]+1][self.pos[1]].state == '. ' and map[self.pos[0]][self.pos[1]-1].state == '. ':
+                succs.append((child, 'nw'))
 
         if x - 1 >= 0 and y + 1 <= 26:
             child = map[self.pos[0]-1][self.pos[1]+1]
-            succs.append((child, 'nw'))
+            if map[self.pos[0] - 1][self.pos[1]].state == '. ' and map[self.pos[0]][self.pos[1] + 1].state == '. ':
+                succs.append((child, 'se'))
 
         return succs
 
@@ -342,8 +347,8 @@ def recv_from_328p(messageType, timeout):
     print("\nWaiting for message:", messageType)
 
     while True:
-        time.sleep(0.03)
         ser.flush()
+        #time.sleep(0.03)
         x = ser.read()
         intMessage = int.from_bytes(x, 'little')
         recType = find_message_type(intMessage)

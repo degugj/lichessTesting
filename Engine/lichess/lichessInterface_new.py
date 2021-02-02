@@ -141,9 +141,9 @@ def gameover(option):
 			# send abort message
 			r = requests.post('https://lichess.org/api/board/game/{gameId}/abort'.format(gameId=gameid.read()), headers={'Authorization': 'Bearer {}'.format(api_key)})
 
-		elif option == "resign":
+		elif option == "resign":  
 			# send resign message
-			r = requests.post('https://lichess.org/api/board/game/{gameId}/resign'.format(gameId=gameid.read()), headers={'Authorization': 'Bearer {}'.format(api_key)})
+			r = request.post('https://lichess.org/api/board/game/{gameId}/resign'.format(gameId=gameid.read()),  headers={'Authorization': 'Bearer {}'.format(api_key)})
 
 		gameid.close()
 		return 1

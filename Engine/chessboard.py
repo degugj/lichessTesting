@@ -17,7 +17,7 @@ DEFINITIONS AND VARIABLES
 -------------------------------
 """
 WIN_WIDTH = 850
-WIN_HEIGHT = 750
+WIN_HEIGHT = 650
 CB_WIDTH = CB_HEIGHT = 512
 DIMENSIONS = 8
 BUFFER_DIMENSIONSx = 2
@@ -228,7 +228,7 @@ def check_buttons(screen, mouse):
 		time.sleep(0.5)
 		return "resign"
 	# check if button hovering is abort button
-	if abortButtonX < mouse[0] < abortButtonX + cellSize*2 and abortButtonY < mouse[1] < (abortButtonY) + cellSize//2:
+	if abortButtonX < mouse[0] < (abortButtonX + cellSize*2) and abortButtonY < mouse[1] < (abortButtonY + cellSize//2):
 		# change button color if pressed
 		draw_button(screen, pg.Color("grey"), abortButtonX, abortButtonY, 
 					cellSize*2, cellSize//2, "Abort Game")
