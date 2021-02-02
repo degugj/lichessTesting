@@ -108,12 +108,40 @@ class GameState():
 
     """ get user color """
     def get_usercolor(self):
-        return self.userColor
+        if self.userColor == 'w':
+            return 'white'
+        else:
+            return 'black'
+
+    """ get color of opponent """
+    def get_opponentcolor(self):
+        if self.userColor == 'w':
+            return 'black'
+        else:
+            return 'white'
 
 
     """ get player turn """
     def get_playerturn(self):
         return self.userMove
+
+
+    """ find piece on local gamestate from chess coordinates """
+    def get_piece_fromboard(self, letter, number):
+        # map letter and number to local gamestate board
+        cell_y = self.letter_to_y[letter]
+        cell_x = self.number_to_x[number]
+        # find the piece in the local board
+        piece = self.board[cell_x][cell_y]
+        return piece
+
+
+    """ move piece to destination """
+    def replace_piece_onboard(self, move, piece):
+        # set original cell to empty and placing piece on destination cell
+        self.board[self.number_to_x[move[1]]][self.letter_to_y[move[0]]] = "--"
+        self.board[self.number_to_x[move[3]]][self.letter_to_y[move[2]]] = piece
+        return
 
 
 # ---------------------------------------------------------------------------
@@ -130,18 +158,9 @@ class GameState():
         # length of move string (normally 4, pawn promotion 5)
         moveLength = len(move)
 
-        # find starting cell in self.board
-        startcell_y = self.letter_to_y[move[0]]
-        startcell_x = self.number_to_x[move[1]]
-
-        # find destination cell in self.board
-        destcell_y = self.letter_to_y[move[2]]
-        destcell_x = self.number_to_x[move[3]]
-
-        # find the piece to be moved
-        startpiece = self.board[startcell_x][startcell_y]
-        # find destination piece
-        destpiece = self.board[destcell_x][destcell_y]
+        # find the piece to be moved and destination piece
+        startpiece = self.get_piece_fromboard(move[0], move[1])
+        destpiece = self.get_piece_fromboard(move[2], move[3])
 
         if not castling:
             # capturing condition
@@ -157,8 +176,7 @@ class GameState():
                 rookMove = self.castling(startpiece, move)
                 if rookMove != '':
                     # update gamestate after king's move/before rook's move
-                    self.board[startcell_x][startcell_y] = "--"
-                    self.board[destcell_x][destcell_y] = startpiece
+                    replace_piece_onboad(move, startpiece)
                     # move the rook
                     self.move_piece(rookMove, castling=True)
                     return
@@ -167,9 +185,9 @@ class GameState():
             if moveLength == 5:
                 startpiece = self.promotion(startpiece, move)
 
-
-        self.board[startcell_x][startcell_y] = "--"
-        self.board[destcell_x][destcell_y] = startpiece
+        # move piece to destination
+        self.replace_piece_onboard(move, startpiece)
+        return
 
 
     """ capture piece and move to buffer """
@@ -376,6 +394,19 @@ class GameState():
             # gamestate has changed; either user or opponent has moved
             if event["type"] == 'gameState':
                 print("Event Response: ", event)
+
+                # check for resignation or checkmate; return winner and reason
+                if event["status"] == "resign":
+                    self.gameOver = True
+                    return ('resign', event['winner'])
+                if event["status"] == "mate":
+                    self.gameOver = True
+                    return ('mate', event['winner'])
+                # check for abort
+                if event["status"] == "abort":
+                    self.gameOver = True
+                    return "abort"
+
                 # handles first turn
                 if self.firstTurn:
                     # user starts the game with first move; opponent is second
@@ -403,18 +434,6 @@ class GameState():
                         move = event["moves"].split()[-1]
                         self.previousMovesEvent = event
                         return move
-
-                # check for resignation or checkmate; return winner color and reason
-                if event["status"] == "resign":
-                    self.gameOver = True
-                    return event["winner"] + "resign"
-                if event["status"] == "mate":
-                    self.gameOver = True
-                    return event["winner"] + "mate"
-                # check for abort
-                if event["status"] == "abort":
-                    self.gameOver = True
-                    return "abort"
 
             return "none"
         except:

@@ -307,8 +307,8 @@ def game_stream(gameQueue):
     return
 
 
+""" used for testing purposes """
 def test():
-
 
     # create and start an event stream process
     global eventstream
