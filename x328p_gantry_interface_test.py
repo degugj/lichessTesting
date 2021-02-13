@@ -4,10 +4,10 @@
 import importlib
 from Engine.gameState import GameState as gs
 #from Engine.x328p_interface import *
-interface = importlib.import_module('.x328p_interface.x328p_interface', 'Engine')
+interface = importlib.import_module('.x328p_interface.x328p_gantry_interface', 'Engine')
 
 currentGamestate = gs()  # Instantiate test gamestate
-move = 'e2d8'
+move = 'a2h2'
 currentGamestate.wBuffer[0][0] = 'wP'
 currentGamestate.wBuffer[0][1] = 'wP'
 currentGamestate.wBuffer[1][0] = 'wP'
