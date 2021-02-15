@@ -8,4 +8,5 @@ interface = importlib.import_module('.x328p_interface.x328p_fs_interface', 'Engi
 
 currentGamestate = gs()  # Instantiate test gamestate
 
-interface.get_column(currentGamestate, 'a')
+#interface.get_column(currentGamestate, 'a')
+#interface.fast_scan_simulator()
