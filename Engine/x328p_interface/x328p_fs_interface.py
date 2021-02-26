@@ -15,6 +15,10 @@ address = 0x8
 # Initialize I2C (SMBus)
 bus = SMBus(channel)
 
+def return_message_dict(two_byte_message):
+    # Talked to Wei about this
+    dict = {}
+    return dict
 
 def get_column(gsNP, columnChar):
     return gsNP[:,letterToColumn[columnChar]]
