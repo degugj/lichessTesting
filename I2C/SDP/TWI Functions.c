@@ -7,15 +7,7 @@
  * code derived from embedds.com/programming-avr-i2c-interface/ and ATmega328 data sheet
  */ 
 
-/*
-#include <stdio.h>
-#include <avr/io.h>
-#include <avr/pgmspace.h>
-#include "usart.h"
-#include "ee24c16.h"
-*/
-
-
+#include "twi.h"
 
 void TWIInit(void) // initialize TWI
 {

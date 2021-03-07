@@ -7,7 +7,7 @@
  * code derived from embedds.com/programming-avr-i2c-interface/ and ATmega328 data sheet
  */ 
 
-#include "I2CEE/I2CEE/i2ceeprom/i2ceeprom/ee24c16.h"
+#include "ee24c16.h"
 
 uint8_t EEWriteByte(uint16_t u16addr, uint8_t u8data) // write byte to 24C16
 {
