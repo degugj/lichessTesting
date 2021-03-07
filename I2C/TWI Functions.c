@@ -15,7 +15,7 @@
 #include "ee24c16.h"
 */
 
-#include "I2CEE/I2CEE/i2ceeprom/i2ceeprom/twi.h"
+
 
 void TWIInit(void) // initialize TWI
 {
