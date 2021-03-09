@@ -101,6 +101,10 @@ uint8_t EEWriteByte(uint16_t u16addr, uint8_t u8data) // write byte to 24C16
 int main(void)
 {
 	TWIInit();
-	EEWriteByte(0x0F,0x0F);
+	while(1) 
+	{
+		EEWriteByte(0x0F,0x0F);
+		
+	}
 	
 }
