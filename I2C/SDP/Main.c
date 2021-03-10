@@ -7,13 +7,12 @@
  * code derived from embedds.com/programming-avr-i2c-interface/ and ATmega328 data sheet
  */ 
 
-#include <avr/io.h>
-
 #ifndef TWI_H_
 #define TWI_H_
 #define ERROR 1
 #define SUCCESS (!ERROR)
 #define EEDEVADR 0b10100000
+#include <util/twi.h>
 #include <avr/io.h>
 void TWIInit(void);
 void TWIStart(void);
@@ -50,9 +49,14 @@ void TWIStop(void)
 
 void TWIWrite(uint8_t u8data)
 {
+	uint8_t twst;
 	TWDR = u8data;
 	TWCR = (1<<TWINT) | (1<<TWEN);
 	while (!(TWCR & (1<<TWINT)));
+	twst = TW_STATUS & 0xF8;
+	if( twst != TW_MT_DATA_ACK) return 1;
+	return 0;
+	
 }
 
 uint8_t TWIReadACK(void)
@@ -77,7 +81,7 @@ uint8_t TWIGetStatus(void)
 	return status;
 }
 
-uint8_t EEWriteByte(uint16_t u16addr, uint8_t u8data) // write byte to 24C16
+uint8_t EEWriteByte(uint16_t u16addr, uint8_t u8data)
 {
 	TWIStart();
 	//if(TWIGetStatus() != 0x08)
@@ -103,7 +107,7 @@ int main(void)
 	TWIInit();
 	while(1)
 	{
-		EEWriteByte(0x0F,0x0F);
+		TWIWrite(0x0F);
 	}
 	
 }
