@@ -80,20 +80,20 @@ uint8_t TWIGetStatus(void)
 uint8_t EEWriteByte(uint16_t u16addr, uint8_t u8data) // write byte to 24C16
 {
 	TWIStart();
-	if(TWIGetStatus() != 0x08)
-	return ERROR;
+	//if(TWIGetStatus() != 0x08)
+	//return ERROR;
 	// Select device and send A4 A1 A0 address bits
 	TWIWrite((EEDEVADR) | (uint8_t) ((u16addr)>>7));
-	if(TWIGetStatus() != 0x18)
-	return ERROR;
+	//if(TWIGetStatus() != 0x18)
+	//return ERROR;
 	// Send the rest of address
 	TWIWrite((uint8_t)(u16addr));
-	if(TWIGetStatus() != 0x28)
-	return ERROR;
+	//if(TWIGetStatus() != 0x28)
+	//return ERROR;
 	//write byte to eeprom
 	TWIWrite(u8data);
-	if(TWIGetStatus() != 0x28)
-	return ERROR;
+// 	if(TWIGetStatus() != 0x28)
+// 	return ERROR;
 	TWIStop();
 	return SUCCESS;
 }
@@ -101,10 +101,9 @@ uint8_t EEWriteByte(uint16_t u16addr, uint8_t u8data) // write byte to 24C16
 int main(void)
 {
 	TWIInit();
-	while(1) 
+	while(1)
 	{
 		EEWriteByte(0x0F,0x0F);
-		
 	}
 	
 }

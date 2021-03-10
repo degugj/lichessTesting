@@ -3,29 +3,29 @@ SDP.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  0000018e  2**0
+  0 .data         00000000  00800100  00800100  0000015e  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         0000013a  00000000  00000000  00000054  2**1
+  1 .text         0000010a  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  0000018e  2**0
+  2 .comment      00000030  00000000  00000000  0000015e  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001c0  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000190  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000060  00000000  00000000  000001fc  2**0
+  4 .debug_aranges 00000060  00000000  00000000  000001cc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000008a2  00000000  00000000  0000025c  2**0
+  5 .debug_info   000007fe  00000000  00000000  0000022c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000725  00000000  00000000  00000afe  2**0
+  6 .debug_abbrev 000006f9  00000000  00000000  00000a2a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000382  00000000  00000000  00001223  2**0
+  7 .debug_line   00000334  00000000  00000000  00001123  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000000b4  00000000  00000000  000015a8  2**2
+  8 .debug_frame  000000b4  00000000  00000000  00001458  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000003b7  00000000  00000000  0000165c  2**0
+  9 .debug_str    000003b7  00000000  00000000  0000150c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000000cb  00000000  00000000  00001a13  2**0
+ 10 .debug_loc    000000cb  00000000  00000000  000018c3  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000050  00000000  00000000  00001ade  2**0
+ 11 .debug_ranges 00000050  00000000  00000000  0000198e  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -65,8 +65,8 @@ Disassembly of section .text:
   6e:	d8 e0       	ldi	r29, 0x08	; 8
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
-  74:	0e 94 93 00 	call	0x126	; 0x126 <main>
-  78:	0c 94 9b 00 	jmp	0x136	; 0x136 <_exit>
+  74:	0e 94 7b 00 	call	0xf6	; 0xf6 <main>
+  78:	0c 94 83 00 	jmp	0x106	; 0x106 <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -117,153 +117,67 @@ uint8_t EEWriteByte(uint16_t u16addr, uint8_t u8data) // write byte to 24C16
   c2:	16 2f       	mov	r17, r22
 	TWIStart();
   c4:	0e 94 49 00 	call	0x92	; 0x92 <TWIStart>
-
-uint8_t TWIGetStatus(void)
-{
-	uint8_t status;
-	// mast status;
-	status = TWSR;
-  c8:	80 91 b9 00 	lds	r24, 0x00B9	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7e00b9>
-}
-
-uint8_t EEWriteByte(uint16_t u16addr, uint8_t u8data) // write byte to 24C16
-{
-	TWIStart();
-	if(TWIGetStatus() != 0x08)
-  cc:	88 30       	cpi	r24, 0x08	; 8
-  ce:	01 f5       	brne	.+64     	; 0x110 <EEWriteByte+0x56>
-	return ERROR;
+	//if(TWIGetStatus() != 0x08)
+	//return ERROR;
 	// Select device and send A4 A1 A0 address bits
 	TWIWrite((EEDEVADR) | (uint8_t) ((u16addr)>>7));
-  d0:	ce 01       	movw	r24, r28
-  d2:	88 0f       	add	r24, r24
-  d4:	89 2f       	mov	r24, r25
-  d6:	88 1f       	adc	r24, r24
-  d8:	99 0b       	sbc	r25, r25
-  da:	91 95       	neg	r25
-  dc:	80 6a       	ori	r24, 0xA0	; 160
-  de:	0e 94 52 00 	call	0xa4	; 0xa4 <TWIWrite>
-
-uint8_t TWIGetStatus(void)
-{
-	uint8_t status;
-	// mast status;
-	status = TWSR;
-  e2:	80 91 b9 00 	lds	r24, 0x00B9	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7e00b9>
-	TWIStart();
-	if(TWIGetStatus() != 0x08)
-	return ERROR;
-	// Select device and send A4 A1 A0 address bits
-	TWIWrite((EEDEVADR) | (uint8_t) ((u16addr)>>7));
-	if(TWIGetStatus() != 0x18)
-  e6:	88 31       	cpi	r24, 0x18	; 24
-  e8:	a9 f4       	brne	.+42     	; 0x114 <EEWriteByte+0x5a>
-	return ERROR;
+  c8:	ce 01       	movw	r24, r28
+  ca:	88 0f       	add	r24, r24
+  cc:	89 2f       	mov	r24, r25
+  ce:	88 1f       	adc	r24, r24
+  d0:	99 0b       	sbc	r25, r25
+  d2:	91 95       	neg	r25
+  d4:	80 6a       	ori	r24, 0xA0	; 160
+  d6:	0e 94 52 00 	call	0xa4	; 0xa4 <TWIWrite>
+	//if(TWIGetStatus() != 0x18)
+	//return ERROR;
 	// Send the rest of address
 	TWIWrite((uint8_t)(u16addr));
-  ea:	8c 2f       	mov	r24, r28
-  ec:	0e 94 52 00 	call	0xa4	; 0xa4 <TWIWrite>
-
-uint8_t TWIGetStatus(void)
-{
-	uint8_t status;
-	// mast status;
-	status = TWSR;
-  f0:	80 91 b9 00 	lds	r24, 0x00B9	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7e00b9>
-	TWIWrite((EEDEVADR) | (uint8_t) ((u16addr)>>7));
-	if(TWIGetStatus() != 0x18)
-	return ERROR;
-	// Send the rest of address
-	TWIWrite((uint8_t)(u16addr));
-	if(TWIGetStatus() != 0x28)
-  f4:	88 32       	cpi	r24, 0x28	; 40
-  f6:	81 f4       	brne	.+32     	; 0x118 <EEWriteByte+0x5e>
-	return ERROR;
+  da:	8c 2f       	mov	r24, r28
+  dc:	0e 94 52 00 	call	0xa4	; 0xa4 <TWIWrite>
+	//if(TWIGetStatus() != 0x28)
+	//return ERROR;
 	//write byte to eeprom
 	TWIWrite(u8data);
-  f8:	81 2f       	mov	r24, r17
-  fa:	0e 94 52 00 	call	0xa4	; 0xa4 <TWIWrite>
-
-uint8_t TWIGetStatus(void)
-{
-	uint8_t status;
-	// mast status;
-	status = TWSR;
-  fe:	80 91 b9 00 	lds	r24, 0x00B9	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7e00b9>
-	TWIWrite((uint8_t)(u16addr));
-	if(TWIGetStatus() != 0x28)
-	return ERROR;
-	//write byte to eeprom
-	TWIWrite(u8data);
-	if(TWIGetStatus() != 0x28)
- 102:	88 32       	cpi	r24, 0x28	; 40
- 104:	59 f4       	brne	.+22     	; 0x11c <EEWriteByte+0x62>
+  e0:	81 2f       	mov	r24, r17
+  e2:	0e 94 52 00 	call	0xa4	; 0xa4 <TWIWrite>
 	
 }
 
 void TWIStop(void)
 {
 	TWCR = (1<<TWINT) | (1<<TWSTO) | (1<<TWEN);
- 106:	84 e9       	ldi	r24, 0x94	; 148
- 108:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7e00bc>
-	//write byte to eeprom
+  e6:	84 e9       	ldi	r24, 0x94	; 148
+  e8:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7e00bc>
 	TWIWrite(u8data);
-	if(TWIGetStatus() != 0x28)
-	return ERROR;
-	TWIStop();
-	return SUCCESS;
- 10c:	80 e0       	ldi	r24, 0x00	; 0
- 10e:	07 c0       	rjmp	.+14     	; 0x11e <EEWriteByte+0x64>
-
-uint8_t EEWriteByte(uint16_t u16addr, uint8_t u8data) // write byte to 24C16
-{
-	TWIStart();
-	if(TWIGetStatus() != 0x08)
-	return ERROR;
- 110:	81 e0       	ldi	r24, 0x01	; 1
- 112:	05 c0       	rjmp	.+10     	; 0x11e <EEWriteByte+0x64>
-	// Select device and send A4 A1 A0 address bits
-	TWIWrite((EEDEVADR) | (uint8_t) ((u16addr)>>7));
-	if(TWIGetStatus() != 0x18)
-	return ERROR;
- 114:	81 e0       	ldi	r24, 0x01	; 1
- 116:	03 c0       	rjmp	.+6      	; 0x11e <EEWriteByte+0x64>
-	// Send the rest of address
-	TWIWrite((uint8_t)(u16addr));
-	if(TWIGetStatus() != 0x28)
-	return ERROR;
- 118:	81 e0       	ldi	r24, 0x01	; 1
- 11a:	01 c0       	rjmp	.+2      	; 0x11e <EEWriteByte+0x64>
-	//write byte to eeprom
-	TWIWrite(u8data);
-	if(TWIGetStatus() != 0x28)
-	return ERROR;
- 11c:	81 e0       	ldi	r24, 0x01	; 1
+// 	if(TWIGetStatus() != 0x28)
+// 	return ERROR;
 	TWIStop();
 	return SUCCESS;
 }
- 11e:	df 91       	pop	r29
- 120:	cf 91       	pop	r28
- 122:	1f 91       	pop	r17
- 124:	08 95       	ret
+  ec:	80 e0       	ldi	r24, 0x00	; 0
+  ee:	df 91       	pop	r29
+  f0:	cf 91       	pop	r28
+  f2:	1f 91       	pop	r17
+  f4:	08 95       	ret
 
-00000126 <main>:
+000000f6 <main>:
 
 int main(void)
 {
 	TWIInit();
- 126:	0e 94 40 00 	call	0x80	; 0x80 <TWIInit>
-	while(1) 
+  f6:	0e 94 40 00 	call	0x80	; 0x80 <TWIInit>
+	while(1)
 	{
 		EEWriteByte(0x0F,0x0F);
- 12a:	6f e0       	ldi	r22, 0x0F	; 15
- 12c:	8f e0       	ldi	r24, 0x0F	; 15
- 12e:	90 e0       	ldi	r25, 0x00	; 0
- 130:	0e 94 5d 00 	call	0xba	; 0xba <EEWriteByte>
- 134:	fa cf       	rjmp	.-12     	; 0x12a <main+0x4>
+  fa:	6f e0       	ldi	r22, 0x0F	; 15
+  fc:	8f e0       	ldi	r24, 0x0F	; 15
+  fe:	90 e0       	ldi	r25, 0x00	; 0
+ 100:	0e 94 5d 00 	call	0xba	; 0xba <EEWriteByte>
+ 104:	fa cf       	rjmp	.-12     	; 0xfa <main+0x4>
 
-00000136 <_exit>:
- 136:	f8 94       	cli
+00000106 <_exit>:
+ 106:	f8 94       	cli
 
-00000138 <__stop_program>:
- 138:	ff cf       	rjmp	.-2      	; 0x138 <__stop_program>
+00000108 <__stop_program>:
+ 108:	ff cf       	rjmp	.-2      	; 0x108 <__stop_program>
