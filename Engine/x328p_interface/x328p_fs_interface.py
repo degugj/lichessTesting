@@ -9,7 +9,7 @@ message_types = {'NA':0b00000111, 'Piece Picked Up':0b00001111, 'Piece Put Down'
 # I2C channel 1 is connected to the GPIO pins
 channel = 1
 #  MCP4725 defaults to address 0x60
-address = 0x8
+address = 0x03
 # Register addresses (with "normal mode" power-down bits)
 #reg_write_dac = 0x40
 # Initialize I2C (SMBus)
@@ -54,18 +54,22 @@ def fast_scan_simulator():
     print("-- Fast Scanning Simulation Started --")
     while True:
             # Read 3 bytes of data via i2c
-            startMessageB1 = 0x30
-            startMessageB2 = 0xFF
+            #startMessageB1 = 0x30
+            #startMessageB2 = 0xFF
             #startMessage = [startMessageB1, startMessageB2]
-            bus.write_byte(address, startMessageB1)
+            #bus.write_byte(address, startMessageB1)
             #bus.write_byte(address, startMessageB2)
-            print("Transmitting Bytes:",startMessageB1)
+            #print("Transmitting Bytes:",startMessageB1)
             #time.sleep(.3)
-            recBytes = bus.read_i2c_block_data(address, 0, 2)
+            print("Waiting for first transmitted byte...")
+            recByte = bus.read_byte(address)
+            integerRecByte = int.from_bytes(x, 'little')
+            
+            #recBytes = bus.read_i2c_block_data(address, 0, 2)
             #return_message_type(recBytes)
-            print("Received Message Type:"+return_message_type(recBytes))
-            print("Recveived Bytes:", recBytes)
-            time.sleep(5)
+            #print("Received Message Type:"+return_message_type(recBytes))
+            print("Recveived Byte:", recByte, '(' + format(integerRecByte, '#010b') + ')')
+            time.sleep(.03)
 
             # Write message via i2c
             #bus.write_i2c_block_data(address, 0, recBytes)
