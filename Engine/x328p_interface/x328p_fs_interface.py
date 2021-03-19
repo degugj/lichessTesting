@@ -3,9 +3,9 @@
 # Date: 2020-11-01
 import numpy as np
 import time
-from smbus import SMBus
-letterToColumn = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
-message_types = {'NA':0b00000111, 'Piece Picked Up':0b00001111, 'Piece Put Down':0b00010111, 'Invalid I2C Command':0b01011111}
+#ser2 = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
+columnToLetter = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
+message_types = {'NA': 0b00000111, 'Piece Picked Up': 0b00001111, 'Piece Put Down': 0b00010111, 'Invalid I2C Command': 0b01011111}
 # I2C channel 1 is connected to the GPIO pins
 channel = 1
 #  MCP4725 defaults to address 0x60
@@ -13,7 +13,27 @@ address = 0x03
 # Register addresses (with "normal mode" power-down bits)
 #reg_write_dac = 0x40
 # Initialize I2C (SMBus)
-bus = SMBus(channel)
+#bus = SMBus(channel)
+import math
+
+class gamestateMessage():
+    def __init__(self, typ, col, data):
+        self.typ = typ
+        self.col = col
+        self.data = data
+        self.chessCell = None
+
+    # return chess cell indicated by col integer
+    def return_chess_cell(self):
+        #print("Column: ", columnToLetter[self.col])
+        charColumn = columnToLetter[self.col]
+        #print(bin(self.data))
+        if self.data != 0:
+            print("Get row from data: ", int(math.log(self.data,2)+1))
+            chessRow = int(math.log(self.data,2)+1)
+        cell = columnToLetter[self.col] + str(chessRow)
+        print("Cell:",cell)
+        return cell
 
 def return_message_dict(two_byte_message):
     # Talked to Wei about this
@@ -48,6 +68,20 @@ def return_message_type(byteMessage):
             return key
     return 'Unknown'
 
+
+def fast_scan_simulator_uart():
+
+    print("-- Fast Scanning Simulation Started --")
+    while True:
+
+        print("Waiting for first transmitted byte...")
+        #recByte = bus.read_byte(address)
+        # = int.from_bytes(x, 'little')
+
+        #print("Recveived Byte:", recByte, '(' + format(integerRecByte, '#010b') + ')')
+        time.sleep(.03)
+
+
 def fast_scan_simulator():
     #https://raspberry-projects.com/pi/programming-in-python/i2c-programming-in-python/using-the-i2c-interface-2
     #https://pypi.org/project/smbus2/
@@ -74,14 +108,16 @@ def fast_scan_simulator():
             # Write message via i2c
             #bus.write_i2c_block_data(address, 0, recBytes)
             #print("Transmitting message:", format(recBytes,'#010b'))
+""""
 def test_sim():
      numb = 1
      print ("Enter 1 for ON or 0 for OFF")
      while numb == 1:
         ledstate = input(">>>>   ")
         if ledstate == "1":
-             bus.write_byte(address, 0x1) # switch it on
+             #bus.write_byte(address, 0x1) # switch it on
         elif ledstate == "0":
-             bus.write_byte(address, 0x0) # switch it on
+             #bus.write_byte(address, 0x0) # switch it on
         else:
              numb = 0
+"""
