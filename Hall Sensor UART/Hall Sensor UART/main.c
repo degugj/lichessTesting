@@ -9,6 +9,19 @@
 #include <util/delay.h>
 #include <avr/io.h>
 
+// Mux0 = PD6
+// Mux1 = PD7
+// Mux2 = PB0
+// Mux3 = PB1
+// Mux4 = PC0
+// Mux5 = PC1
+// Mux6 = PC2
+// Mux7 = PC3
+
+// A = PD2
+// B = PD3
+// C = PD4
+
 void USART_Transmit(uint8_t data)
 {
 
