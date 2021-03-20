@@ -7,8 +7,7 @@ import pygame as pg
 import multiprocessing as mp
 import time
 
-from Engine import gameState as gs
-from Engine import gui_pages as pages
+from Engine import gameState as gs, gui_pages as pages, audio
 from Engine.lichess import lichessInterface_new as lichessinterface
 
 """
@@ -17,35 +16,33 @@ DEFINITIONS AND VARIABLES
 -------------------------------
 """
 WIN_WIDTH = 850
-WIN_HEIGHT = 650
+WIN_HEIGHT = 750
 CB_WIDTH = CB_HEIGHT = 512
 DIMENSIONS = 8
 BUFFER_DIMENSIONSx = 2
 BUFFER_DIMENSIONSy = 8
 MAX_FPS = 15
 
-# chessboard coordinates and cellsize
-xchessboardOffset = (WIN_WIDTH - CB_WIDTH) // 2
-ychessboardOffset = (WIN_HEIGHT - CB_HEIGHT) // 4
+# size of single cell
 cellSize = CB_HEIGHT // DIMENSIONS
+# chessboard coordinates (x offset, y offset)
+chessboardCoords = ((WIN_WIDTH - CB_WIDTH) // 2, (WIN_HEIGHT - CB_HEIGHT) // 4)
 
-# buffer coordinates
-leftbufferOffset = (xchessboardOffset - (2*cellSize)) // 2
-rightbufferOffset = WIN_WIDTH - (2*cellSize) - leftbufferOffset
+# buffer coordinates (left buffer offset, right buffer offset)
+leftbufferCoords = (chessboardCoords[0] - (2*cellSize)) // 2
+bufferCoords = (leftbufferCoords, WIN_WIDTH - (2*cellSize) - leftbufferCoords)
 
 # alert window coordinates
-alertwindowOffsetx = xchessboardOffset
-alertwindowOffsety = (WIN_HEIGHT - ychessboardOffset) - 50
+alertwindowCoords = (chessboardCoords[0], (WIN_HEIGHT - chessboardCoords[1]) - 50)
 
 # button coordinate offsets
-resignButtonX = xchessboardOffset + cellSize*3
-resignButtonY = alertwindowOffsety - 40
-abortButtonX = resignButtonX + cellSize*3
-abortButtonY = resignButtonY
+resignbuttonCoords = (chessboardCoords[0] + cellSize*3, alertwindowCoords[1] - 40)
+abortbuttonCoords = (resignbuttonCoords[0] + cellSize*3, resignbuttonCoords[1])
 
+# dictionary to hold images
 images = {}
 
-### CONVERT COORDINATES TO TUPLES???? ###
+screen = None
 
 """
 -------------------------------
@@ -68,6 +65,7 @@ def init_chessboard(challengerName, gamestate):
 	pg.display.set_icon(icon)
 
 	# set window dimensions and color, and create clock
+	global screen
 	screen = pg.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 	screen.fill(pg.Color("white"))
 	clock = pg.time.Clock()
@@ -80,7 +78,9 @@ def init_chessboard(challengerName, gamestate):
 
 	# draw section for alerts
 	color = pg.Color("light grey")
-	pg.draw.rect(screen, color, pg.Rect(alertwindowOffsetx, alertwindowOffsety, CB_WIDTH, cellSize+30))
+	pg.draw.rect(screen, color, pg.Rect(alertwindowCoords[0], alertwindowCoords[1], CB_WIDTH, cellSize+30))
+
+	audio.sound_gamestart()
 
 	# always run until quit event
 	run = draw = True
@@ -101,14 +101,21 @@ def init_chessboard(challengerName, gamestate):
 				button = check_buttons(screen, mouse)
 				if button == "resign":
 					# user has resigned the game
-					if gameover(screen, ("resign", gamestate.get_opponentcolor()), gamestate):
+					if gameover(("resign", gamestate.get_opponentcolor()), gamestate):
 						draw = False
+						run = False
+						time.sleep(3)
+						break
 				if button == "abort":
 					# user has aborted the game
-					if gameover(screen, ("abort", gamestate.get_opponentcolor()), gamestate):
+					if gameover(("abort", gamestate.get_opponentcolor()), gamestate):
 						draw = False
+						run = False
+						time.sleep(3)
+						break
 
 		if draw:
+
 			# draw buttons
 			draw_userbuttons(screen)
 
@@ -119,19 +126,21 @@ def init_chessboard(challengerName, gamestate):
 			clock.tick(MAX_FPS)
 			pg.display.flip()
 
+			display_alert(gamestate.message)
+
 			# update gamestate of the board (i.e user/opponent makes move)
-			gamestateUpdate = gamestate.update_gamestate(screen)
+			gamestateUpdate = gamestate.update_gamestate()
+
 			if gamestateUpdate != 'ok':
-				gameover(screen, gamestateUpdate, gamestate)
-				pg.display.flip()
-				time.sleep(10)
-				break
+				draw_gamestate(screen, gamestate)
+				gameover(gamestateUpdate, gamestate)
+				time.sleep(3)
+				run = False
 
 	# terminate gamestream
 	pages.terminate_gamestream()
 	# quit pygame
 	pg.display.quit()
-	pg.quit()
 
 
 """ load_images: loads chesspiece images into images dictionary
@@ -157,8 +166,8 @@ def draw_gametext(screen, challengerName, gamestate):
 	leftbuffertextOffset =  (WIN_WIDTH - CB_WIDTH) // 4
 	rightbuffertextOffset =  WIN_WIDTH - leftbuffertextOffset
 	display_text(screen, "Currently Playing: " + challengerName, (0,0,0), 20, WIN_WIDTH // 2, 40)
-	display_text(screen, "White Capture Buffer", (0,0,0), 15, leftbuffertextOffset, ychessboardOffset-25)
-	display_text(screen, "Black Capture Buffer", (0,0,0), 15, rightbuffertextOffset, ychessboardOffset-25)
+	display_text(screen, "White Capture Buffer", (0,0,0), 15, leftbuffertextOffset, chessboardCoords[1]-25)
+	display_text(screen, "Black Capture Buffer", (0,0,0), 15, rightbuffertextOffset, chessboardCoords[1]-25)
 
 	# draw letter and number coordinates
 	letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
@@ -191,10 +200,10 @@ def draw_gametext(screen, challengerName, gamestate):
 """
 def draw_userbuttons(screen):
 	# resign button
-	draw_button(screen, pg.Color("blue"), resignButtonX, resignButtonY, 
+	draw_button(screen, pg.Color("blue"), resignbuttonCoords[0], resignbuttonCoords[1], 
 					cellSize*2, cellSize//2, "Resign Game")
 	# abort button
-	draw_button(screen, pg.Color("red"), abortButtonX, abortButtonY, 
+	draw_button(screen, pg.Color("red"), abortbuttonCoords[0], abortbuttonCoords[1], 
 					cellSize*2, cellSize//2, "Abort Game")
 
 	return
@@ -221,16 +230,16 @@ def draw_button(screen, color, x, y, length, height, text):
 """
 def check_buttons(screen, mouse):
 	# check if button hovering resign game button
-	if resignButtonX < mouse[0] < (resignButtonX + cellSize*2) and resignButtonY < mouse[1] < (resignButtonY) + cellSize//2:
+	if resignbuttonCoords[0] < mouse[0] < (resignbuttonCoords[0] + cellSize*2) and resignbuttonCoords[1] < mouse[1] < (resignbuttonCoords[1]) + cellSize//2:
 		# change button color if pressed
-		draw_button(screen, pg.Color("grey"), resignButtonX, resignButtonY, 
+		draw_button(screen, pg.Color("grey"), resignbuttonCoords[0], resignbuttonCoords[1], 
 					cellSize*2, cellSize//2, "Resign Game")
 		time.sleep(0.5)
 		return "resign"
 	# check if button hovering is abort button
-	if abortButtonX < mouse[0] < (abortButtonX + cellSize*2) and abortButtonY < mouse[1] < (abortButtonY + cellSize//2):
+	if abortbuttonCoords[0] < mouse[0] < (abortbuttonCoords[0] + cellSize*2) and abortbuttonCoords[1] < mouse[1] < (abortbuttonCoords[1] + cellSize//2):
 		# change button color if pressed
-		draw_button(screen, pg.Color("grey"), abortButtonX, abortButtonY, 
+		draw_button(screen, pg.Color("grey"), abortbuttonCoords[0], abortbuttonCoords[1], 
 					cellSize*2, cellSize//2, "Abort Game")
 		time.sleep(0.5)
 		return "abort"
@@ -240,11 +249,12 @@ def check_buttons(screen, mouse):
 	params:
 	return:
 """
-def display_alert(screen, message):
+def display_alert(message):
 	# clear alert section
-	pg.draw.rect(screen, pg.Color("light grey"), pg.Rect(alertwindowOffsetx, alertwindowOffsety, CB_WIDTH, cellSize+30))
+	global screen
+	pg.draw.rect(screen, pg.Color("light grey"), pg.Rect(alertwindowCoords[0], alertwindowCoords[1], CB_WIDTH, cellSize+30))
 	# display alert message
-	display_text(screen, message, pg.Color("black"), 15, WIN_WIDTH//2, alertwindowOffsety+30)
+	display_text(screen, message, pg.Color("black"), 15, WIN_WIDTH//2, alertwindowCoords[1]+30)
 	pg.display.flip()
 
 	return
@@ -256,7 +266,7 @@ def display_alert(screen, message):
 """
 def draw_gamestate(screen, gamestate):
 
-	draw_board(screen)
+	draw_board(screen, gamestate.coloredCells)
 	draw_buffers(screen)
 	draw_pieces(screen, gamestate)
 
@@ -267,14 +277,19 @@ def draw_gamestate(screen, gamestate):
 	params: screen
 	return:
 """
-def draw_board(screen, startColor=None, destColor=None):
+def draw_board(screen, coloredCells):
+	startCell = coloredCells[0]
+	destCell = coloredCells[1]
 	# alternate board cell colors
 	colors = [pg.Color("white"), pg.Color("dark grey")]
 	for row in range(DIMENSIONS):
 		for column in range(DIMENSIONS):
-			color = colors[(row+column) % 2]
+			if row == startCell[0] and column == startCell[1] or row == destCell[0] and column == destCell[1]:
+				color = pg.Color("Khaki") 
+			else:
+				color = colors[(row+column) % 2]
 			# draw chess board; offsets used to center the board
-			pg.draw.rect(screen, color, pg.Rect(column*cellSize + xchessboardOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
+			pg.draw.rect(screen, color, pg.Rect(column*cellSize + chessboardCoords[0], row*cellSize + chessboardCoords[1], cellSize, cellSize))
 
 	return
 
@@ -290,9 +305,9 @@ def draw_buffers(screen):
 		for column in range(2):
 			color = colors[(row+column) % 2]
 			# place left buffer
-			pg.draw.rect(screen, color, pg.Rect(column*cellSize + leftbufferOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
+			pg.draw.rect(screen, color, pg.Rect(column*cellSize + bufferCoords[0], row*cellSize + chessboardCoords[1], cellSize, cellSize))
 			# place right buffer
-			pg.draw.rect(screen, color, pg.Rect(column*cellSize + rightbufferOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
+			pg.draw.rect(screen, color, pg.Rect(column*cellSize + bufferCoords[1], row*cellSize + chessboardCoords[1], cellSize, cellSize))
 	return
 
 
@@ -307,7 +322,7 @@ def draw_pieces(screen, gamestate):
 			piece = gamestate.board[row][column]
 			if piece != "--":
 				# draw pieces on top of the board; offsets used to center pieces into correct cells
-				screen.blit(images[piece], (column*cellSize + xchessboardOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
+				screen.blit(images[piece], (column*cellSize + chessboardCoords[0], row*cellSize + chessboardCoords[1], cellSize, cellSize))
 
 	# pieces on the capture zones
 	for row in range(BUFFER_DIMENSIONSy):
@@ -315,11 +330,11 @@ def draw_pieces(screen, gamestate):
 			# draw white pieces
 			whitePiece = gamestate.wBuffer[row][column]
 			if whitePiece != "--":
-				screen.blit(images[whitePiece], (column*cellSize + leftbufferOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
+				screen.blit(images[whitePiece], (column*cellSize + bufferCoords[0], row*cellSize + chessboardCoords[1], cellSize, cellSize))
 			# draw black pieces
 			blackPiece = gamestate.bBuffer[row][column]
 			if blackPiece != "--":
-				screen.blit(images[blackPiece], (column*cellSize + rightbufferOffset, row*cellSize + ychessboardOffset, cellSize, cellSize))
+				screen.blit(images[blackPiece], (column*cellSize + bufferCoords[1], row*cellSize + chessboardCoords[1], cellSize, cellSize))
 
 	return
 
@@ -341,43 +356,50 @@ def display_text(screen, message, color, size, x, y):
 	params: screen (pygame screen), reason (tuple: (winner, reason)), gamestate
 	return:
 """
-def gameover(screen, reason, gamestate):
-	print(reason[1])
+def gameover(reason, gamestate):
 	# user has won
 	if reason[1] == gamestate.get_usercolor():
+		# play victory tone
+		audio.sound_victory()
 		# opponent has resigned
 		if reason[0] == "resign":
 			# display message
-			display_alert(screen, "GAME OVER! The opponent has resigned and you have won!")
-			return 1
+			gamestate.message = "GAME OVER! The opponent has resigned and you have won!"
+
 		# opponent has aborted
 		if reason[0] == "abort":
 			# display message
-			display_alert(screen, "GAME OVER! The opponent has aborted the game!")
-			return 1
+			gamestate.message = "GAME OVER! The opponent has resigned and you have won!"
+
 		# user won by checkmate
 		if reason[0] == "mate":
-			display_alert(screen, "GAME OVER! You have won by checkmate!")
-			return
+			gamestate.message = "GAME OVER! The opponent has resigned and you have won!"
+
 	# opponent has won
 	else:
+		# play defeat tone
+		audio.sound_defeat()
 		# user has resigned
 		if reason[0] == "resign":
 			# send to lichess server
-			if lichessinterface.gameover("resign"):
-				display_alert(screen, "GAME OVER! You have resigned!")
-				return 1
-			return
+			if lichessinterface.gameover("resign", screen):
+				gamestate.message = "GAME OVER! The opponent has resigned and you have won!"
+			
 		# user has aborted  
 		if reason[0] == "abort":
 			# send to lichess server
-			if lichessinterface.gameover("abort"):
-				display_alert(screen, "GAME OVER! You have aborted the game!")
-				return 1
-			return
+			if lichessinterface.gameover("abort", screen):
+				gamestate.message = "GAME OVER! The opponent has resigned and you have won!"
+			
 		# opponent won by checkmate
 		if reason[0] == "mate":
-			display_alert(screen, "GAME OVER! You have lost by checkmate!")
-			return 1
-			
+			gamestate.message = "GAME OVER! The opponent has resigned and you have won!"
 
+
+	display_alert(gamestate.message)
+
+
+# quit pygame module
+def terminate_pygame():
+	pg.quit()
+	return

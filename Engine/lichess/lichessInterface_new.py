@@ -96,8 +96,6 @@ def challenge_user(username, **kwargs):
 
 
 
-
-
 """ create_seek: start a seek for random opponent
 	params:
 	return:
@@ -112,18 +110,19 @@ def create_seek():
 	params:
 	return:
 """
-def make_move(move, screen):
-	gameid = open('gameid.txt', 'r')
-	r = requests.post('https://lichess.org/api/board/game/{id}/move/{move}'.format(id=gameid.read(), move=move), headers={'Authorization': 'Bearer {}'.format(api_key)})
-	gameid.close()
-	if r.ok:
-		chessboard.display_alert(screen, "Okay")
-		return 1
-	# error code 400
-	else:
-		chessboard.display_alert(screen, r.content)
-		return 0
-
+def make_move(move):
+	try:
+		gameid = open('gameid.txt', 'r')
+		r = requests.post('https://lichess.org/api/board/game/{id}/move/{move}'.format(id=gameid.read(), move=move), headers={'Authorization': 'Bearer {}'.format(api_key)})
+		gameid.close()
+		if r.ok:
+			return 1
+		# error code 400; return error message from LiChess
+		else:
+			print(r.content)
+			return r.content
+	except:
+		pass
 
 
 """ game_over: either abort or resign
@@ -134,7 +133,7 @@ def make_move(move, screen):
 		0: game successfully resigned
 		-1: error
 """
-def gameover(option):
+def gameover(option, screen):
 	gameid = open('gameid.txt', 'r')
 	try:
 		if option == "abort":
@@ -143,13 +142,13 @@ def gameover(option):
 
 		elif option == "resign":  
 			# send resign message
-			r = request.post('https://lichess.org/api/board/game/{gameId}/resign'.format(gameId=gameid.read()),  headers={'Authorization': 'Bearer {}'.format(api_key)})
+			r = requests.post('https://lichess.org/api/board/game/{gameId}/resign'.format(gameId=gameid.read()),  headers={'Authorization': 'Bearer {}'.format(api_key)})
 
 		gameid.close()
 		return 1
 
 	except:
-		print("Unable to complete, request issue")
+		chessboard.display_alert(screen, "Error sending request message to LiChess server")
 		return 0
 
 
