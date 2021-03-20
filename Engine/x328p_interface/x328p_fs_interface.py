@@ -49,8 +49,8 @@ def compare_chess_states(gs, messageArray):
     #print("Sam's Message Array:", messageArray)
     for message in messageArray:
         column = get_column_byIndex(gs, message.col)
-        print(column)
-        print(column_to_byte(column))
+        #print(column)
+        #print(column_to_byte(column))
         if(column_to_byte(column) != message.data):
             print("Incongruent gamestates")
             return -1
