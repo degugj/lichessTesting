@@ -98,7 +98,7 @@ def init_chessboard(challengerName, gamestate):
 				# get position of mouse, and check if hovering button
 				mouse = pg.mouse.get_pos()
 				# check if mouse hovering button
-				button = check_buttons(screen, mouse)
+				button = check_buttons(screen, mouse, gamestate)
 				if button == "resign":
 					# user has resigned the game
 					if gameover(("resign", gamestate.get_opponentcolor()), gamestate):
@@ -117,7 +117,7 @@ def init_chessboard(challengerName, gamestate):
 		if draw:
 
 			# draw buttons
-			draw_userbuttons(screen)
+			draw_userbuttons(screen, gamestate.turn)
 
 			# draw chessboard, buffer zones, pieces
 			draw_gamestate(screen, gamestate)
@@ -198,13 +198,17 @@ def draw_gametext(screen, challengerName, gamestate):
 	params: screen
 	return:
 """
-def draw_userbuttons(screen):
+def draw_userbuttons(screen, turn):
 	# resign button
 	draw_button(screen, pg.Color("blue"), resignbuttonCoords[0], resignbuttonCoords[1], 
 					cellSize*2, cellSize//2, "Resign Game")
-	# abort button
-	draw_button(screen, pg.Color("red"), abortbuttonCoords[0], abortbuttonCoords[1], 
-					cellSize*2, cellSize//2, "Abort Game")
+	if turn < 2:
+		# abort button
+		draw_button(screen, pg.Color("red"), abortbuttonCoords[0], abortbuttonCoords[1], 
+						cellSize*2, cellSize//2, "Abort Game")
+	elif turn == 2:
+		pg.draw.rect(screen, pg.Color("white"), pg.Rect(abortbuttonCoords[0], abortbuttonCoords[1], 
+						cellSize*2, cellSize//2))
 
 	return
 
@@ -223,12 +227,20 @@ def draw_button(screen, color, x, y, length, height, text):
 	return
 
 
+""" remove_button: remove a button
+	params: screen, x, y 
+	return:
+"""
+def remove_button(screen, x, y, length, height):
+	# whiteout the button's coordinate locations
+	pg.draw.rect(screen, pg.Color("white"), pg.Rect(x, y, length, height))
+	return
 
 """ check_buttons: called when game checks for mouse clicks
 	params: screen, mouse (mouse location)
 	return:
 """
-def check_buttons(screen, mouse):
+def check_buttons(screen, mouse, gamestate):
 	# check if button hovering resign game button
 	if resignbuttonCoords[0] < mouse[0] < (resignbuttonCoords[0] + cellSize*2) and resignbuttonCoords[1] < mouse[1] < (resignbuttonCoords[1]) + cellSize//2:
 		# change button color if pressed
@@ -237,7 +249,7 @@ def check_buttons(screen, mouse):
 		time.sleep(0.5)
 		return "resign"
 	# check if button hovering is abort button
-	if abortbuttonCoords[0] < mouse[0] < (abortbuttonCoords[0] + cellSize*2) and abortbuttonCoords[1] < mouse[1] < (abortbuttonCoords[1] + cellSize//2):
+	if gamestate.turn < 2 and abortbuttonCoords[0] < mouse[0] < (abortbuttonCoords[0] + cellSize*2) and abortbuttonCoords[1] < mouse[1] < (abortbuttonCoords[1] + cellSize//2):
 		# change button color if pressed
 		draw_button(screen, pg.Color("grey"), abortbuttonCoords[0], abortbuttonCoords[1], 
 					cellSize*2, cellSize//2, "Abort Game")
@@ -353,7 +365,7 @@ def display_text(screen, message, color, size, x, y):
 
 
 """ gameover: game has ended
-	params: screen (pygame screen), reason (tuple: (winner, reason)), gamestate
+	params: reason (tuple: (reason, winner_color)), gamestate
 	return:
 """
 def gameover(reason, gamestate):
@@ -369,11 +381,11 @@ def gameover(reason, gamestate):
 		# opponent has aborted
 		if reason[0] == "abort":
 			# display message
-			gamestate.message = "GAME OVER! The opponent has resigned and you have won!"
+			gamestate.message = "GAME OVER! The opponent has aborted the match!"
 
 		# user won by checkmate
 		if reason[0] == "mate":
-			gamestate.message = "GAME OVER! The opponent has resigned and you have won!"
+			gamestate.message = "GAME OVER! You have won by checkmate!"
 
 	# opponent has won
 	else:
@@ -383,17 +395,17 @@ def gameover(reason, gamestate):
 		if reason[0] == "resign":
 			# send to lichess server
 			if lichessinterface.gameover("resign", screen):
-				gamestate.message = "GAME OVER! The opponent has resigned and you have won!"
+				gamestate.message = "GAME OVER! You have resigned and the opponent has won."
 			
 		# user has aborted  
 		if reason[0] == "abort":
 			# send to lichess server
 			if lichessinterface.gameover("abort", screen):
-				gamestate.message = "GAME OVER! The opponent has resigned and you have won!"
+				gamestate.message = "GAME OVER! You have aborted the game."
 			
 		# opponent won by checkmate
 		if reason[0] == "mate":
-			gamestate.message = "GAME OVER! The opponent has resigned and you have won!"
+			gamestate.message = "GAME OVER! The opponent has won by checkmate!"
 
 
 	display_alert(gamestate.message)

@@ -97,6 +97,9 @@ class GameState():
 
         self.defaultState = self.board        
 
+        # indicates how many turns have occurred
+        self.turn = 0
+
         # indicates if game is in first turn; used during get_opponentturn
         self.firstTurn = True
         # keeps track of previous opponents move; used during get_opponentturn
@@ -165,13 +168,16 @@ class GameState():
         # length of move string (normally 4, pawn promotion 5)
         moveLength = len(move)
 
+        # increment number of turns that have occurred
+        self.turn += 1
+
         # find the piece to be moved and destination piece
         startpiece = self.get_piece_fromboard(move[0], move[1])
         destpiece = self.get_piece_fromboard(move[2], move[3])
-        # get coordinates of the pieces (indices indicating piece location on gamestate.board)
+        # get gamestate.board coordinates of the pieces
         self.coloredCells[0] = startpiece[1]
         self.coloredCells[1] = destpiece[1]
-
+        # get actual piece (e.g 'wP', 'bP')
         startpiece = startpiece[0]
         destpiece = destpiece[0]
 
