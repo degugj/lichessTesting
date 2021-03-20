@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# AvrStudio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "i2ceeprom", "i2ceeprom\i2ceeprom.cproj", "{0C1EEFBD-0AD6-4F61-B681-AF1BDB72F2B2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0C1EEFBD-0AD6-4F61-B681-AF1BDB72F2B2}.Debug|AVR.ActiveCfg = Debug|AVR
+		{0C1EEFBD-0AD6-4F61-B681-AF1BDB72F2B2}.Debug|AVR.Build.0 = Debug|AVR
+		{0C1EEFBD-0AD6-4F61-B681-AF1BDB72F2B2}.Release|AVR.ActiveCfg = Release|AVR
+		{0C1EEFBD-0AD6-4F61-B681-AF1BDB72F2B2}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

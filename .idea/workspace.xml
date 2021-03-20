@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8ff659b2-d0f7-4a7e-86dc-2d39cc014c34" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Engine/x328p_interface/x328p_fs_interface.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/x328p_fs_interface_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/gameState.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/gameState.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/x328p_interface/x328p_gantry_interface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/x328p_interface_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/x328p_gantry_interface_test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,8 +19,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Engine/gui_pages.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="359">
-              <caret line="145" column="31" lean-forward="true" selection-start-line="145" selection-start-column="31" selection-end-line="145" selection-end-column="31" />
+            <state relative-caret-position="2329">
+              <caret line="145" column="31" selection-start-line="145" selection-start-column="31" selection-end-line="145" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -38,8 +40,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gui_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1292">
-              <caret line="79" column="11" lean-forward="true" selection-start-line="79" selection-start-column="11" selection-end-line="79" selection-end-column="11" />
+            <state relative-caret-position="1275">
+              <caret line="79" column="11" selection-start-line="79" selection-start-column="11" selection-end-line="79" selection-end-column="11" />
               <folding>
                 <element signature="e#80#100#0" expanded="true" />
               </folding>
@@ -50,7 +52,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Engine/gameState.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-901">
+            <state relative-caret-position="88">
               <caret line="56" column="59" selection-start-line="56" selection-start-column="59" selection-end-line="56" selection-end-column="59" />
             </state>
           </provider>
@@ -59,17 +61,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Engine/Communication_Testing/i2ctest.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+            <state relative-caret-position="34">
+              <caret line="2" column="31" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
+              <folding>
+                <element signature="e#122#134#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_gantry_interface.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="111">
-              <caret line="398" column="84" selection-start-line="398" selection-start-column="84" selection-end-line="398" selection-end-column="84" />
+            <state relative-caret-position="153">
+              <caret line="9" column="17" selection-start-line="9" selection-end-line="10" />
               <folding>
                 <element signature="e#134#145#0" expanded="true" />
               </folding>
@@ -78,10 +83,31 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/x328p_interface_test.py">
+        <entry file="file://$PROJECT_DIR$/x328p_gantry_interface_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="57">
-              <caret line="9" column="12" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
+            <state>
+              <caret selection-end-line="8" selection-end-column="53" />
+              <folding>
+                <element signature="e#161#177#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_fs_interface.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="16" lean-forward="true" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/x328p_fs_interface_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="34" selection-start-column="34" selection-end-column="34" />
               <folding>
                 <element signature="e#161#177#0" expanded="true" />
               </folding>
@@ -138,24 +164,25 @@
         <option value="$PROJECT_DIR$/Engine/x328p_interface_test.py" />
         <option value="$PROJECT_DIR$/gui_test.py" />
         <option value="$PROJECT_DIR$/Engine/gui_pages.py" />
-        <option value="$PROJECT_DIR$/x328p_interface_test.py" />
         <option value="$PROJECT_DIR$/Engine/gameState.py" />
         <option value="$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py" />
+        <option value="$PROJECT_DIR$/x328p_interface_test.py" />
+        <option value="$PROJECT_DIR$/Engine/x328p_interface/x328p_fs_interface.py" />
+        <option value="$PROJECT_DIR$/x328p_fs_interface_test.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="856" />
-    <option name="y" value="120" />
-    <option name="width" value="1390" />
-    <option name="height" value="1754" />
+    <option name="x" value="1354" />
+    <option name="y" value="-14" />
+    <option name="width" value="1394" />
+    <option name="height" value="1770" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -166,12 +193,13 @@
             <path>
               <item name="lichessTesting" type="b2602c69:ProjectViewProjectNode" />
               <item name="lichessTesting" type="462c0819:PsiDirectoryNode" />
-              <item name="arduino" type="462c0819:PsiDirectoryNode" />
+              <item name="Engine" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="lichessTesting" type="b2602c69:ProjectViewProjectNode" />
               <item name="lichessTesting" type="462c0819:PsiDirectoryNode" />
               <item name="Engine" type="462c0819:PsiDirectoryNode" />
+              <item name="Communication_Testing" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="lichessTesting" type="b2602c69:ProjectViewProjectNode" />
@@ -183,6 +211,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -210,7 +239,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.x328p_interface_test">
+  <component name="RunManager" selected="Python.x328p_fs_interface_test">
     <configuration name="328p_interface_test (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="lichessTesting" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -253,7 +282,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="gameStream" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="x328p_fs_interface_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="lichessTesting" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -265,7 +294,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/gameStream.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/x328p_fs_interface_test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -274,7 +303,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="test_jack" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="x328p_gantry_interface_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="lichessTesting" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -286,7 +315,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_jack.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/x328p_gantry_interface_test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -307,7 +336,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/x328p_interface_test.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\jackd\PycharmProjects\lichessTesting\x328p_gantry_interface_test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -318,11 +347,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.x328p_fs_interface_test" />
+        <item itemvalue="Python.x328p_gantry_interface_test" />
         <item itemvalue="Python.x328p_interface_test" />
         <item itemvalue="Python.328p_interface_test (1)" />
         <item itemvalue="Python.328p_interface_test" />
-        <item itemvalue="Python.gameStream" />
-        <item itemvalue="Python.test_jack" />
       </list>
     </recent_temporary>
   </component>
@@ -547,20 +576,41 @@
       <option name="project" value="LOCAL" />
       <updated>1611115213451</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Added integer values for sent header and payload.">
+      <created>1611116555552</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1611116555552</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Updates to diagnose errors with UART.">
+      <created>1611117509345</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1611117509345</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Removed illegal diagonal moves. Ready for physical testing">
+      <created>1612038886952</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1612038886952</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1381" height="885" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.21232368" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20935412" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Messages" order="0" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.32804233" />
-      <window_info active="true" anchor="bottom" x="102" y="380" width="1163" height="111" id="Run" maximized="true" order="3" sideWeight="0.49740162" visible="true" weight="0.43386245" />
+      <window_info active="true" anchor="bottom" x="102" y="380" width="1163" height="111" id="Run" maximized="true" order="3" sideWeight="0.49740162" visible="true" weight="0.4378307" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.3994709" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
@@ -605,9 +655,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="testing git vcs" />
-    <MESSAGE value="Working on Astar and interface with 328p. Test will not work without modification to gamestate class (talk to Jack)" />
-    <MESSAGE value="Added argument to make_physical_move()" />
     <MESSAGE value="Created function to visualize position map. Translated 8x8 gamestate to map without buffer zones for now. Next step is heuristic map and astar implementation. Will upload outputs to drive." />
     <MESSAGE value="Fixes to print position map. Implemented a successful heuristic (using straight line distance). Now we can implement astar for game board pathplanning." />
     <MESSAGE value="Can reach goal state. Working on returning solution path." />
@@ -630,7 +677,10 @@
     <MESSAGE value="Fixed position map piece capture. Finds appropriate position based on piece captured." />
     <MESSAGE value="Removed long sys out prints for testing and video." />
     <MESSAGE value="Fixes to buffer zone position resolution." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixes to buffer zone position resolution." />
+    <MESSAGE value="Added integer values for sent header and payload." />
+    <MESSAGE value="Updates to diagnose errors with UART." />
+    <MESSAGE value="Removed illegal diagonal moves. Ready for physical testing" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed illegal diagonal moves. Ready for physical testing" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/chessPiece.py" />
@@ -700,20 +750,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Engine/328p_interface/328p_interface_test.py" />
     <entry file="file://$PROJECT_DIR$/328p_interface_test.py" />
-    <entry file="file://$PROJECT_DIR$/gui_test.py">
+    <entry file="file://$PROJECT_DIR$/Engine/gui_pages.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1292">
-          <caret line="79" column="11" lean-forward="true" selection-start-line="79" selection-start-column="11" selection-end-line="79" selection-end-column="11" />
-          <folding>
-            <element signature="e#80#100#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/Communication_Testing/i2ctest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+        <state relative-caret-position="2329">
+          <caret line="145" column="31" selection-start-line="145" selection-start-column="31" selection-end-line="145" selection-end-column="31" />
         </state>
       </provider>
     </entry>
@@ -727,36 +767,66 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/gui_pages.py">
+    <entry file="file://$PROJECT_DIR$/gui_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="359">
-          <caret line="145" column="31" lean-forward="true" selection-start-line="145" selection-start-column="31" selection-end-line="145" selection-end-column="31" />
+        <state relative-caret-position="1275">
+          <caret line="79" column="11" selection-start-line="79" selection-start-column="11" selection-end-line="79" selection-end-column="11" />
+          <folding>
+            <element signature="e#80#100#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/x328p_interface_test.py">
+    <entry file="file://$PROJECT_DIR$/Engine/Communication_Testing/i2ctest.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="9" column="12" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
+        <state relative-caret-position="34">
+          <caret line="2" column="31" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
+          <folding>
+            <element signature="e#122#134#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/x328p_gantry_interface_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="8" selection-end-column="53" />
           <folding>
             <element signature="e#161#177#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_gantry_interface.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="17" selection-start-line="9" selection-end-line="10" />
+          <folding>
+            <element signature="e#134#145#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Engine/gameState.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-901">
+        <state relative-caret-position="88">
           <caret line="56" column="59" selection-start-line="56" selection-start-column="59" selection-end-line="56" selection-end-column="59" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_interface.py">
+    <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_fs_interface.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="111">
-          <caret line="398" column="84" selection-start-line="398" selection-start-column="84" selection-end-line="398" selection-end-column="84" />
+        <state relative-caret-position="136">
+          <caret line="8" column="16" lean-forward="true" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/x328p_fs_interface_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="34" selection-start-column="34" selection-end-column="34" />
           <folding>
-            <element signature="e#134#145#0" expanded="true" />
+            <element signature="e#161#177#0" expanded="true" />
           </folding>
         </state>
       </provider>
