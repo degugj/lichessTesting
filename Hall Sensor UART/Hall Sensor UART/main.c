@@ -5,9 +5,24 @@
  * Author : Sam Klein
  */ 
 
+
 #define F_CPU 16000000
+
 #include <util/delay.h>
 #include <avr/io.h>
+
+#define Mux0 PD6
+#define Mux1 PD7
+#define Mux2 PB0
+#define Mux3 PB1
+#define Mux4 PC0
+#define Mux5 PC1
+#define Mux6 PC2
+#define Mux7 PC3
+
+#define A PD2
+#define B PD3
+#define C PD4
 
 void USART_Transmit(uint8_t data)
 {
@@ -48,7 +63,29 @@ void USART_init(void){
 
 int main(void)
 {
-    //uint8_t UART_lastRecievedByte;
+    
+	//PORTD = (1<<A) | (1<<B) | (1<<C); // Set A, B, C to high for now (Hall7 will be read)
+	
+	DDRD |= (1<<A);
+	DDRD |= (1<<B);
+	DDRD |= (1<<C);
+	
+	DDRD |= (0<<Mux0);
+	DDRD |= (0<<Mux1);
+	DDRB |= (0<<Mux2);
+	DDRB |= (0<<Mux3);
+	DDRC |= (0<<Mux4);
+	DDRC |= (0<<Mux5);
+	DDRC |= (0<<Mux6);
+	DDRC |= (0<<Mux7);
+	
+	PORTD |= (1<<A);
+	PORTD |= (1<<B);
+	PORTD |= (1<<C);
+	
+	
+	
+	//uint8_t UART_lastRecievedByte;
 	USART_init();
     while (1) 
     {
