@@ -198,7 +198,8 @@ class ChallengePage(tk.Frame):
 
                 # wait until challenger accepts or declines challenge
                 accepted = False
-                while not accepted:
+                declined = False
+                while not accepted and not declined:
                     try:
                         # grab event and check if game start has occurred
                         event = eventQueue.get_nowait()
@@ -208,13 +209,14 @@ class ChallengePage(tk.Frame):
                                 accepted = True
 
                         if event["type"] == "challengeDeclined":
-                            print("Challenge declined by: ", username)
-                            break
+                            declined = True
                     except:
                         pass
 
                 if accepted:
                     ingame(username, controller)
+                if declined:
+                    print("Challenge declined by: ", username)
         return
 
 
@@ -225,9 +227,9 @@ FUNCTIONS
 """
 
 """ ingame: runs while user is currently in a game
-	params:
-		challengerName: name of player that user is playing
-	return:
+    params:
+        challengerName: name of player that user is playing
+    return:
 """
 def ingame(challengerName, controller):
 
@@ -248,9 +250,9 @@ def ingame(challengerName, controller):
 
 
 """ event_stream: seperate process for event stream
-	params:
-		eventQueue: responses from LiChess event stream will be placed in queue
-	return:
+    params:
+        eventQueue: responses from LiChess event stream will be placed in queue
+    return:
 """
 def event_stream(eventQueue):
     
@@ -346,8 +348,8 @@ def test():
 
 
 """ quit_program: terminates all processes and closes window
-	params:
-	return:
+    params:
+    return:
 """
 def quit_program():
     chessboard.terminate_pygame()
