@@ -505,7 +505,7 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     #     time.sleep(1)
     # print("Sending path via UART...")
     # send_to_328p(solution)
-    #transmit_path(sl_compression(solution))
+    transmit_path(sl_compression(solution))
 
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
