@@ -402,12 +402,12 @@ def recv_from_328p(messageType, timeout):
 def send_to_328p(data):
     ser.flush()
     print("Message sent (" + hex(data)+")","(Header:", (data&0b11100000),"Payload:",(data&0b00011111),')')
-    while True:
-        received_data = ser.read()  # read serial port
-        time.sleep(0.03)
-        data_left = ser.inWaiting()  # check for remaining byte
-        received_data += ser.read(data_left)
-        print("Sent Data: ",format(data, '#010b'))  # print received data
+    #while True:
+    #    received_data = ser.read()  # read serial port
+    #    time.sleep(0.03)
+    #    data_left = ser.inWaiting()  # check for remaining byte
+    #    received_data += ser.read(data_left)
+    #    print("Sent Data: ",format(data, '#010b'))  # print received data
     ser.write(data.to_bytes(1, 'little'))  # transmit data serially
 
     
