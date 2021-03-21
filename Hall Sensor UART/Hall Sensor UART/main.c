@@ -129,12 +129,16 @@ uint8_t GatherMuxData(int Mux)
 	return MuxData;
 }
 
+void SendData(uint8_t Byte1, uint8_t Byte2)
+{
+	USART_Transmit(Byte1);
+	USART_Transmit(Byte2);
+}
+
 int main(void)
 {
 	
 	MuxInit();
-	
-	
 	
 	
 	//uint8_t UART_lastRecievedByte;
@@ -142,6 +146,8 @@ int main(void)
     while (1) 
     {
 		//UART_lastRecievedByte = USART_Receive();
+		
+		uint8_t MD0 = GatherMuxData(0);
 		
 		//Sending UART message 0xF0
 		USART_Transmit(0xFF);
