@@ -301,7 +301,7 @@ def transmit_path(path):
     recv_from_328p("ARRIVED", 10)
     # Request RFID
     #print("RFID Req: ",format(message_encode(0b11010,"RFID"), '#010b'))
-    send_to_328p(message_encode(0b11010,"RFID"))
+    #send_to_328p(message_encode(0b11010,"RFID"))
     # Check RFID, compare to my state
     #print("Recieve and confirm RFID (Mocking with sleep for now)")
     print("Skip RFID wait for now...")
