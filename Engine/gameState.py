@@ -1,4 +1,4 @@
- # Weishan Li
+# Weishan Li
 # Jack DeGuglielmo
 # September 2020
 # Description: GameState class for storing the local state of the chess board
@@ -11,10 +11,11 @@ IMPORTS
 import time
 
 from Engine import chessboard
+from Engine import audio
 
 from Engine.lichess import lichessInterface_new as interface
-#from Engine.mcu_interfaces import fastScan_interface as fastScan
 
+#from Engine.mcu_interfaces import fastScan_interface as fastScan
 #from Engine.x328p_interface import x328p_interface as gantry_interface
 
 """
@@ -53,7 +54,7 @@ class GameState():
                         ["--", "--"],
                         ["--", "--"],
                         ["--", "--"]]
-        # dictionary that maps bishop to row 4, knight to row 5, rook to row 6, and queen to row 7
+        # dictionary that maps bishop to row 4, knight to row 5, rook to row 6, and queen to row 7 of buffer zones
         self.bufferMap = {'B':4, 'H':5, 'R':6, 'Q':7, 'K':7}
         
         # user is white
@@ -96,10 +97,19 @@ class GameState():
 
         self.defaultState = self.board        
 
+        # indicates how many turns have occurred
+        self.turn = 0
+
         # indicates if game is in first turn; used during get_opponentturn
         self.firstTurn = True
         # keeps track of previous opponents move; used during get_opponentturn
         self.previousMovesEvent = None
+
+        # cells need to be colored differently to indicate the starting and destination cell of moving pieces
+        self.coloredCells = [(-1, -1), (-1, -1)]
+
+        # message to be displayed for the user
+        self.message = ""
 
         # indicates if game is over
         self.gameOver = False
@@ -120,7 +130,6 @@ class GameState():
         else:
             return 'white'
 
-
     """ get player turn """
     def get_playerturn(self):
         return self.userMove
@@ -133,12 +142,13 @@ class GameState():
         cell_x = self.number_to_x[number]
         # find the piece in the local board
         piece = self.board[cell_x][cell_y]
-        return piece
+        # return the piece name and gamestate.board coordinates
+        return (piece, (cell_x, cell_y))
 
 
     """ move piece to destination """
     def replace_piece_onboard(self, move, piece):
-        # set original cell to empty and placing piece on destination cell
+        # set original cell to empty and place piece on destination cell
         self.board[self.number_to_x[move[1]]][self.letter_to_y[move[0]]] = "--"
         self.board[self.number_to_x[move[3]]][self.letter_to_y[move[2]]] = piece
         return
@@ -158,9 +168,18 @@ class GameState():
         # length of move string (normally 4, pawn promotion 5)
         moveLength = len(move)
 
+        # increment number of turns that have occurred
+        self.turn += 1
+
         # find the piece to be moved and destination piece
         startpiece = self.get_piece_fromboard(move[0], move[1])
         destpiece = self.get_piece_fromboard(move[2], move[3])
+        # get gamestate.board coordinates of the pieces
+        self.coloredCells[0] = startpiece[1]
+        self.coloredCells[1] = destpiece[1]
+        # get actual piece (e.g 'wP', 'bP')
+        startpiece = startpiece[0]
+        destpiece = destpiece[0]
 
         if not castling:
             # capturing condition
@@ -176,7 +195,7 @@ class GameState():
                 rookMove = self.castling(startpiece, move)
                 if rookMove != '':
                     # update gamestate after king's move/before rook's move
-                    replace_piece_onboad(move, startpiece)
+                    self.replace_piece_onboard(move, startpiece)
                     # move the rook
                     self.move_piece(rookMove, castling=True)
                     return
@@ -187,6 +206,9 @@ class GameState():
 
         # move piece to destination
         self.replace_piece_onboard(move, startpiece)
+        
+        audio.sound_move()
+
         return
 
 
@@ -321,43 +343,45 @@ class GameState():
 # ---------------------------------------------------------------------------
 
     """ handles user/opponent moves and updates gamestate """
-    def update_gamestate(self, screen):
+    def update_gamestate(self):
 
         # user's move
         if self.userMove:
-            chessboard.display_alert(screen, "User's Turn")
-            move = self.get_usermove(screen)
+            move = self.get_usermove()
 
-            if move:
+            if move != "invalid":
                 # make move on local gamestate board
                 self.move_piece(move)
                 self.userMove = False
+                self.message = "Opponent's Turn..."
 
             return "ok"
 
         # opponent's move
         else:
-            chessboard.display_alert(screen, "Opponent's Turn...")
             # read game stream for opponent event
-            move = self.read_gamestream(screen)
+            move = self.read_gamestream()
 
             # move has not been received by opponent
             if move == "none":
                 return "ok"
             # move has been received
-            elif len(move) == 4 or len(move) == 5:
-                chessboard.display_alert(screen, "Opponent move: " + move)
+            elif len(move) == 4 or len(move) == 5: 
+                self.message = "Opponent move: " + str(move)
                 # move piece on local gamestate board
                 self.move_piece(move)
                 self.userMove = True
+
                 return "ok"
-            # other responses (i.e resgination, checkmate, abort)
+            # other responses (i.e resgination, checkmate, abort) 
             else:
+                if move[0] == "mate":
+                    self.move_piece(move[2])
                 return move
 
 
     """ read local game state for user move """
-    def get_usermove(self, screen):
+    def get_usermove(self):
 
         """
         read local game state
@@ -373,20 +397,24 @@ class GameState():
                     inputPiece = input("Promotion piece; bishop(b), knight(n), rook(r), queen(q): ")
                     if inputPiece == 'b' or inputPiece == 'k' or inputPiece == 'r' or inputPiece == 'q':
                         break
-                    chessboard.display_alert(screen, "Invalid promotion piece argument")
+                    self.message = "Invalid promotion piece argument"
                 # append promotion piece to move
                 move += inputPiece
         except:
             pass
 
         # send move to LiChess server
-        valid = interface.make_move(move, screen)
-        if valid:
+        response = interface.make_move(move)
+        if response == 1:
             return move
+        else:
+            self.message = response
+            chessboard.display_alert(response)
+            return "invalid"
 
 
     """ read the game stream """
-    def read_gamestream(self, screen):
+    def read_gamestream(self):
 
         try:
             # get event from game queue
@@ -399,9 +427,6 @@ class GameState():
                 if event["status"] == "resign":
                     self.gameOver = True
                     return ('resign', event['winner'])
-                if event["status"] == "mate":
-                    self.gameOver = True
-                    return ('mate', event['winner'])
                 # check for abort
                 if event["status"] == "abort":
                     self.gameOver = True
@@ -433,7 +458,12 @@ class GameState():
                         # get opponent's move and save previous move
                         move = event["moves"].split()[-1]
                         self.previousMovesEvent = event
-                        return move
+                        # check if the move caused mate
+                        if event["status"] == "mate":
+                            self.gameOver = True
+                            return ('mate', event['winner'], move)
+                        else:
+                            return move
 
             return "none"
         except:
@@ -450,4 +480,3 @@ class GameState():
             print(self.board[i])
 
         return ''
-

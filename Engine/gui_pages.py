@@ -7,8 +7,7 @@ import signal, json, time, os
 import tkinter as tk
 import multiprocessing as mp
 
-from Engine import chessboard
-from Engine import gameState
+from Engine import chessboard, gameState, audio
 
 from Engine.GUI import gui_widgets as widgets
 from Engine.lichess import lichessInterface_new as interface
@@ -182,7 +181,7 @@ class ChallengePage(tk.Frame):
 
     """ challenge user """
     def challenge(self, controller, username=""):
-
+        audio.sound_button()
         if username == "":
             print("User not found")
         else:
@@ -201,6 +200,7 @@ class ChallengePage(tk.Frame):
                 accepted = False
                 while not accepted:
                     try:
+                        # grab event and check if game start has occurred
                         event = eventQueue.get_nowait()
                         if event["type"] == "gameStart":
                             if event["game"]["id"] == gameid:
@@ -350,8 +350,9 @@ def test():
 	return:
 """
 def quit_program():
+    chessboard.terminate_pygame()
+    
     global terminated
-
     terminated = True
     if eventstream != None:
         terminate_eventstream()
@@ -363,6 +364,8 @@ def quit_program():
 
 def terminate_gamestream():
     global gamestream
+    while not gameQueue.empty():
+        gameQueue.get()
     gamestream.terminate()
     gamestream.join()
     print("TERMINATED GAME STREAM")
@@ -370,6 +373,8 @@ def terminate_gamestream():
 
 def terminate_eventstream():
     global eventstream
+    while not eventQueue.empty():
+        eventQueue.get()
     eventstream.terminate()
     eventstream.join()
     print("TERMINATED EVENT STREAM")

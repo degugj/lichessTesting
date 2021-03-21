@@ -4,6 +4,7 @@
 import numpy as np
 import time
 #ser2 = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
+letterToColumn = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5,'g': 6,'h': 7}  # To translate cell to posMap location
 columnToLetter = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
 message_types = {'NA': 0b00000111, 'Piece Picked Up': 0b00001111, 'Piece Put Down': 0b00010111, 'Invalid I2C Command': 0b01011111}
 # I2C channel 1 is connected to the GPIO pins
@@ -24,6 +25,7 @@ class gamestateMessage():
         self.chessCell = None
 
     # return chess cell indicated by col integer
+    """
     def return_chess_cell(self):
         #print("Column: ", columnToLetter[self.col])
         charColumn = columnToLetter[self.col]
@@ -34,22 +36,80 @@ class gamestateMessage():
         cell = columnToLetter[self.col] + str(chessRow)
         print("Cell:",cell)
         return cell
+    """
+def resolve_chess_move(gs, messageArray):
+    print("GS: ", gs)
+    print("Sam's Message Array:", messageArray)
+    #What move was made
+    #TODO See compare chess states for starter code
+    return 'zz'
+
+def compare_chess_states(gs, messageArray):
+    #print("GS: ", gs)
+    #print("Sam's Message Array:", messageArray)
+    for message in messageArray:
+        column = get_column_byIndex(gs, message.col)
+        #print(column)
+        #print(column_to_byte(column))
+        if(column_to_byte(column) != message.data):
+            print("Incongruent gamestates")
+            return -1
+    print("Verified Congruent Gamestates")
+    return 0
 
 def return_message_dict(two_byte_message):
     # Talked to Wei about this
     dict = {}
     return dict
 
-def get_column(gsNP, columnChar):
+def get_column_byChar(gsNP, columnChar):
     return gsNP[:,letterToColumn[columnChar]]
 
+def get_column_byIndex(gsNP, ind):
+    return gsNP[:,ind]
+
 def column_to_byte(column):
-    columnByte = '0'
-    print(format(columnByte, '#010b'))
+    columnInt = 0b00000000
+    for piece in column:
+        #print(piece)
+        if piece != '--':
+            columnInt = columnInt << 1
+            columnInt = columnInt | 1
+        else:
+            columnInt = columnInt << 1
+            columnInt = columnInt | 0b00000000
+    #print(bin(columnInt))
+    return columnInt
+
+def initial_error_check(gs):
+    # Step 1: Tell Sam to transmit all columns
+    # Step 2: Sam transmits current state (column by column).
+    # Wait for 8 messages. Compare array to gs.
+    # return to wei 1, -1, 0
     return 0
 
 def start_fast_scan(gs):
     newGs = np.array(gs.board)
+
+    #print(newGs)
+    #print()
+
+
+    # Step 1: Transmit start message to sam
+
+    # Sam waits for completion of move (aka piece placed down or button)
+    # Step 2: Sam transmits current state (column by column).
+    # Wait for 8 messages. Store in array
+
+    # Step 3: Loop through objects. Resolve physical user move.
+    # Should make function to compare 8 messages to current (use for error checking later)
+
+
+
+    # Jack generates message from Sam
+    #print(get_column(newGs, 'a'))
+
+    # return move
     return 0
 
 def stop_fast_scan():
