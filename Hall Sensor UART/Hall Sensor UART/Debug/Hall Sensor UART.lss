@@ -3,27 +3,29 @@ Hall Sensor UART.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  0000011e  2**0
+  0 .data         00000000  00800100  00800100  000001a6  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000000ca  00000000  00000000  00000054  2**1
+  1 .text         00000152  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  0000011e  2**0
+  2 .comment      00000030  00000000  00000000  000001a6  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000150  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000001d8  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000038  00000000  00000000  00000190  2**0
+  4 .debug_aranges 00000060  00000000  00000000  00000218  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000076e  00000000  00000000  000001c8  2**0
+  5 .debug_info   000008d9  00000000  00000000  00000278  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000006e4  00000000  00000000  00000936  2**0
+  6 .debug_abbrev 00000799  00000000  00000000  00000b51  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000002ce  00000000  00000000  0000101a  2**0
+  7 .debug_line   00000404  00000000  00000000  000012ea  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000054  00000000  00000000  000012e8  2**2
+  8 .debug_frame  000000c8  00000000  00000000  000016f0  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000003d8  00000000  00000000  0000133c  2**0
+  9 .debug_str    00000422  00000000  00000000  000017b8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000028  00000000  00000000  00001714  2**0
+ 10 .debug_loc    00000179  00000000  00000000  00001bda  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000050  00000000  00000000  00001d53  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -63,18 +65,18 @@ Disassembly of section .text:
   6e:	d8 e0       	ldi	r29, 0x08	; 8
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
-  74:	0e 94 5d 00 	call	0xba	; 0xba <main>
-  78:	0c 94 63 00 	jmp	0xc6	; 0xc6 <_exit>
+  74:	0e 94 9d 00 	call	0x13a	; 0x13a <main>
+  78:	0c 94 a7 00 	jmp	0x14e	; 0x14e <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000080 <USART_Transmit>:
-int USART_Receive(void){
-	while ( !(UCSR0A & (1<<RXC0)) ){}
-	/* Get and return received data from buffer */
-	return UDR0;
-	
+
+void SendData(uint8_t Byte1, uint8_t Byte2)
+{
+	USART_Transmit(Byte1);
+	USART_Transmit(Byte2);
 }
   80:	ef e9       	ldi	r30, 0x9F	; 159
   82:	ff e0       	ldi	r31, 0x0F	; 15
@@ -91,52 +93,120 @@ int USART_Receive(void){
   9a:	08 95       	ret
 
 0000009c <USART_init>:
-
-void USART_init(void){
-	
-	//DISABLE POWER REDUCTION FOR USART
-	PRR &= ~( 1 << PRUSART0);
   9c:	e4 e6       	ldi	r30, 0x64	; 100
   9e:	f0 e0       	ldi	r31, 0x00	; 0
   a0:	80 81       	ld	r24, Z
   a2:	8d 7f       	andi	r24, 0xFD	; 253
   a4:	80 83       	st	Z, r24
-	/*Set baud rate */
-	//9600 for 16MHz clock
-	UBRR0L = 0b01100111;
   a6:	87 e6       	ldi	r24, 0x67	; 103
   a8:	80 93 c4 00 	sts	0x00C4, r24	; 0x8000c4 <__TEXT_REGION_LENGTH__+0x7e00c4>
-	
-	/*Enable receiver and transmitter //and Receive INterrupt*/
-	UCSR0B = (1<<RXEN0)|(1<<TXEN0);//|(1<<RXCIE0);
   ac:	88 e1       	ldi	r24, 0x18	; 24
   ae:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
-	/* 8-bit data */
-	UCSR0C = (3<<UCSZ00);
   b2:	86 e0       	ldi	r24, 0x06	; 6
   b4:	80 93 c2 00 	sts	0x00C2, r24	; 0x8000c2 <__TEXT_REGION_LENGTH__+0x7e00c2>
   b8:	08 95       	ret
 
-000000ba <main>:
-}
+000000ba <MuxInit>:
+  ba:	52 9a       	sbi	0x0a, 2	; 10
+  bc:	53 9a       	sbi	0x0a, 3	; 10
+  be:	54 9a       	sbi	0x0a, 4	; 10
+  c0:	56 98       	cbi	0x0a, 6	; 10
+  c2:	57 98       	cbi	0x0a, 7	; 10
+  c4:	20 98       	cbi	0x04, 0	; 4
+  c6:	21 98       	cbi	0x04, 1	; 4
+  c8:	38 98       	cbi	0x07, 0	; 7
+  ca:	39 98       	cbi	0x07, 1	; 7
+  cc:	3a 98       	cbi	0x07, 2	; 7
+  ce:	3b 98       	cbi	0x07, 3	; 7
+  d0:	08 95       	ret
+
+000000d2 <SetABC>:
+  d2:	82 ff       	sbrs	r24, 2
+  d4:	02 c0       	rjmp	.+4      	; 0xda <SetABC+0x8>
+  d6:	5c 9a       	sbi	0x0b, 4	; 11
+  d8:	01 c0       	rjmp	.+2      	; 0xdc <SetABC+0xa>
+  da:	5c 98       	cbi	0x0b, 4	; 11
+  dc:	81 ff       	sbrs	r24, 1
+  de:	02 c0       	rjmp	.+4      	; 0xe4 <SetABC+0x12>
+  e0:	5b 9a       	sbi	0x0b, 3	; 11
+  e2:	01 c0       	rjmp	.+2      	; 0xe6 <SetABC+0x14>
+  e4:	5b 98       	cbi	0x0b, 3	; 11
+  e6:	80 ff       	sbrs	r24, 0
+  e8:	02 c0       	rjmp	.+4      	; 0xee <SetABC+0x1c>
+  ea:	5a 9a       	sbi	0x0b, 2	; 11
+  ec:	08 95       	ret
+  ee:	5a 98       	cbi	0x0b, 2	; 11
+  f0:	08 95       	ret
+
+000000f2 <GatherMuxData>:
+  f2:	ef 92       	push	r14
+  f4:	ff 92       	push	r15
+  f6:	1f 93       	push	r17
+  f8:	cf 93       	push	r28
+  fa:	df 93       	push	r29
+  fc:	c0 e0       	ldi	r28, 0x00	; 0
+  fe:	d0 e0       	ldi	r29, 0x00	; 0
+ 100:	10 e0       	ldi	r17, 0x00	; 0
+ 102:	ee 24       	eor	r14, r14
+ 104:	e3 94       	inc	r14
+ 106:	f1 2c       	mov	r15, r1
+ 108:	8c 2f       	mov	r24, r28
+ 10a:	0e 94 69 00 	call	0xd2	; 0xd2 <SetABC>
+ 10e:	4e 9a       	sbi	0x09, 6	; 9
+ 110:	4e 99       	sbic	0x09, 6	; 9
+ 112:	08 c0       	rjmp	.+16     	; 0x124 <GatherMuxData+0x32>
+ 114:	c7 01       	movw	r24, r14
+ 116:	0c 2e       	mov	r0, r28
+ 118:	02 c0       	rjmp	.+4      	; 0x11e <GatherMuxData+0x2c>
+ 11a:	88 0f       	add	r24, r24
+ 11c:	99 1f       	adc	r25, r25
+ 11e:	0a 94       	dec	r0
+ 120:	e2 f7       	brpl	.-8      	; 0x11a <GatherMuxData+0x28>
+ 122:	18 2b       	or	r17, r24
+ 124:	21 96       	adiw	r28, 0x01	; 1
+ 126:	c8 30       	cpi	r28, 0x08	; 8
+ 128:	d1 05       	cpc	r29, r1
+ 12a:	71 f7       	brne	.-36     	; 0x108 <GatherMuxData+0x16>
+ 12c:	81 2f       	mov	r24, r17
+ 12e:	df 91       	pop	r29
+ 130:	cf 91       	pop	r28
+ 132:	1f 91       	pop	r17
+ 134:	ff 90       	pop	r15
+ 136:	ef 90       	pop	r14
+ 138:	08 95       	ret
+
+0000013a <main>:
 
 int main(void)
 {
-    //uint8_t UART_lastRecievedByte;
+	
+	MuxInit();
+ 13a:	0e 94 5d 00 	call	0xba	; 0xba <MuxInit>
+	//PORTD |= (1<<B);
+	//PORTD |= (1<<C);
+	
+	
+	//uint8_t UART_lastRecievedByte;
 	USART_init();
-  ba:	0e 94 4e 00 	call	0x9c	; 0x9c <USART_init>
+ 13e:	0e 94 4e 00 	call	0x9c	; 0x9c <USART_init>
     while (1) 
     {
 		//UART_lastRecievedByte = USART_Receive();
 		
+		uint8_t MD0 = GatherMuxData(0);
+ 142:	80 e0       	ldi	r24, 0x00	; 0
+ 144:	0e 94 79 00 	call	0xf2	; 0xf2 <GatherMuxData>
+		//if(bit_is_clear(PIND,Mux0)) {
+		//	MD0 = 0b10000000;
+		//}
+		
 		//Sending UART message 0xF0
-		USART_Transmit(0xFF);
-  be:	8f ef       	ldi	r24, 0xFF	; 255
-  c0:	0e 94 40 00 	call	0x80	; 0x80 <USART_Transmit>
-  c4:	fc cf       	rjmp	.-8      	; 0xbe <main+0x4>
+		USART_Transmit(MD0);
+ 148:	0e 94 40 00 	call	0x80	; 0x80 <USART_Transmit>
+ 14c:	fa cf       	rjmp	.-12     	; 0x142 <main+0x8>
 
-000000c6 <_exit>:
-  c6:	f8 94       	cli
+0000014e <_exit>:
+ 14e:	f8 94       	cli
 
-000000c8 <__stop_program>:
-  c8:	ff cf       	rjmp	.-2      	; 0xc8 <__stop_program>
+00000150 <__stop_program>:
+ 150:	ff cf       	rjmp	.-2      	; 0x150 <__stop_program>
