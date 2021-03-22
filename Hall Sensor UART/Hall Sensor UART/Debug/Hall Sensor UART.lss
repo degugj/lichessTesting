@@ -3,29 +3,29 @@ Hall Sensor UART.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000178  2**0
+  0 .data         00000000  00800100  00800100  000001a4  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000124  00000000  00000000  00000054  2**1
+  1 .text         00000150  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000178  2**0
+  2 .comment      00000030  00000000  00000000  000001a4  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000001a8  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000001d4  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000060  00000000  00000000  000001e8  2**0
+  4 .debug_aranges 00000060  00000000  00000000  00000214  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000008c6  00000000  00000000  00000248  2**0
+  5 .debug_info   000008d9  00000000  00000000  00000274  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000799  00000000  00000000  00000b0e  2**0
+  6 .debug_abbrev 00000799  00000000  00000000  00000b4d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000004b0  00000000  00000000  000012a7  2**0
+  7 .debug_line   000003ff  00000000  00000000  000012e6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000000c8  00000000  00000000  00001758  2**2
+  8 .debug_frame  000000c8  00000000  00000000  000016e8  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000422  00000000  00000000  00001820  2**0
+  9 .debug_str    00000422  00000000  00000000  000017b0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000185  00000000  00000000  00001c42  2**0
+ 10 .debug_loc    00000179  00000000  00000000  00001bd2  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000050  00000000  00000000  00001dc7  2**0
+ 11 .debug_ranges 00000050  00000000  00000000  00001d4b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -65,8 +65,8 @@ Disassembly of section .text:
   6e:	d8 e0       	ldi	r29, 0x08	; 8
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
-  74:	0e 94 68 00 	call	0xd0	; 0xd0 <main>
-  78:	0c 94 90 00 	jmp	0x120	; 0x120 <_exit>
+  74:	0e 94 9c 00 	call	0x138	; 0x138 <main>
+  78:	0c 94 a6 00 	jmp	0x14c	; 0x14c <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -110,7 +110,7 @@ void SendData(uint8_t Byte1, uint8_t Byte2)
   ba:	52 9a       	sbi	0x0a, 2	; 10
   bc:	53 9a       	sbi	0x0a, 3	; 10
   be:	54 9a       	sbi	0x0a, 4	; 10
-  c0:	57 98       	cbi	0x0a, 7	; 10
+  c0:	56 98       	cbi	0x0a, 6	; 10
   c2:	20 98       	cbi	0x04, 0	; 4
   c4:	21 98       	cbi	0x04, 1	; 4
   c6:	38 98       	cbi	0x07, 0	; 7
@@ -119,138 +119,94 @@ void SendData(uint8_t Byte1, uint8_t Byte2)
   cc:	3b 98       	cbi	0x07, 3	; 7
   ce:	08 95       	ret
 
-000000d0 <main>:
+000000d0 <SetABC>:
+  d0:	82 ff       	sbrs	r24, 2
+  d2:	02 c0       	rjmp	.+4      	; 0xd8 <SetABC+0x8>
+  d4:	5c 9a       	sbi	0x0b, 4	; 11
+  d6:	01 c0       	rjmp	.+2      	; 0xda <SetABC+0xa>
+  d8:	5c 98       	cbi	0x0b, 4	; 11
+  da:	81 ff       	sbrs	r24, 1
+  dc:	02 c0       	rjmp	.+4      	; 0xe2 <SetABC+0x12>
+  de:	5b 9a       	sbi	0x0b, 3	; 11
+  e0:	01 c0       	rjmp	.+2      	; 0xe4 <SetABC+0x14>
+  e2:	5b 98       	cbi	0x0b, 3	; 11
+  e4:	80 ff       	sbrs	r24, 0
+  e6:	02 c0       	rjmp	.+4      	; 0xec <SetABC+0x1c>
+  e8:	5a 9a       	sbi	0x0b, 2	; 11
+  ea:	08 95       	ret
+  ec:	5a 98       	cbi	0x0b, 2	; 11
+  ee:	08 95       	ret
+
+000000f0 <GatherMuxData>:
+  f0:	ef 92       	push	r14
+  f2:	ff 92       	push	r15
+  f4:	1f 93       	push	r17
+  f6:	cf 93       	push	r28
+  f8:	df 93       	push	r29
+  fa:	c0 e0       	ldi	r28, 0x00	; 0
+  fc:	d0 e0       	ldi	r29, 0x00	; 0
+  fe:	10 e0       	ldi	r17, 0x00	; 0
+ 100:	ee 24       	eor	r14, r14
+ 102:	e3 94       	inc	r14
+ 104:	f1 2c       	mov	r15, r1
+ 106:	8c 2f       	mov	r24, r28
+ 108:	0e 94 68 00 	call	0xd0	; 0xd0 <SetABC>
+ 10c:	4e 9a       	sbi	0x09, 6	; 9
+ 10e:	4e 99       	sbic	0x09, 6	; 9
+ 110:	08 c0       	rjmp	.+16     	; 0x122 <GatherMuxData+0x32>
+ 112:	c7 01       	movw	r24, r14
+ 114:	0c 2e       	mov	r0, r28
+ 116:	02 c0       	rjmp	.+4      	; 0x11c <GatherMuxData+0x2c>
+ 118:	88 0f       	add	r24, r24
+ 11a:	99 1f       	adc	r25, r25
+ 11c:	0a 94       	dec	r0
+ 11e:	e2 f7       	brpl	.-8      	; 0x118 <GatherMuxData+0x28>
+ 120:	18 2b       	or	r17, r24
+ 122:	21 96       	adiw	r28, 0x01	; 1
+ 124:	c8 30       	cpi	r28, 0x08	; 8
+ 126:	d1 05       	cpc	r29, r1
+ 128:	71 f7       	brne	.-36     	; 0x106 <GatherMuxData+0x16>
+ 12a:	81 2f       	mov	r24, r17
+ 12c:	df 91       	pop	r29
+ 12e:	cf 91       	pop	r28
+ 130:	1f 91       	pop	r17
+ 132:	ff 90       	pop	r15
+ 134:	ef 90       	pop	r14
+ 136:	08 95       	ret
+
+00000138 <main>:
 
 int main(void)
 {
 	
 	MuxInit();
-  d0:	0e 94 5d 00 	call	0xba	; 0xba <MuxInit>
+ 138:	0e 94 5d 00 	call	0xba	; 0xba <MuxInit>
 	//PORTD |= (1<<B);
 	//PORTD |= (1<<C);
 	
 	
 	//uint8_t UART_lastRecievedByte;
 	USART_init();
-  d4:	0e 94 4e 00 	call	0x9c	; 0x9c <USART_init>
-		
-		//PIND |= (1<<Mux0);
-		
-		uint8_t MD0 = 0x00;
-		
-		PIND |= (1<<6);
-  d8:	4e 9a       	sbi	0x09, 6	; 9
-		
-		PORTD &= ~(1<<C);
-  da:	5c 98       	cbi	0x0b, 4	; 11
-		PORTD &= ~(1<<B);
-  dc:	5b 98       	cbi	0x0b, 3	; 11
-		PORTD &= ~(1<<A);
-  de:	5a 98       	cbi	0x0b, 2	; 11
-				
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
-  e0:	89 b1       	in	r24, 0x09	; 9
+ 13c:	0e 94 4e 00 	call	0x9c	; 0x9c <USART_init>
 		
 		//uint8_t MD0 = GatherMuxData(0);
 		
 		//PIND |= (1<<Mux0);
 		
-		uint8_t MD0 = 0x00;
-  e2:	88 1f       	adc	r24, r24
-  e4:	88 27       	eor	r24, r24
-  e6:	88 1f       	adc	r24, r24
-		if ((PIND & (1<<Mux0))) {
-
-			MD0 |= (1<<0);
-		}
-		
-		PORTD |= (1<<C);
-  e8:	5c 9a       	sbi	0x0b, 4	; 11
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
-  ea:	4f 99       	sbic	0x09, 7	; 9
-			MD0 |= (1<<1);
-  ec:	82 60       	ori	r24, 0x02	; 2
-		}
-		
-		PORTD &= ~(1<<C);
-  ee:	5c 98       	cbi	0x0b, 4	; 11
-		PORTD |= (1<<B);
-  f0:	5b 9a       	sbi	0x0b, 3	; 11
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
-  f2:	4f 99       	sbic	0x09, 7	; 9
-			MD0 |= (1<<2);
-  f4:	84 60       	ori	r24, 0x04	; 4
-		}
-		
-		PORTD |= (1<<C);
-  f6:	5c 9a       	sbi	0x0b, 4	; 11
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
-  f8:	4f 99       	sbic	0x09, 7	; 9
-			MD0 |= (1<<3);
-  fa:	88 60       	ori	r24, 0x08	; 8
-		}
-		
-		PORTD &= ~(1<<C);
-  fc:	5c 98       	cbi	0x0b, 4	; 11
-		PORTD &= ~(1<<B);
-  fe:	5b 98       	cbi	0x0b, 3	; 11
-		PORTD |= (1<<A);
- 100:	5a 9a       	sbi	0x0b, 2	; 11
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
- 102:	4f 99       	sbic	0x09, 7	; 9
-			MD0 |= (1<<4);
- 104:	80 61       	ori	r24, 0x10	; 16
-		}
-		
-		PORTD |= (1<<C);
- 106:	5c 9a       	sbi	0x0b, 4	; 11
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
- 108:	4f 99       	sbic	0x09, 7	; 9
-			MD0 |= (1<<5);
- 10a:	80 62       	ori	r24, 0x20	; 32
-		}
-		
-		PORTD &= ~(1<<C);
- 10c:	5c 98       	cbi	0x0b, 4	; 11
-		PORTD |= (1<<B);
- 10e:	5b 9a       	sbi	0x0b, 3	; 11
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
- 110:	4f 99       	sbic	0x09, 7	; 9
-			MD0 |= (1<<6);
- 112:	80 64       	ori	r24, 0x40	; 64
-		}
-		
-		PORTD |= (1<<C);
- 114:	5c 9a       	sbi	0x0b, 4	; 11
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
- 116:	4f 99       	sbic	0x09, 7	; 9
-			MD0 |= (1<<7);
- 118:	80 68       	ori	r24, 0x80	; 128
-		}
+		uint8_t MD0 = GatherMuxData(0);
+ 140:	80 e0       	ldi	r24, 0x00	; 0
+ 142:	0e 94 78 00 	call	0xf0	; 0xf0 <GatherMuxData>
+// 		if ((PIND & (1<<Mux0))) {
+// 			MD0 |= (1<<7);
+// 		}
 		
 		//Sending UART message 0xF0
 		USART_Transmit(MD0);
- 11a:	0e 94 40 00 	call	0x80	; 0x80 <USART_Transmit>
-    }
- 11e:	dc cf       	rjmp	.-72     	; 0xd8 <main+0x8>
+ 146:	0e 94 40 00 	call	0x80	; 0x80 <USART_Transmit>
+ 14a:	fa cf       	rjmp	.-12     	; 0x140 <main+0x8>
 
-00000120 <_exit>:
- 120:	f8 94       	cli
+0000014c <_exit>:
+ 14c:	f8 94       	cli
 
-00000122 <__stop_program>:
- 122:	ff cf       	rjmp	.-2      	; 0x122 <__stop_program>
+0000014e <__stop_program>:
+ 14e:	ff cf       	rjmp	.-2      	; 0x14e <__stop_program>

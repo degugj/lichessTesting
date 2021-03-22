@@ -11,8 +11,8 @@
 #include <util/delay.h>
 #include <avr/io.h>
 
-#define Mux0 PD7
-//#define Mux0 6
+//#define Mux0 PD6
+#define Mux0 6
 //#define Mux1 PD7
 #define Mux2 PB0
 #define Mux3 PB1
@@ -165,72 +165,72 @@ int main(void)
 		
 		//PIND |= (1<<Mux0);
 		
-		uint8_t MD0 = 0x00;
+		uint8_t MD0 = GatherMuxData(0);
 		
-		PIND |= (1<<6);
+		//PIND |= (1<<6);
 		
-		PORTD &= ~(1<<C);
-		PORTD &= ~(1<<B);
-		PORTD &= ~(1<<A);
+		//PORTD &= ~(1<<C);
+		//PORTD &= ~(1<<B);
+		//PORTD &= ~(1<<A);
 				
 		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
+		//if ((PIND & (1<<Mux0))) {
 
-			MD0 |= (1<<0);
-		}
+			//MD0 = 0xFF;
+		//}
 		
-		PORTD |= (1<<C);
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
-			MD0 |= (1<<1);
-		}
-		
-		PORTD &= ~(1<<C);
-		PORTD |= (1<<B);
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
-			MD0 |= (1<<2);
-		}
-		
-		PORTD |= (1<<C);
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
-			MD0 |= (1<<3);
-		}
-		
-		PORTD &= ~(1<<C);
-		PORTD &= ~(1<<B);
-		PORTD |= (1<<A);
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
-			MD0 |= (1<<4);
-		}
-		
-		PORTD |= (1<<C);
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
-			MD0 |= (1<<5);
-		}
-		
-		PORTD &= ~(1<<C);
-		PORTD |= (1<<B);
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
-			MD0 |= (1<<6);
-		}
-		
-		PORTD |= (1<<C);
-		
-		//if(bit_is_clear(PIND,Mux0)) {
-		if ((PIND & (1<<Mux0))) {
-			MD0 |= (1<<7);
-		}
+// 		PORTD |= (1<<C);
+// 		
+// 		//if(bit_is_clear(PIND,Mux0)) {
+// 		if ((PIND & (1<<Mux0))) {
+// 			MD0 |= (1<<1);
+// 		}
+// 		
+// 		PORTD &= ~(1<<C);
+// 		PORTD |= (1<<B);
+// 		
+// 		//if(bit_is_clear(PIND,Mux0)) {
+// 		if ((PIND & (1<<Mux0))) {
+// 			MD0 |= (1<<2);
+// 		}
+// 		
+// 		PORTD |= (1<<C);
+// 		
+// 		//if(bit_is_clear(PIND,Mux0)) {
+// 		if ((PIND & (1<<Mux0))) {
+// 			MD0 |= (1<<3);
+// 		}
+// 		
+// 		PORTD &= ~(1<<C);
+// 		PORTD &= ~(1<<B);
+// 		PORTD |= (1<<A);
+// 		
+// 		//if(bit_is_clear(PIND,Mux0)) {
+// 		if ((PIND & (1<<Mux0))) {
+// 			MD0 |= (1<<4);
+// 		}
+// 		
+// 		PORTD |= (1<<C);
+// 		
+// 		//if(bit_is_clear(PIND,Mux0)) {
+// 		if ((PIND & (1<<Mux0))) {
+// 			MD0 |= (1<<5);
+// 		}
+// 		
+// 		PORTD &= ~(1<<C);
+// 		PORTD |= (1<<B);
+// 		
+// 		//if(bit_is_clear(PIND,Mux0)) {
+// 		if ((PIND & (1<<Mux0))) {
+// 			MD0 |= (1<<6);
+// 		}
+// 		
+// 		PORTD |= (1<<C);
+// 		
+// 		//if(bit_is_clear(PIND,Mux0)) {
+// 		if ((PIND & (1<<Mux0))) {
+// 			MD0 |= (1<<7);
+// 		}
 		
 		//Sending UART message 0xF0
 		USART_Transmit(MD0);
