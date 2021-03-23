@@ -4,13 +4,13 @@
 
 import math
 import heapq
-#import serial
+import serial
 import time
 import sys
 letterToColumn = {'a':5, 'b':7,'c':9,'d':11,'e':13,'f':15,'g':17,'h':19}  # To translate cell to posMap location
 pieceToBuffer = {'wP':[15,0], 'bP': [15, 24], 'bP': [15, 22]}
 # easy translation from number to row ((number * 2) + 1)
-#ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
+ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 
 # self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
 # self.number_to_y = {'1':7, '2':6, '3':5, '4':4, '5':3, '6':2, '7':1, '8':0}
@@ -301,7 +301,7 @@ def transmit_path(path):
     recv_from_328p("ARRIVED", 10)
     # Request RFID
     #print("RFID Req: ",format(message_encode(0b11010,"RFID"), '#010b'))
-    send_to_328p(message_encode(0b11010,"RFID"))
+    #send_to_328p(message_encode(0b11010,"RFID"))
     # Check RFID, compare to my state
     #print("Recieve and confirm RFID (Mocking with sleep for now)")
     print("Skip RFID wait for now...")
@@ -400,15 +400,15 @@ def recv_from_328p(messageType, timeout):
 
 # Sends 328P a path via UART
 def send_to_328p(data):
-#    ser.flush()
+    ser.flush()
     print("Message sent (" + hex(data)+")","(Header:", (data&0b11100000),"Payload:",(data&0b00011111),')')
     #while True:
-        #received_data = ser.read()  # read serial port
-        #time.sleep(0.03)
-        #data_left = ser.inWaiting()  # check for remaining byte
-        #received_data += ser.read(data_left)
-        #print("Sent Data: ",format(data, '#010b'))  # print received data
-#    ser.write(data.to_bytes(1, 'little'))  # transmit data serially
+    #    received_data = ser.read()  # read serial port
+    #    time.sleep(0.03)
+    #    data_left = ser.inWaiting()  # check for remaining byte
+    #    received_data += ser.read(data_left)
+    #    print("Sent Data: ",format(data, '#010b'))  # print received data
+    ser.write(data.to_bytes(1, 'little'))  # transmit data serially
 
     
     #print("Solution Path:")
@@ -505,7 +505,7 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     #     time.sleep(1)
     # print("Sending path via UART...")
     # send_to_328p(solution)
-    #transmit_path(sl_compression(solution))
+    transmit_path(sl_compression(solution))
 
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()

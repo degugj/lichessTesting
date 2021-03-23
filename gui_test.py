@@ -14,9 +14,11 @@ from Engine import gui_pages as pages, audio
 VARIABLES AND DEFINITIONS
 -------------------------------
 """
+os.environ['SDL_VIDEO_CENTERED'] = '1'
+
 # width and height of gui window
-WIDTH = 600
-HEIGHT = 400
+WIDTH = 500
+HEIGHT = 300
 
 
 """
@@ -29,7 +31,7 @@ class MainApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         
-        tk.Tk.iconbitmap(self, default="Engine/GUI/icon.bmp")
+        #tk.Tk.iconbitmap(self, default="Engine/GUI/icon.bmp")
 
         #frame of window
         container = tk.Frame(self)
@@ -90,8 +92,11 @@ def main():
         #GUI window
         mainWindow = MainApp()
         mainWindow.title("MagiChess")
-        mainWindow.geometry(f"{WIDTH}x{HEIGHT}")   #main window dimensions
-
+        
+        positionRight = int(mainWindow.winfo_screenwidth()/2 - WIDTH/2)
+        positionDown = int(mainWindow.winfo_screenheight()/2 - HEIGHT/2)
+        # mainWindow.attributes('-fullscreen', True)   #main window dimensions
+        mainWindow.geometry("{}x{}+{}+{}".format(WIDTH, HEIGHT, positionRight, positionDown))
 
         # map closing 'window closing' event to quit_program function
         mainWindow.protocol("WM_DELETE_WINDOW", pages.quit_program)
