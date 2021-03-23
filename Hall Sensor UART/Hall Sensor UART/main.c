@@ -82,7 +82,7 @@ void MuxInit(void)
 
 void SetABC(uint8_t row)
 {
-	PORTD &= ~(1<<A)&~(1<<B)&~(1<<C);	if((row >> 2) & 1) {		PORTD |= (1<<C);	}	else if((row >> 1) & 1) {		PORTD |= (1<<B);	}	else if((row >> 0) & 1) {		PORTD |= (1<<A);	}
+	PORTD &= ~(1<<A)&~(1<<B)&~(1<<C);		if((row >> 2) & 1) {		PORTD |= (1<<C);	}	else if((row >> 1) & 1) {		PORTD |= (1<<B);	}	else if((row >> 0) & 1) {		PORTD |= (1<<A);	}
 
 // 	if((row >> 2) & 1) {
 // 		PORTD |= (1<<C);
@@ -195,7 +195,7 @@ int main(void)
 		
 		PIND |= (1<<6);
 		
-		SetABC(2);
+		SetABC(3);
 		
 		//PORTD &= ~(1<<C);
 		//PORTD &= ~(1<<B);

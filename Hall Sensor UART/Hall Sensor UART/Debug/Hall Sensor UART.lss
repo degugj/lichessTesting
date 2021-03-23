@@ -143,8 +143,8 @@ int main(void)
 		PIND |= (1<<6);
   dc:	4e 9a       	sbi	0x09, 6	; 9
 		
-		SetABC(2);
-  de:	82 e0       	ldi	r24, 0x02	; 2
+		SetABC(3);
+  de:	83 e0       	ldi	r24, 0x03	; 3
   e0:	0e 94 5b 00 	call	0xb6	; 0xb6 <SetABC>
 		
 		//PORTD &= ~(1<<C);
