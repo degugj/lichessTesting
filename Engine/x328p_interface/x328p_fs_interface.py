@@ -91,8 +91,22 @@ def initial_error_check(gs):
 def start_fast_scan(gs):
     newGs = np.array(gs.board)
 
-    #print(newGs)
-    #print()
+    messageNo1Init = gamestateMessage()  # a2a3
+    messageNo2Init = gamestateMessage()
+    messageNo3Init = gamestateMessage()
+    messageNo4Init = gamestateMessage()
+    messageNo5Init = gamestateMessage()
+    messageNo6Init = gamestateMessage()
+    messageNo7Init = gamestateMessage()
+    messageNo8Init = gamestateMessage()
+
+    samState = [messageNo1Init, messageNo2Init, messageNo3Init, messageNo4Init,
+                messageNo5Init, messageNo6Init, messageNo7Init, messageNo8Init]
+
+
+
+    move = resolve_chess_move(newGs, samState)
+    print("Resolved Move:", move)
 
 
     # Step 1: Transmit start message to sam
