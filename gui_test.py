@@ -7,7 +7,7 @@ import tkinter as tk
 import signal, os
 
 from Engine.GUI import gui_widgets as widgets
-from Engine import gui_pages as pages
+from Engine import gui_pages as pages, audio
 
 """
 -------------------------------
@@ -63,8 +63,8 @@ class MainApp(tk.Tk):
     params: page
     """    
     def show_frame(self, page, user=""):
+
         frame = self.frames[page]
-        
         #checks for username input
         if user != "":
             #main menu frame functions
@@ -81,6 +81,11 @@ MAIN
 """
 def main():
     
+    # initialize sound mixer
+    audio.init_mixer()
+    # initialize background music
+    audio.sound_background()
+
     if 0:
         pages.test()
     else:
