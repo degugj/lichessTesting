@@ -12,7 +12,6 @@
 #include <avr/io.h>
 
 #define Mux0 6
-//#define Mux0 6
 #define Mux1 7
 #define Mux2 0
 #define Mux3 1
