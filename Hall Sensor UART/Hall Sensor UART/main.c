@@ -11,21 +11,21 @@
 #include <util/delay.h>
 #include <avr/io.h>
 
-#define Mux0 PD6
+#define Mux0 6
 //#define Mux0 6
-#define Mux1 PD7
-#define Mux2 PB0
-#define Mux3 PB1
-#define Mux4 PC0
-#define Mux5 PC1
-#define Mux6 PC2
-#define Mux7 PC3
+#define Mux1 7
+#define Mux2 0
+#define Mux3 1
+#define Mux4 0
+#define Mux5 1
+#define Mux6 2
+#define Mux7 3
 
-#define A PD2
-#define B PD3
-#define C PD4
+#define A 2
+#define B 3
+#define C 4
 
-#define LED PB2
+#define LED 2
 
 void USART_Transmit(uint8_t data)
 {
@@ -82,8 +82,60 @@ void MuxInit(void)
 
 void SetABC(uint8_t row)
 {
-	switch (row)	{		case 0 :		PORTC |= (1<<C)|(1<<B);		PORTC &= ~(1<<A);		break;		case 1 :		PORTC |= (1<<B);		PORTC &= ~(1<<A) &~(1<<C);		break;		case 2 :		PORTC |= (1<<C)|(1<<B);		PORTC &= ~(1<<A);		break;		case 3 :		PORTC &= ~(1<<A)&~(1<<B)&~(1<<C);		break;		case 4 :		PORTC |= (1<<A);		PORTC &= ~(1<<B)&~(1<<C);		break;		case 5 :		PORTC |= (1<<C)|(1<<A);		PORTC &= ~(1<<B);		break;		case 6 :		PORTC |= (1<<A)|(1<<B);		PORTC &= ~(1<<C);		break;		case 7 :		PORTC |= (1<<A)|(1<<B)|(1<<C);		break;	}
+	PORTD &= ~(1<<A)&~(1<<B)&~(1<<C);	if((row >> 2) & 1) {		PORTD |= (1<<C);	}	else if((row >> 1) & 1) {		PORTD |= (1<<B);	}	else if((row >> 0) & 1) {		PORTD |= (1<<A);	}
 
+// 	if((row >> 2) & 1) {
+// 		PORTD |= (1<<C);
+// 		} else {
+// 		PORTD &= ~(1<<C);
+// 	}
+// 
+// 	if((row >> 1) & 1) {
+// 		PORTD |= (1<<B);
+// 		} else {
+// 		PORTD &= ~(1<<B);
+// 	}
+// 
+// 	if((row >> 0) & 1) {
+// 		PORTD |= (1<<A);
+// 		} else {
+// 		PORTD &= ~(1<<A);
+// 	}
+
+// 	switch (row)
+// 	{
+// 		case 0 :
+// 		PORTC |= (1<<C)|(1<<B);
+// 		PORTC &= ~(1<<A);
+// 		break;
+// 		case 1 :
+// 		PORTC |= (1<<B);
+// 		PORTC &= ~(1<<A) &~(1<<C);
+// 		break;
+// 		case 2 :
+// 		PORTC |= (1<<C)|(1<<B);
+// 		PORTC &= ~(1<<A);
+// 		break;
+// 		case 3 :
+// 		PORTC &= ~(1<<A)&~(1<<B)&~(1<<C);
+// 		break;
+// 		case 4 :
+// 		PORTC |= (1<<A);
+// 		PORTC &= ~(1<<B)&~(1<<C);
+// 		break;
+// 		case 5 :
+// 		PORTC |= (1<<C)|(1<<A);
+// 		PORTC &= ~(1<<B);
+// 		break;
+// 		case 6 :
+// 		PORTC |= (1<<A)|(1<<B);
+// 		PORTC &= ~(1<<C);
+// 		break;
+// 		case 7 :
+// 		PORTC |= (1<<A)|(1<<B)|(1<<C);
+// 		break;
+// 	}
+//
 }
 
 uint8_t GatherMuxData(uint8_t Mux)
@@ -128,6 +180,8 @@ int main(void)
 {
 	
 	MuxInit();
+	
+	DDRB |= (1<<2); //SetLED as output
 		
 	//uint8_t UART_lastRecievedByte;
 	USART_init();
@@ -137,13 +191,11 @@ int main(void)
 		
 		//PIND |= (1<<Mux0);
 		
-		uint8_t MD0 = 0x00; //GatherMuxData(0);
+		//uint8_t MD0 = 0x00; //GatherMuxData(0);
 		
 		PIND |= (1<<6);
 		
-		SetABC(0);
-		
-		
+		SetABC(2);
 		
 		//PORTD &= ~(1<<C);
 		//PORTD &= ~(1<<B);
@@ -151,8 +203,10 @@ int main(void)
 				
 		if(bit_is_clear(PIND,Mux0)) {
 		//if ((PIND & (1<<Mux0))) {
-
-			MD0 = 0xFF;
+			PORTB |= (1<<2);
+			//MD0 = 0xFF;
+		} else {
+			PORTB &= ~(1<<2);
 		}
 		
 // 		PORTD |= (1<<C);
@@ -209,7 +263,7 @@ int main(void)
 // 		}
 		
 		//Sending UART message 0xF0
-		USART_Transmit(MD0);
+		//USART_Transmit(MD0);
     }
 }
 
