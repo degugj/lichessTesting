@@ -11,9 +11,9 @@
 #include <util/delay.h>
 #include <avr/io.h>
 
-//#define Mux0 PD6
-#define Mux0 6
-//#define Mux1 PD7
+#define Mux0 PD6
+//#define Mux0 6
+#define Mux1 PD7
 #define Mux2 PB0
 #define Mux3 PB1
 #define Mux4 PC0
@@ -69,7 +69,7 @@ void MuxInit(void)
 	DDRD |= (1<<C);
 	
 	DDRD &= ~(1<<Mux0);
-	//DDRD &= ~(1<<Mux1);
+	DDRD &= ~(1<<Mux1);
 	DDRB &= ~(1<<Mux2);
 	DDRB &= ~(1<<Mux3);
 	DDRC &= ~(1<<Mux4);
@@ -104,7 +104,7 @@ uint8_t GatherMuxData(uint8_t Mux)
 	if(Mux == 0) {
 		Mux = Mux0;
 	} else if(Mux == 1) {
-		Mux = Mux0;
+		Mux = Mux1;
 	} else if(Mux == 2) {
 		Mux = Mux2;
 	} else if(Mux == 3) {
@@ -130,15 +130,6 @@ uint8_t GatherMuxData(uint8_t Mux)
 	return MuxData;
 }
 
-uint8_t GatherMuxData2(uint8_t Mux)
-{
-	Mux = Mux0;
-	
-	PORTD &= ~(1<<C);
-	
-	return Mux;
-}
-
 void SendData(uint8_t Byte1, uint8_t Byte2)
 {
 	USART_Transmit(Byte1);
@@ -149,19 +140,12 @@ int main(void)
 {
 	
 	MuxInit();
-	
-	//PORTD |= (1<<A);
-	//PORTD |= (1<<B);
-	//PORTD |= (1<<C);
-	
-	
+		
 	//uint8_t UART_lastRecievedByte;
 	USART_init();
     while (1) 
     {
 		//UART_lastRecievedByte = USART_Receive();
-		
-		//uint8_t MD0 = GatherMuxData(0);
 		
 		//PIND |= (1<<Mux0);
 		
@@ -173,7 +157,7 @@ int main(void)
 		//PORTD &= ~(1<<B);
 		//PORTD &= ~(1<<A);
 				
-		//if(bit_is_clear(PIND,Mux0)) {
+		//if(bit_is_clear(PIND,Mux0)) {r
 		//if ((PIND & (1<<Mux0))) {
 
 			//MD0 = 0xFF;
