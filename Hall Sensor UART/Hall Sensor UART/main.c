@@ -25,6 +25,8 @@
 #define B PD3
 #define C PD4
 
+#define LED PB2
+
 void USART_Transmit(uint8_t data)
 {
 
@@ -80,23 +82,8 @@ void MuxInit(void)
 
 void SetABC(uint8_t row)
 {
-	if((row >> 2) & 1) {
-		PORTD |= (1<<C);
-	} else {
-		PORTD &= ~(1<<C);
-	}
-	
-	if((row >> 1) & 1) {
-		PORTD |= (1<<B);
-	} else {
-		PORTD &= ~(1<<B);
-	}
-	
-	if((row >> 0) & 1) {
-		PORTD |= (1<<A);
-	} else {
-		PORTD &= ~(1<<A);
-	}
+	switch (row)	{		case 0 :		PORTC |= (1<<C)|(1<<B);		PORTC &= ~(1<<A);		break;		case 1 :		PORTC |= (1<<B);		PORTC &= ~(1<<A) &~(1<<C);		break;		case 2 :		PORTC |= (1<<C)|(1<<B);		PORTC &= ~(1<<A);		break;		case 3 :		PORTC &= ~(1<<A)&~(1<<B)&~(1<<C);		break;		case 4 :		PORTC |= (1<<A);		PORTC &= ~(1<<B)&~(1<<C);		break;		case 5 :		PORTC |= (1<<C)|(1<<A);		PORTC &= ~(1<<B);		break;		case 6 :		PORTC |= (1<<A)|(1<<B);		PORTC &= ~(1<<C);		break;		case 7 :		PORTC |= (1<<A)|(1<<B)|(1<<C);		break;	}
+
 }
 
 uint8_t GatherMuxData(uint8_t Mux)
@@ -125,6 +112,7 @@ uint8_t GatherMuxData(uint8_t Mux)
 		PIND |= (1<<6);
 		if(bit_is_clear(PIND,PD6)) {
 			MuxData |= (1<<i);
+			//USART_Transmit(0xFF);
 		}
 	}
 	return MuxData;
@@ -149,19 +137,23 @@ int main(void)
 		
 		//PIND |= (1<<Mux0);
 		
-		uint8_t MD0 = GatherMuxData(0);
+		uint8_t MD0 = 0x00; //GatherMuxData(0);
 		
-		//PIND |= (1<<6);
+		PIND |= (1<<6);
+		
+		SetABC(0);
+		
+		
 		
 		//PORTD &= ~(1<<C);
 		//PORTD &= ~(1<<B);
 		//PORTD &= ~(1<<A);
 				
-		//if(bit_is_clear(PIND,Mux0)) {r
+		if(bit_is_clear(PIND,Mux0)) {
 		//if ((PIND & (1<<Mux0))) {
 
-			//MD0 = 0xFF;
-		//}
+			MD0 = 0xFF;
+		}
 		
 // 		PORTD |= (1<<C);
 // 		
