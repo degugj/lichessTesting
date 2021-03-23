@@ -11,8 +11,10 @@ from Engine.x328p_interface import x328p_fs_interface as interface
 currentGamestate = gs()  # Instantiate test gamestate
 
 #interface.get_column(currentGamestate, 'a')
-interface.start_fast_scan(currentGamestate)
+move = interface.start_fast_scan(currentGamestate)
+print(move)
 
+""""
 messageNo1Init = interface.gamestateMessage(0b00001, 0b000, 0b11000011) # a2a3
 messageNo2Init = interface.gamestateMessage(0b00010, 0b001, 0b11000001)
 messageNo3Init = interface.gamestateMessage(0b00011, 0b010, 0b11000011)
@@ -26,8 +28,8 @@ samState = [messageNo1Init, messageNo2Init, messageNo3Init, messageNo4Init,
             messageNo5Init, messageNo6Init, messageNo7Init, messageNo8Init]
 newGs = np.array(currentGamestate.board)
 
-move = interface.resolve_chess_move(newGs, samState)
-print("Resolved Move:",move)
+#move = interface.resolve_chess_move(newGs, samState)
+#print("Resolved Move:",move)
 #interface.compare_chess_states(newGs, samState)
 
 #interface.fast_scan_simulator_uart()
@@ -53,4 +55,4 @@ print("Resolved Move:",move)
 # messageNo12 = gamestateMessage(0b01100, 0b111, 0b10000000)
 
 
-
+"""
