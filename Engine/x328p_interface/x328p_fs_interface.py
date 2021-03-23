@@ -40,7 +40,46 @@ class gamestateMessage():
 def resolve_chess_move(gs, messageArray):
     print("GS: ", gs)
     print("Sam's Message Array:", messageArray)
-    #What move was made
+    start_found = False
+    dest_found = False
+
+    # loop through each column
+    for c in range(len(gs)-1):
+        # convert column to byte form to compare with fast scan byte (i.e 0b11000011)
+        column = column_to_byte(get_column_byIndex(gs, c))
+        fs_column = messageArray[c].data
+
+        # loop through each cell of column
+        for i in range(len(gs)-1):
+            # bit shift to find value of current cell
+            cell = (column >> i) & 1
+            cell_fs = (fs_column >> i) & 1
+
+            # check for start location; once found, turn bool off
+            if cell_fs == 0 and cell == 1 and not start_found: 
+                start_cell_letter = columnToLetter[c]    
+                start_cell_number = i+1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                start_pos = start_cell_letter + str(start_cell_number)
+                start_found = True
+            
+            # check for destination location; once found, turn bool off
+            if cell_fs == 1 and cell == 0 and not dest_found:
+                dest_cell_letter = columnToLetter[c]
+                dest_cell_number = i+1
+
+                # convert to chess coordinates and concatenate (i.e b4)
+                dest_pos = dest_cell_letter + str(dest_cell_number)
+                dest_found = True
+
+    return start_pos + dest_pos
+
+        # print(bin(column_to_byte(column)))
+        # print(bin(messageArray[c].data))
+
+    
+
     #TODO See compare chess states for starter code
     return 'zz'
 
