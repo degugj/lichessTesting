@@ -3,10 +3,11 @@
 # Date: 2020-11-01
 import numpy as np
 import time
+#import serial
 #ser2 = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 letterToColumn = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5,'g': 6,'h': 7}  # To translate cell to posMap location
 columnToLetter = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
-message_types = {'NA': 0b00000111, 'Piece Picked Up': 0b00001111, 'Piece Put Down': 0b00010111, 'Invalid I2C Command': 0b01011111}
+message_types = {0b00000 : 'N/A', 0b00001: 'Piece Picked Up', 0b00010: 'Piece Put Down', 0b01011: 'Invalid I2C Command'}
 # I2C channel 1 is connected to the GPIO pins
 channel = 1
 #  MCP4725 defaults to address 0x60
@@ -38,20 +39,57 @@ class gamestateMessage():
         return cell
     """
 def resolve_chess_move(gs, messageArray):
-    print("GS: ", gs)
-    print("Sam's Message Array:", messageArray)
-    #What move was made
-    #TODO See compare chess states for starter code
-    return 'zz'
+    #print("GS: ", gs)
+    #print("Sam's Message Array:", messageArray)
+    start_found = False
+    dest_found = False
+
+    start_pos = ""
+    dest_pos = ""
+
+    # loop through each column
+    for c in range(len(gs)):
+        # convert column to byte form to compare with fast scan byte (i.e 0b11000011)
+        column = column_to_byte(get_column_byIndex(gs, c))
+        #print("column:",column)
+        fs_column = messageArray[c].data
+        #print("fs_column:",fs_column)
+        # loop through each cell of column
+        for i in range(len(gs)):
+            # bit shift to find value of current cell
+            cell = (column >> i) & 1
+            cell_fs = (fs_column >> i) & 1
+
+            # check for start location; once found, turn bool off
+            if cell_fs == 0 and cell == 1 and not start_found: 
+                start_cell_letter = columnToLetter[c]    
+                start_cell_number = i+1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                start_pos = start_cell_letter + str(start_cell_number)
+                start_found = True
+            
+            # check for destination location; once found, turn bool off
+            if cell_fs == 1 and cell == 0 and not dest_found:
+                dest_cell_letter = columnToLetter[c]
+                dest_cell_number = i+1
+
+                # convert to chess coordinates and concatenate (i.e b4)
+                dest_pos = dest_cell_letter + str(dest_cell_number)
+                dest_found = True
+    return start_pos + dest_pos
+
+        # print(bin(column_to_byte(column)))
+        # print(bin(messageArray[c].data))
 
 def compare_chess_states(gs, messageArray):
     #print("GS: ", gs)
     #print("Sam's Message Array:", messageArray)
-    for message in messageArray:
-        column = get_column_byIndex(gs, message.col)
+    for i in range(8):
+        column = get_column_byIndex(gs, i)
         #print(column)
         #print(column_to_byte(column))
-        if(column_to_byte(column) != message.data):
+        if(column_to_byte(column) != messageArray[i].data):
             print("Incongruent gamestates")
             return -1
     print("Verified Congruent Gamestates")
@@ -88,11 +126,68 @@ def initial_error_check(gs):
     # return to wei 1, -1, 0
     return 0
 
+def receive_chess_state():
+    samState = []
+    while True:
+        # Serial receive 2 bytes from Sam
+        # ser.flush()
+        # rawRecByte0 = ser.read()
+        # Maybe add a delay here
+        # rawRecByte1 = ser.read()
+        # recByte0 = int.from_bytes(rawRecByte0, 'little')
+        # recByte1 = int.from_bytes(rawRecByte1, 'little')
+        #recByte0 = 0b11110010
+        recByte1 = 0b11000011
+        #messageType = (recByte0 >> 3)
+        messageType = None
+        #messageCol = recByte0 & 0b00000111
+        messageCol = None
+        currentMessage = gamestateMessage(messageType, messageCol, recByte1)
+
+        # Figure out message type
+        # messageTypeStr = message_types[messageType]
+
+        samState.append(currentMessage)
+
+        if(len(samState) == 8):
+            return samState
+
+    return -1
+
 def start_fast_scan(gs):
     newGs = np.array(gs.board)
 
-    #print(newGs)
-    #print()
+    # Serial write start message to Sam
+    transmission_byte0 = 0b00100111
+    transmission_byte1 = 0b00100111  # Second byte doesn't matter for start
+
+    # After transmission. Sam will send all 8 columns to check if we have congruent states
+    samInitialState = receive_chess_state()
+    if samInitialState == -1:
+        print("Error in reading Sam State")
+        return -1
+    # Check congruency
+    if(compare_chess_states(newGs, samInitialState) != 0):
+        print("Incongruent Gamestates. Returning 5 to Wei to tell user to fix pieces and call start again")
+        return 5
+
+    # Transmit again
+    samState2 = receive_chess_state()
+    if(samState2 != -1):
+        # Finesse for testing the move resolution
+        samState2[7].data = 0b11000101
+        move = resolve_chess_move(newGs, samState2)
+        if move == '':
+            # add a length check if we only get one cell resolved
+            print("No move detected/resolved")
+            return -1
+        return move
+    else:
+        print("Error resolving move/start FS function")
+        return -1
+
+    #move = resolve_chess_move(newGs, samState)
+    #print("Resolved Move:", move)
 
 
     # Step 1: Transmit start message to sam
@@ -118,14 +213,8 @@ def stop_fast_scan():
 def print_message_info(two_byte_message):
     return 0
 
-def return_message_type(byteMessage):
-    # Length check
-    # Find type
+def return_message_type(typeInt):
     #print("Received data:", byteMessage, '(' + format(byteMessage, '#010b') + ')')
-    byte1 = byteMessage[0]
-    for key in message_types:
-        if (byte1&0b11111000) == (message_types[key]&0b11111000):
-            return key
     return 'Unknown'
 
 
