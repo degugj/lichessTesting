@@ -180,19 +180,19 @@ int main(void)
 		
 		//uint8_t MD0 = 0x00; //GatherMuxData(0);
 		
-		PINB |= (1<<Mux3);
- 12e:	19 9a       	sbi	0x03, 1	; 3
+		PIND |= (1<<Mux1);
+ 12e:	4f 9a       	sbi	0x09, 7	; 9
 		
-		SetABC(4);
- 130:	84 e0       	ldi	r24, 0x04	; 4
+		SetABC(1);
+ 130:	81 e0       	ldi	r24, 0x01	; 1
  132:	0e 94 63 00 	call	0xc6	; 0xc6 <SetABC>
 		
 		//PORTD &= ~(1<<C);
 		//PORTD &= ~(1<<B);
 		//PORTD &= ~(1<<A);
 				
-		if(bit_is_clear(PINB,Mux3)) {
- 136:	19 99       	sbic	0x03, 1	; 3
+		if(bit_is_clear(PIND,Mux1)) {
+ 136:	4f 99       	sbic	0x09, 7	; 9
  138:	02 c0       	rjmp	.+4      	; 0x13e <main+0x1a>
 		//if ((PIND & (1<<Mux0))) {
 			PORTB |= (1<<2);

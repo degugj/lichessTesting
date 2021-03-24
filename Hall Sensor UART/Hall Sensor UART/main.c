@@ -205,15 +205,15 @@ int main(void)
 		
 		//uint8_t MD0 = 0x00; //GatherMuxData(0);
 		
-		PINB |= (1<<Mux3);
+		PIND |= (1<<Mux1);
 		
-		SetABC(4);
+		SetABC(1);
 		
 		//PORTD &= ~(1<<C);
 		//PORTD &= ~(1<<B);
 		//PORTD &= ~(1<<A);
 				
-		if(bit_is_clear(PINB,Mux3)) {
+		if(bit_is_clear(PIND,Mux1)) {
 		//if ((PIND & (1<<Mux0))) {
 			PORTB |= (1<<2);
 			//MD0 = 0xFF;
