@@ -85,11 +85,11 @@ def resolve_chess_move(gs, messageArray):
 def compare_chess_states(gs, messageArray):
     #print("GS: ", gs)
     #print("Sam's Message Array:", messageArray)
-    for i in range(8):
-        column = get_column_byIndex(gs, i)
+    for message in messageArray:
+        column = get_column_byIndex(gs, message.col)
         #print(column)
         #print(column_to_byte(column))
-        if(column_to_byte(column) != messageArray[i].data):
+        if(column_to_byte(column) != messageArray[message.col].data):
             print("Incongruent gamestates")
             return -1
     print("Verified Congruent Gamestates")
@@ -155,18 +155,18 @@ def receive_chess_state():
     while True:
         # Serial receive 2 bytes from Sam
         ser.flush()
-        # rawRecByte0 = ser.read()
+        rawRecByte0 = ser.read()
         # Maybe add a delay here
         rawRecByte1 = ser.read()
-        # recByte0 = int.from_bytes(rawRecByte0, 'little')
+        recByte0 = int.from_bytes(rawRecByte0, 'little')
         recByte1 = int.from_bytes(rawRecByte1, 'little')
         print("Byte Received:", bin(recByte1))
         #recByte0 = 0b11110010
         #recByte1 = 0b11000011
         #messageType = (recByte0 >> 3)
         messageType = None
-        #messageCol = recByte0 & 0b00000111
-        messageCol = None
+        messageCol = recByte0 & 0b00000111
+        #messageCol = None
         currentMessage = gamestateMessage(messageType, messageCol, recByte1)
 
         # Figure out message type
