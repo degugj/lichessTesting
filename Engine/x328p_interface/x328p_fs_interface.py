@@ -196,9 +196,9 @@ def start_fast_scan(gs):
     newGs = np.array(gs.board)
 
     # Serial write start message to Sam
-    transmission_byte0 = 0b00100111
+    transmission_byte0 = 0b00110000
     transmission_byte1 = 0b00100111  # Second byte doesn't matter for start
-
+    send_to_328p(transmission_byte0, "Start Fast Scan")
     # Transmit again
     samState2 = receive_chess_state()
     if(samState2 != -1):
