@@ -3,8 +3,8 @@
 # Date: 2020-11-01
 import numpy as np
 import time
-#import serial
-#ser2 = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
+import serial
+ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 letterToColumn = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5,'g': 6,'h': 7}  # To translate cell to posMap location
 columnToLetter = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
 message_types = {0b00000 : 'N/A', 0b00001: 'Piece Picked Up', 0b00010: 'Piece Put Down', 0b01011: 'Invalid I2C Command'}
@@ -39,6 +39,7 @@ class gamestateMessage():
         return cell
     """
 def resolve_chess_move(gs, messageArray):
+    print("Resolving Move...")
     #print("GS: ", gs)
     #print("Sam's Message Array:", messageArray)
     start_found = False
@@ -53,7 +54,7 @@ def resolve_chess_move(gs, messageArray):
         column = column_to_byte(get_column_byIndex(gs, c))
         #print("column:",column)
         fs_column = messageArray[c].data
-        #print("fs_column:",fs_column)
+        print("fs_column:",bin(fs_column))
         # loop through each cell of column
         for i in range(len(gs)):
             # bit shift to find value of current cell
@@ -85,11 +86,11 @@ def resolve_chess_move(gs, messageArray):
 def compare_chess_states(gs, messageArray):
     #print("GS: ", gs)
     #print("Sam's Message Array:", messageArray)
-    for i in range(8):
-        column = get_column_byIndex(gs, i)
+    for message in messageArray:
+        column = get_column_byIndex(gs, message.col)
         #print(column)
         #print(column_to_byte(column))
-        if(column_to_byte(column) != messageArray[i].data):
+        if(column_to_byte(column) != messageArray[message.col].data):
             print("Incongruent gamestates")
             return -1
     print("Verified Congruent Gamestates")
@@ -124,24 +125,50 @@ def initial_error_check(gs):
     # Step 2: Sam transmits current state (column by column).
     # Wait for 8 messages. Compare array to gs.
     # return to wei 1, -1, 0
+    # After transmission. Sam will send all 8 columns to check if we have congruent states
+    newGs = np.array(gs.board)
+    print("Starting initial check...")
+    send_to_328p(0b00101000,"Dump All Sensor Data")
+    samInitialState = receive_chess_state()
+    if samInitialState == -1:
+        print("Error in reading Sam State")
+        return -1
+    # Check congruency
+    if (compare_chess_states(newGs, samInitialState) != 0):
+        print("Incongruent Gamestates. Returning 5 to Wei to tell user to fix pieces and call start again")
+        return 5
+    print("Initial Gamestates Verified and Congruent")
     return 0
 
+# Receive message from 328P via UART
+"""
+def recv_from_328p(timeout):
+    print("\nWaiting for message:")
+    while True:
+        ser.flush()
+        # time.sleep(0.03)
+        x = ser.read()
+"""
+
 def receive_chess_state():
+    print("Waiting for Sam's Chess State...")
     samState = []
     while True:
         # Serial receive 2 bytes from Sam
-        # ser.flush()
-        # rawRecByte0 = ser.read()
+        ser.flush()
+        rawRecByte0 = ser.read()
         # Maybe add a delay here
-        # rawRecByte1 = ser.read()
-        # recByte0 = int.from_bytes(rawRecByte0, 'little')
-        # recByte1 = int.from_bytes(rawRecByte1, 'little')
+        rawRecByte1 = ser.read()
+        recByte0 = int.from_bytes(rawRecByte0, 'little')
+        print("Byte0 Received:", bin(recByte0))
+        recByte1 = int.from_bytes(rawRecByte1, 'little')
+        print("Byte1 Received:", bin(recByte1))
         #recByte0 = 0b11110010
-        recByte1 = 0b11000011
+        #recByte1 = 0b11000011
         #messageType = (recByte0 >> 3)
         messageType = None
-        #messageCol = recByte0 & 0b00000111
-        messageCol = None
+        messageCol = recByte0 & 0b00000111
+        #messageCol = None
         currentMessage = gamestateMessage(messageType, messageCol, recByte1)
 
         # Figure out message type
@@ -154,28 +181,30 @@ def receive_chess_state():
 
     return -1
 
+# Sends 328P a path via UART
+def send_to_328p(data, messageType):
+    ser.flush()
+    print(messageType, "message sent (" + hex(data)+")", bin(data),')',)
+    #while True:
+    #    received_data = ser.read()  # read serial port
+    #    time.sleep(0.03)
+    #    data_left = ser.inWaiting()  # check for remaining byte
+    #    received_data += ser.read(data_left)
+    #    print("Sent Data: ",format(data, '#010b'))  # print received data
+    ser.write(data.to_bytes(1, 'little'))  # transmit data serially
+
 def start_fast_scan(gs):
     newGs = np.array(gs.board)
 
     # Serial write start message to Sam
-    transmission_byte0 = 0b00100111
+    transmission_byte0 = 0b00110000
     transmission_byte1 = 0b00100111  # Second byte doesn't matter for start
-
-    # After transmission. Sam will send all 8 columns to check if we have congruent states
-    samInitialState = receive_chess_state()
-    if samInitialState == -1:
-        print("Error in reading Sam State")
-        return -1
-    # Check congruency
-    if(compare_chess_states(newGs, samInitialState) != 0):
-        print("Incongruent Gamestates. Returning 5 to Wei to tell user to fix pieces and call start again")
-        return 5
-
+    send_to_328p(transmission_byte0, "Start Fast Scan")
     # Transmit again
     samState2 = receive_chess_state()
     if(samState2 != -1):
         # Finesse for testing the move resolution
-        samState2[7].data = 0b11000101
+        # samState2[7].data = 0b11000101
         move = resolve_chess_move(newGs, samState2)
         if move == '':
             # add a length check if we only get one cell resolved

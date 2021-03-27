@@ -10,9 +10,22 @@ from Engine.x328p_interface import x328p_fs_interface as interface
 
 currentGamestate = gs()  # Instantiate test gamestate
 
+#print(currentGamestate.board)
+# Reset the board to no pieces (as Sam has no pieces)
+for indexR, row in enumerate(currentGamestate.board):
+    for indexC, item in enumerate(row):
+        currentGamestate.board[indexR][indexC] = '--'
+        if indexR == 6 and indexC == 3:
+            currentGamestate.board[indexR][indexC] = 'wP'
+
+#print(currentGamestate.board)
+
 #interface.get_column(currentGamestate, 'a')
+checkStatus = interface.initial_error_check(currentGamestate)
+if checkStatus != 0:
+    exit()
 move = interface.start_fast_scan(currentGamestate)
-print(move)
+print("Move resolved from Sam's subsystem:", move)
 
 """"
 messageNo1Init = interface.gamestateMessage(0b00001, 0b000, 0b11000011) # a2a3
