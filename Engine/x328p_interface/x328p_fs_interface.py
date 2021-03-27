@@ -159,8 +159,9 @@ def receive_chess_state():
         # Maybe add a delay here
         rawRecByte1 = ser.read()
         recByte0 = int.from_bytes(rawRecByte0, 'little')
+        print("Byte0 Received:", bin(recByte0))
         recByte1 = int.from_bytes(rawRecByte1, 'little')
-        print("Byte Received:", bin(recByte1))
+        print("Byte1 Received:", bin(recByte1))
         #recByte0 = 0b11110010
         #recByte1 = 0b11000011
         #messageType = (recByte0 >> 3)
