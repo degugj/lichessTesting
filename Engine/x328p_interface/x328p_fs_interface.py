@@ -39,6 +39,7 @@ class gamestateMessage():
         return cell
     """
 def resolve_chess_move(gs, messageArray):
+    print("Resolving Move...")
     #print("GS: ", gs)
     #print("Sam's Message Array:", messageArray)
     start_found = False
@@ -53,7 +54,7 @@ def resolve_chess_move(gs, messageArray):
         column = column_to_byte(get_column_byIndex(gs, c))
         #print("column:",column)
         fs_column = messageArray[c].data
-        #print("fs_column:",fs_column)
+        print("fs_column:",bin(fs_column))
         # loop through each cell of column
         for i in range(len(gs)):
             # bit shift to find value of current cell
