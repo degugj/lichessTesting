@@ -57,7 +57,7 @@ int main(void){
 		
 		//Sending UART Message 0xF0;
 		USART_Transmit(0xF0);
-		
+		 
 	}
 	
 }
