@@ -16,7 +16,7 @@ from Engine import audio
 from Engine.lichess import lichessInterface_new as interface
 
 #from Engine.mcu_interfaces import fastScan_interface as fastScan
-from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
+# from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
 
 """
 -------------------------------
