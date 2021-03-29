@@ -3,29 +3,29 @@ Hall Sensor UART.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000182  2**0
+  0 .data         00000000  00800100  00800100  000003b8  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         0000012e  00000000  00000000  00000054  2**1
+  1 .text         00000364  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000182  2**0
+  2 .comment      00000030  00000000  00000000  000003b8  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000001b4  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003e8  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000058  00000000  00000000  000001f4  2**0
+  4 .debug_aranges 00000068  00000000  00000000  00000428  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000087a  00000000  00000000  0000024c  2**0
+  5 .debug_info   00000b10  00000000  00000000  00000490  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000763  00000000  00000000  00000ac6  2**0
+  6 .debug_abbrev 00000779  00000000  00000000  00000fa0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000439  00000000  00000000  00001229  2**0
+  7 .debug_line   0000055f  00000000  00000000  00001719  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000000b8  00000000  00000000  00001664  2**2
+  8 .debug_frame  00000128  00000000  00000000  00001c78  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000413  00000000  00000000  0000171c  2**0
+  9 .debug_str    00000450  00000000  00000000  00001da0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000217  00000000  00000000  00001b2f  2**0
+ 10 .debug_loc    000004c3  00000000  00000000  000021f0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000048  00000000  00000000  00001d46  2**0
+ 11 .debug_ranges 000000a0  00000000  00000000  000026b3  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -57,14 +57,14 @@ Disassembly of section .text:
   5c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
   60:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
   64:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
-  68:	7a 00       	.word	0x007a	; ????
-  6a:	62 00       	.word	0x0062	; ????
-  6c:	70 00       	.word	0x0070	; ????
-  6e:	6c 00       	.word	0x006c	; ????
-  70:	67 00       	.word	0x0067	; ????
-  72:	75 00       	.word	0x0075	; ????
-  74:	5d 00       	.word	0x005d	; ????
-  76:	7f 00       	.word	0x007f	; ????
+  68:	a0 00       	.word	0x00a0	; ????
+  6a:	88 00       	.word	0x0088	; ????
+  6c:	96 00       	.word	0x0096	; ????
+  6e:	92 00       	.word	0x0092	; ????
+  70:	8d 00       	.word	0x008d	; ????
+  72:	9b 00       	.word	0x009b	; ????
+  74:	83 00       	.word	0x0083	; ????
+  76:	a5 00       	.word	0x00a5	; ????
 
 00000078 <__ctors_end>:
   78:	11 24       	eor	r1, r1
@@ -73,124 +73,649 @@ Disassembly of section .text:
   7e:	d8 e0       	ldi	r29, 0x08	; 8
   80:	de bf       	out	0x3e, r29	; 62
   82:	cd bf       	out	0x3d, r28	; 61
-  84:	0e 94 83 00 	call	0x106	; 0x106 <main>
-  88:	0c 94 95 00 	jmp	0x12a	; 0x12a <_exit>
+  84:	0e 94 61 01 	call	0x2c2	; 0x2c2 <main>
+  88:	0c 94 b0 01 	jmp	0x360	; 0x360 <_exit>
 
 0000008c <__bad_interrupt>:
   8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
-00000090 <MuxInit>:
+00000090 <USART_Transmit>:
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  90:	ef e9       	ldi	r30, 0x9F	; 159
+  92:	ff e0       	ldi	r31, 0x0F	; 15
+  94:	31 97       	sbiw	r30, 0x01	; 1
+  96:	f1 f7       	brne	.-4      	; 0x94 <USART_Transmit+0x4>
+  98:	00 c0       	rjmp	.+0      	; 0x9a <USART_Transmit+0xa>
+  9a:	00 00       	nop
+void USART_Transmit(uint8_t data)
+{
+
+	_delay_ms(1);
+	/* Wait for empty transmit buffer */
+	while ( !( UCSR0A & (1<<UDRE0)) );
+  9c:	e0 ec       	ldi	r30, 0xC0	; 192
+  9e:	f0 e0       	ldi	r31, 0x00	; 0
+  a0:	90 81       	ld	r25, Z
+  a2:	95 ff       	sbrs	r25, 5
+  a4:	fd cf       	rjmp	.-6      	; 0xa0 <USART_Transmit+0x10>
+	/* Put data into buffer, sends the data */
+	UDR0 = data;
+  a6:	80 93 c6 00 	sts	0x00C6, r24	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7e00c6>
+  aa:	08 95       	ret
+
+000000ac <USART_Receive>:
+ * Description: Returns the received parameters from UART
+ * Input Parameters : NONE
+ * Return value: 8-bit data received from UART
+ */
+int USART_Receive(void){
+	while ( !(UCSR0A & (1<<RXC0)) ){}
+  ac:	e0 ec       	ldi	r30, 0xC0	; 192
+  ae:	f0 e0       	ldi	r31, 0x00	; 0
+  b0:	80 81       	ld	r24, Z
+  b2:	88 23       	and	r24, r24
+  b4:	ec f7       	brge	.-6      	; 0xb0 <USART_Receive+0x4>
+	/* Get and return received data from buffer */
+	return UDR0;
+  b6:	80 91 c6 00 	lds	r24, 0x00C6	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7e00c6>
+	
+}
+  ba:	90 e0       	ldi	r25, 0x00	; 0
+  bc:	08 95       	ret
+
+000000be <USART_init>:
+
+void USART_init(void){
+	
+	//DISABLE POWER REDUCTION FOR USART
+	PRR &= ~( 1 << PRUSART0);
+  be:	e4 e6       	ldi	r30, 0x64	; 100
+  c0:	f0 e0       	ldi	r31, 0x00	; 0
+  c2:	80 81       	ld	r24, Z
+  c4:	8d 7f       	andi	r24, 0xFD	; 253
+  c6:	80 83       	st	Z, r24
+	/*Set baud rate */
+	//9600 for 16MHz clock
+	UBRR0L = 0b01100111;
+  c8:	87 e6       	ldi	r24, 0x67	; 103
+  ca:	80 93 c4 00 	sts	0x00C4, r24	; 0x8000c4 <__TEXT_REGION_LENGTH__+0x7e00c4>
+	
+	/*Enable receiver and transmitter //and Receive INterrupt*/
+	UCSR0B = (1<<RXEN0)|(1<<TXEN0);//|(1<<RXCIE0);
+  ce:	88 e1       	ldi	r24, 0x18	; 24
+  d0:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+	/* 8-bit data */
+	UCSR0C = (3<<UCSZ00);
+  d4:	86 e0       	ldi	r24, 0x06	; 6
+  d6:	80 93 c2 00 	sts	0x00C2, r24	; 0x8000c2 <__TEXT_REGION_LENGTH__+0x7e00c2>
+  da:	08 95       	ret
+
+000000dc <MuxInit>:
+}
+
+void MuxInit(void) 
+{
+	DDRD |= (1<<A);
+  dc:	52 9a       	sbi	0x0a, 2	; 10
+	DDRD |= (1<<B);
+  de:	53 9a       	sbi	0x0a, 3	; 10
+	DDRD |= (1<<C);
+  e0:	54 9a       	sbi	0x0a, 4	; 10
+	
+	DDRC &= ~(1<<Mux0);
+  e2:	3e 98       	cbi	0x07, 6	; 7
+	DDRC &= ~(1<<Mux1);
+  e4:	3f 98       	cbi	0x07, 7	; 7
+	DDRB &= ~(1<<Mux2);
+  e6:	20 98       	cbi	0x04, 0	; 4
+	DDRB &= ~(1<<Mux3);
+  e8:	21 98       	cbi	0x04, 1	; 4
+	DDRC &= ~(1<<Mux4);
+  ea:	38 98       	cbi	0x07, 0	; 7
+	DDRC &= ~(1<<Mux5);
+  ec:	39 98       	cbi	0x07, 1	; 7
+	DDRC &= ~(1<<Mux6);
+  ee:	3a 98       	cbi	0x07, 2	; 7
+	DDRC &= ~(1<<Mux7);
+  f0:	3b 98       	cbi	0x07, 3	; 7
+  f2:	08 95       	ret
+
+000000f4 <SetABC>:
+}
+
+void SetABC(uint8_t row)
+{
+ 	switch (row)
+  f4:	90 e0       	ldi	r25, 0x00	; 0
+  f6:	88 30       	cpi	r24, 0x08	; 8
+  f8:	91 05       	cpc	r25, r1
+  fa:	50 f5       	brcc	.+84     	; 0x150 <SetABC+0x5c>
+  fc:	fc 01       	movw	r30, r24
+  fe:	ec 5c       	subi	r30, 0xCC	; 204
+ 100:	ff 4f       	sbci	r31, 0xFF	; 255
+ 102:	0c 94 aa 01 	jmp	0x354	; 0x354 <__tablejump2__>
+ 	{
+ 		case 6 :
+ 		PORTD |= (1<<C)|(1<<B);
+ 106:	8b b1       	in	r24, 0x0b	; 11
+ 108:	88 61       	ori	r24, 0x18	; 24
+ 10a:	8b b9       	out	0x0b, r24	; 11
+ 		PORTD &= ~(1<<A);
+ 10c:	5a 98       	cbi	0x0b, 2	; 11
+ 		break;
+ 10e:	08 95       	ret
+ 		case 1 :
+ 		PORTD |= (1<<B);
+ 110:	5b 9a       	sbi	0x0b, 3	; 11
+ 		PORTD &= ~(1<<A) &~(1<<C);
+ 112:	8b b1       	in	r24, 0x0b	; 11
+ 114:	8b 7e       	andi	r24, 0xEB	; 235
+ 116:	8b b9       	out	0x0b, r24	; 11
+ 		break;
+ 118:	08 95       	ret
+ 		case 4 :
+ 		PORTD |= (1<<C);
+ 11a:	5c 9a       	sbi	0x0b, 4	; 11
+ 		PORTD &= ~(1<<A)&~(1<<B);
+ 11c:	8b b1       	in	r24, 0x0b	; 11
+ 11e:	83 7f       	andi	r24, 0xF3	; 243
+ 120:	8b b9       	out	0x0b, r24	; 11
+ 		break;
+ 122:	08 95       	ret
+		case 3 :
+		PORTD &= ~(1<<A)&~(1<<B)&~(1<<C);
+ 124:	8b b1       	in	r24, 0x0b	; 11
+ 126:	83 7e       	andi	r24, 0xE3	; 227
+ 128:	8b b9       	out	0x0b, r24	; 11
+ 		break;
+ 12a:	08 95       	ret
+ 		case 2 :
+ 		PORTD |= (1<<A);
+ 12c:	5a 9a       	sbi	0x0b, 2	; 11
+ 		PORTD &= ~(1<<B)&~(1<<C);
+ 12e:	8b b1       	in	r24, 0x0b	; 11
+ 130:	87 7e       	andi	r24, 0xE7	; 231
+ 132:	8b b9       	out	0x0b, r24	; 11
+ 		break;
+ 134:	08 95       	ret
+ 		case 5 :
+ 		PORTD |= (1<<C)|(1<<A);
+ 136:	8b b1       	in	r24, 0x0b	; 11
+ 138:	84 61       	ori	r24, 0x14	; 20
+ 13a:	8b b9       	out	0x0b, r24	; 11
+ 		PORTD &= ~(1<<B);
+ 13c:	5b 98       	cbi	0x0b, 3	; 11
+ 		break;
+ 13e:	08 95       	ret
+ 		case 0 :
+ 		PORTD |= (1<<A)|(1<<B);
+ 140:	8b b1       	in	r24, 0x0b	; 11
+ 142:	8c 60       	ori	r24, 0x0C	; 12
+ 144:	8b b9       	out	0x0b, r24	; 11
+ 		PORTD &= ~(1<<C);
+ 146:	5c 98       	cbi	0x0b, 4	; 11
+		break;
+ 148:	08 95       	ret
+		case 7 :
+		PORTD |= (1<<A)|(1<<B)|(1<<C);
+ 14a:	8b b1       	in	r24, 0x0b	; 11
+ 14c:	8c 61       	ori	r24, 0x1C	; 28
+ 14e:	8b b9       	out	0x0b, r24	; 11
+ 150:	08 95       	ret
+
+00000152 <GatherMuxDataB>:
+	}
+
+}
+
+uint8_t GatherMuxDataB(uint8_t Mux)
+{
+ 152:	df 92       	push	r13
+ 154:	ef 92       	push	r14
+ 156:	ff 92       	push	r15
+ 158:	0f 93       	push	r16
+ 15a:	1f 93       	push	r17
+ 15c:	cf 93       	push	r28
+ 15e:	df 93       	push	r29
+ 160:	91 e0       	ldi	r25, 0x01	; 1
+ 162:	82 30       	cpi	r24, 0x02	; 2
+ 164:	09 f4       	brne	.+2      	; 0x168 <GatherMuxDataB+0x16>
+ 166:	90 e0       	ldi	r25, 0x00	; 0
+ 168:	01 e0       	ldi	r16, 0x01	; 1
+ 16a:	10 e0       	ldi	r17, 0x00	; 0
+ 16c:	02 c0       	rjmp	.+4      	; 0x172 <GatherMuxDataB+0x20>
+ 16e:	00 0f       	add	r16, r16
+ 170:	11 1f       	adc	r17, r17
+ 172:	9a 95       	dec	r25
+ 174:	e2 f7       	brpl	.-8      	; 0x16e <GatherMuxDataB+0x1c>
+	
+	uint8_t MuxData = 0x00;
+	for (uint8_t i = 0; i < 8; i++) {
+		SetABC(i);
+		PINB |= (1<<6);
+		if(bit_is_clear(PINB,Mux)) {
+ 176:	c0 e0       	ldi	r28, 0x00	; 0
+ 178:	d0 e0       	ldi	r29, 0x00	; 0
+		Mux = Mux2;
+	} else {
+		Mux = Mux3;
+	} 
+	
+	uint8_t MuxData = 0x00;
+ 17a:	d1 2c       	mov	r13, r1
+	for (uint8_t i = 0; i < 8; i++) {
+		SetABC(i);
+		PINB |= (1<<6);
+		if(bit_is_clear(PINB,Mux)) {
+			MuxData |= (1<<i);
+ 17c:	ee 24       	eor	r14, r14
+ 17e:	e3 94       	inc	r14
+ 180:	f1 2c       	mov	r15, r1
+		Mux = Mux3;
+	} 
+	
+	uint8_t MuxData = 0x00;
+	for (uint8_t i = 0; i < 8; i++) {
+		SetABC(i);
+ 182:	8c 2f       	mov	r24, r28
+ 184:	0e 94 7a 00 	call	0xf4	; 0xf4 <SetABC>
+		PINB |= (1<<6);
+ 188:	1e 9a       	sbi	0x03, 6	; 3
+		if(bit_is_clear(PINB,Mux)) {
+ 18a:	83 b1       	in	r24, 0x03	; 3
+ 18c:	90 e0       	ldi	r25, 0x00	; 0
+ 18e:	80 23       	and	r24, r16
+ 190:	91 23       	and	r25, r17
+ 192:	89 2b       	or	r24, r25
+ 194:	41 f4       	brne	.+16     	; 0x1a6 <GatherMuxDataB+0x54>
+			MuxData |= (1<<i);
+ 196:	c7 01       	movw	r24, r14
+ 198:	0c 2e       	mov	r0, r28
+ 19a:	02 c0       	rjmp	.+4      	; 0x1a0 <GatherMuxDataB+0x4e>
+ 19c:	88 0f       	add	r24, r24
+ 19e:	99 1f       	adc	r25, r25
+ 1a0:	0a 94       	dec	r0
+ 1a2:	e2 f7       	brpl	.-8      	; 0x19c <GatherMuxDataB+0x4a>
+ 1a4:	d8 2a       	or	r13, r24
+ 1a6:	21 96       	adiw	r28, 0x01	; 1
+	} else {
+		Mux = Mux3;
+	} 
+	
+	uint8_t MuxData = 0x00;
+	for (uint8_t i = 0; i < 8; i++) {
+ 1a8:	c8 30       	cpi	r28, 0x08	; 8
+ 1aa:	d1 05       	cpc	r29, r1
+ 1ac:	51 f7       	brne	.-44     	; 0x182 <GatherMuxDataB+0x30>
+			MuxData |= (1<<i);
+			//USART_Transmit(0xFF);
+		}
+	}
+	return MuxData;
+}
+ 1ae:	8d 2d       	mov	r24, r13
+ 1b0:	df 91       	pop	r29
+ 1b2:	cf 91       	pop	r28
+ 1b4:	1f 91       	pop	r17
+ 1b6:	0f 91       	pop	r16
+ 1b8:	ff 90       	pop	r15
+ 1ba:	ef 90       	pop	r14
+ 1bc:	df 90       	pop	r13
+ 1be:	08 95       	ret
+
+000001c0 <GatherMuxDataC>:
+
+uint8_t GatherMuxDataC(uint8_t Mux)
+{
+ 1c0:	df 92       	push	r13
+ 1c2:	ef 92       	push	r14
+ 1c4:	ff 92       	push	r15
+ 1c6:	0f 93       	push	r16
+ 1c8:	1f 93       	push	r17
+ 1ca:	cf 93       	push	r28
+ 1cc:	df 93       	push	r29
+	if(Mux == 4) {
+ 1ce:	84 30       	cpi	r24, 0x04	; 4
+ 1d0:	31 f0       	breq	.+12     	; 0x1de <GatherMuxDataC+0x1e>
+		Mux = Mux4;
+	} else if (Mux == 5) {
+ 1d2:	85 30       	cpi	r24, 0x05	; 5
+ 1d4:	31 f0       	breq	.+12     	; 0x1e2 <GatherMuxDataC+0x22>
+		Mux = Mux5;
+	} else if (Mux == 6) {
+ 1d6:	86 30       	cpi	r24, 0x06	; 6
+ 1d8:	31 f0       	breq	.+12     	; 0x1e6 <GatherMuxDataC+0x26>
+		Mux = Mux6 ;
+	} else {
+		Mux = Mux7;
+ 1da:	83 e0       	ldi	r24, 0x03	; 3
+ 1dc:	05 c0       	rjmp	.+10     	; 0x1e8 <GatherMuxDataC+0x28>
+}
+
+uint8_t GatherMuxDataC(uint8_t Mux)
+{
+	if(Mux == 4) {
+		Mux = Mux4;
+ 1de:	80 e0       	ldi	r24, 0x00	; 0
+ 1e0:	03 c0       	rjmp	.+6      	; 0x1e8 <GatherMuxDataC+0x28>
+	} else if (Mux == 5) {
+		Mux = Mux5;
+ 1e2:	81 e0       	ldi	r24, 0x01	; 1
+ 1e4:	01 c0       	rjmp	.+2      	; 0x1e8 <GatherMuxDataC+0x28>
+	} else if (Mux == 6) {
+		Mux = Mux6 ;
+ 1e6:	82 e0       	ldi	r24, 0x02	; 2
+ 1e8:	01 e0       	ldi	r16, 0x01	; 1
+ 1ea:	10 e0       	ldi	r17, 0x00	; 0
+ 1ec:	02 c0       	rjmp	.+4      	; 0x1f2 <GatherMuxDataC+0x32>
+ 1ee:	00 0f       	add	r16, r16
+ 1f0:	11 1f       	adc	r17, r17
+ 1f2:	8a 95       	dec	r24
+ 1f4:	e2 f7       	brpl	.-8      	; 0x1ee <GatherMuxDataC+0x2e>
+	
+	uint8_t MuxData = 0x00;
+	for (uint8_t i = 0; i < 8; i++) {
+		SetABC(i);
+		PINC |= (1<<6);
+		if(bit_is_clear(PINC,Mux)) {
+ 1f6:	c0 e0       	ldi	r28, 0x00	; 0
+ 1f8:	d0 e0       	ldi	r29, 0x00	; 0
+		Mux = Mux6 ;
+	} else {
+		Mux = Mux7;
+	}
+	
+	uint8_t MuxData = 0x00;
+ 1fa:	d1 2c       	mov	r13, r1
+	for (uint8_t i = 0; i < 8; i++) {
+		SetABC(i);
+		PINC |= (1<<6);
+		if(bit_is_clear(PINC,Mux)) {
+			MuxData |= (1<<i);
+ 1fc:	ee 24       	eor	r14, r14
+ 1fe:	e3 94       	inc	r14
+ 200:	f1 2c       	mov	r15, r1
+		Mux = Mux7;
+	}
+	
+	uint8_t MuxData = 0x00;
+	for (uint8_t i = 0; i < 8; i++) {
+		SetABC(i);
+ 202:	8c 2f       	mov	r24, r28
+ 204:	0e 94 7a 00 	call	0xf4	; 0xf4 <SetABC>
+		PINC |= (1<<6);
+ 208:	36 9a       	sbi	0x06, 6	; 6
+		if(bit_is_clear(PINC,Mux)) {
+ 20a:	86 b1       	in	r24, 0x06	; 6
+ 20c:	90 e0       	ldi	r25, 0x00	; 0
+ 20e:	80 23       	and	r24, r16
+ 210:	91 23       	and	r25, r17
+ 212:	89 2b       	or	r24, r25
+ 214:	41 f4       	brne	.+16     	; 0x226 <GatherMuxDataC+0x66>
+			MuxData |= (1<<i);
+ 216:	c7 01       	movw	r24, r14
+ 218:	0c 2e       	mov	r0, r28
+ 21a:	02 c0       	rjmp	.+4      	; 0x220 <GatherMuxDataC+0x60>
+ 21c:	88 0f       	add	r24, r24
+ 21e:	99 1f       	adc	r25, r25
+ 220:	0a 94       	dec	r0
+ 222:	e2 f7       	brpl	.-8      	; 0x21c <GatherMuxDataC+0x5c>
+ 224:	d8 2a       	or	r13, r24
+ 226:	21 96       	adiw	r28, 0x01	; 1
+	} else {
+		Mux = Mux7;
+	}
+	
+	uint8_t MuxData = 0x00;
+	for (uint8_t i = 0; i < 8; i++) {
+ 228:	c8 30       	cpi	r28, 0x08	; 8
+ 22a:	d1 05       	cpc	r29, r1
+ 22c:	51 f7       	brne	.-44     	; 0x202 <GatherMuxDataC+0x42>
+			MuxData |= (1<<i);
+			//USART_Transmit(0xFF);
+		}
+	}
+	return MuxData;
+}
+ 22e:	8d 2d       	mov	r24, r13
+ 230:	df 91       	pop	r29
+ 232:	cf 91       	pop	r28
+ 234:	1f 91       	pop	r17
+ 236:	0f 91       	pop	r16
+ 238:	ff 90       	pop	r15
+ 23a:	ef 90       	pop	r14
+ 23c:	df 90       	pop	r13
+ 23e:	08 95       	ret
+
+00000240 <GatherMuxDataD>:
+
+uint8_t GatherMuxDataD(uint8_t Mux)
+{
+ 240:	df 92       	push	r13
+ 242:	ef 92       	push	r14
+ 244:	ff 92       	push	r15
+ 246:	0f 93       	push	r16
+ 248:	1f 93       	push	r17
+ 24a:	cf 93       	push	r28
+ 24c:	df 93       	push	r29
+	if(Mux == 0) {
+ 24e:	88 23       	and	r24, r24
+ 250:	11 f0       	breq	.+4      	; 0x256 <GatherMuxDataD+0x16>
+		Mux = Mux0;
+	} else {
+		Mux = Mux1;
+ 252:	87 e0       	ldi	r24, 0x07	; 7
+ 254:	01 c0       	rjmp	.+2      	; 0x258 <GatherMuxDataD+0x18>
+}
+
+uint8_t GatherMuxDataD(uint8_t Mux)
+{
+	if(Mux == 0) {
+		Mux = Mux0;
+ 256:	86 e0       	ldi	r24, 0x06	; 6
+ 258:	01 e0       	ldi	r16, 0x01	; 1
+ 25a:	10 e0       	ldi	r17, 0x00	; 0
+ 25c:	02 c0       	rjmp	.+4      	; 0x262 <GatherMuxDataD+0x22>
+ 25e:	00 0f       	add	r16, r16
+ 260:	11 1f       	adc	r17, r17
+ 262:	8a 95       	dec	r24
+ 264:	e2 f7       	brpl	.-8      	; 0x25e <GatherMuxDataD+0x1e>
+	
+	uint8_t MuxData = 0x00;
+	for (uint8_t i = 0; i < 8; i++) {
+		SetABC(i);
+		PIND |= (1<<6);
+		if(bit_is_clear(PIND,Mux)) {
+ 266:	c0 e0       	ldi	r28, 0x00	; 0
+ 268:	d0 e0       	ldi	r29, 0x00	; 0
+		Mux = Mux0;
+	} else {
+		Mux = Mux1;
+	}
+	
+	uint8_t MuxData = 0x00;
+ 26a:	d1 2c       	mov	r13, r1
+	for (uint8_t i = 0; i < 8; i++) {
+		SetABC(i);
+		PIND |= (1<<6);
+		if(bit_is_clear(PIND,Mux)) {
+			MuxData |= (1<<i);
+ 26c:	ee 24       	eor	r14, r14
+ 26e:	e3 94       	inc	r14
+ 270:	f1 2c       	mov	r15, r1
+		Mux = Mux1;
+	}
+	
+	uint8_t MuxData = 0x00;
+	for (uint8_t i = 0; i < 8; i++) {
+		SetABC(i);
+ 272:	8c 2f       	mov	r24, r28
+ 274:	0e 94 7a 00 	call	0xf4	; 0xf4 <SetABC>
+		PIND |= (1<<6);
+ 278:	4e 9a       	sbi	0x09, 6	; 9
+		if(bit_is_clear(PIND,Mux)) {
+ 27a:	89 b1       	in	r24, 0x09	; 9
+ 27c:	90 e0       	ldi	r25, 0x00	; 0
+ 27e:	80 23       	and	r24, r16
+ 280:	91 23       	and	r25, r17
+ 282:	89 2b       	or	r24, r25
+ 284:	41 f4       	brne	.+16     	; 0x296 <GatherMuxDataD+0x56>
+			MuxData |= (1<<i);
+ 286:	c7 01       	movw	r24, r14
+ 288:	0c 2e       	mov	r0, r28
+ 28a:	02 c0       	rjmp	.+4      	; 0x290 <GatherMuxDataD+0x50>
+ 28c:	88 0f       	add	r24, r24
+ 28e:	99 1f       	adc	r25, r25
+ 290:	0a 94       	dec	r0
+ 292:	e2 f7       	brpl	.-8      	; 0x28c <GatherMuxDataD+0x4c>
+ 294:	d8 2a       	or	r13, r24
+ 296:	21 96       	adiw	r28, 0x01	; 1
+	} else {
+		Mux = Mux1;
+	}
+	
+	uint8_t MuxData = 0x00;
+	for (uint8_t i = 0; i < 8; i++) {
+ 298:	c8 30       	cpi	r28, 0x08	; 8
+ 29a:	d1 05       	cpc	r29, r1
+ 29c:	51 f7       	brne	.-44     	; 0x272 <GatherMuxDataD+0x32>
+			MuxData |= (1<<i);
+			//USART_Transmit(0xFF);
+		}
+	}
+	return MuxData;
+}
+ 29e:	8d 2d       	mov	r24, r13
+ 2a0:	df 91       	pop	r29
+ 2a2:	cf 91       	pop	r28
+ 2a4:	1f 91       	pop	r17
+ 2a6:	0f 91       	pop	r16
+ 2a8:	ff 90       	pop	r15
+ 2aa:	ef 90       	pop	r14
+ 2ac:	df 90       	pop	r13
+ 2ae:	08 95       	ret
+
+000002b0 <SendData>:
 
 void SendData(uint8_t Byte1, uint8_t Byte2)
 {
+ 2b0:	cf 93       	push	r28
+ 2b2:	c6 2f       	mov	r28, r22
 	USART_Transmit(Byte1);
+ 2b4:	0e 94 48 00 	call	0x90	; 0x90 <USART_Transmit>
 	USART_Transmit(Byte2);
+ 2b8:	8c 2f       	mov	r24, r28
+ 2ba:	0e 94 48 00 	call	0x90	; 0x90 <USART_Transmit>
 }
-  90:	52 9a       	sbi	0x0a, 2	; 10
-  92:	53 9a       	sbi	0x0a, 3	; 10
-  94:	54 9a       	sbi	0x0a, 4	; 10
-  96:	3e 98       	cbi	0x07, 6	; 7
-  98:	3f 98       	cbi	0x07, 7	; 7
-  9a:	20 98       	cbi	0x04, 0	; 4
-  9c:	21 98       	cbi	0x04, 1	; 4
-  9e:	38 98       	cbi	0x07, 0	; 7
-  a0:	39 98       	cbi	0x07, 1	; 7
-  a2:	3a 98       	cbi	0x07, 2	; 7
-  a4:	3b 98       	cbi	0x07, 3	; 7
-  a6:	08 95       	ret
+ 2be:	cf 91       	pop	r28
+ 2c0:	08 95       	ret
 
-000000a8 <SetABC>:
-  a8:	90 e0       	ldi	r25, 0x00	; 0
-  aa:	88 30       	cpi	r24, 0x08	; 8
-  ac:	91 05       	cpc	r25, r1
-  ae:	50 f5       	brcc	.+84     	; 0x104 <SetABC+0x5c>
-  b0:	fc 01       	movw	r30, r24
-  b2:	ec 5c       	subi	r30, 0xCC	; 204
-  b4:	ff 4f       	sbci	r31, 0xFF	; 255
-  b6:	0c 94 8f 00 	jmp	0x11e	; 0x11e <__tablejump2__>
-  ba:	8b b1       	in	r24, 0x0b	; 11
-  bc:	88 61       	ori	r24, 0x18	; 24
-  be:	8b b9       	out	0x0b, r24	; 11
-  c0:	5a 98       	cbi	0x0b, 2	; 11
-  c2:	08 95       	ret
-  c4:	5b 9a       	sbi	0x0b, 3	; 11
-  c6:	8b b1       	in	r24, 0x0b	; 11
-  c8:	8b 7e       	andi	r24, 0xEB	; 235
-  ca:	8b b9       	out	0x0b, r24	; 11
-  cc:	08 95       	ret
-  ce:	5c 9a       	sbi	0x0b, 4	; 11
-  d0:	8b b1       	in	r24, 0x0b	; 11
-  d2:	83 7f       	andi	r24, 0xF3	; 243
-  d4:	8b b9       	out	0x0b, r24	; 11
-  d6:	08 95       	ret
-  d8:	8b b1       	in	r24, 0x0b	; 11
-  da:	83 7e       	andi	r24, 0xE3	; 227
-  dc:	8b b9       	out	0x0b, r24	; 11
-  de:	08 95       	ret
-  e0:	5a 9a       	sbi	0x0b, 2	; 11
-  e2:	8b b1       	in	r24, 0x0b	; 11
-  e4:	87 7e       	andi	r24, 0xE7	; 231
-  e6:	8b b9       	out	0x0b, r24	; 11
-  e8:	08 95       	ret
-  ea:	8b b1       	in	r24, 0x0b	; 11
-  ec:	84 61       	ori	r24, 0x14	; 20
-  ee:	8b b9       	out	0x0b, r24	; 11
-  f0:	5b 98       	cbi	0x0b, 3	; 11
-  f2:	08 95       	ret
-  f4:	8b b1       	in	r24, 0x0b	; 11
-  f6:	8c 60       	ori	r24, 0x0C	; 12
-  f8:	8b b9       	out	0x0b, r24	; 11
-  fa:	5c 98       	cbi	0x0b, 4	; 11
-  fc:	08 95       	ret
-  fe:	8b b1       	in	r24, 0x0b	; 11
- 100:	8c 61       	ori	r24, 0x1C	; 28
- 102:	8b b9       	out	0x0b, r24	; 11
- 104:	08 95       	ret
-
-00000106 <main>:
+000002c2 <main>:
 
 int main(void)
 {
 	
 	MuxInit();
- 106:	0e 94 48 00 	call	0x90	; 0x90 <MuxInit>
-// 			SendData(0x05,0x00);
-// 			SendData(0x06,0x00);
-// 			SendData(0x07,0x00);
-// 		}
+ 2c2:	0e 94 6e 00 	call	0xdc	; 0xdc <MuxInit>
+	
+	//DDRB |= (1<<2); //SetLED as output
 		
-		PIND |= (1<<Mux0);
- 10a:	4e 9a       	sbi	0x09, 6	; 9
+	uint8_t UART_lastRecievedByte;
+	USART_init();
+ 2c6:	0e 94 5f 00 	call	0xbe	; 0xbe <USART_init>
+	uint8_t MD6;
+	uint8_t MD7;
+	
+    while (1) 
+    {
+		MD0 = GatherMuxDataD(0);
+ 2ca:	80 e0       	ldi	r24, 0x00	; 0
+ 2cc:	0e 94 20 01 	call	0x240	; 0x240 <GatherMuxDataD>
+ 2d0:	c8 2e       	mov	r12, r24
+		MD1 = GatherMuxDataD(1);
+ 2d2:	81 e0       	ldi	r24, 0x01	; 1
+ 2d4:	0e 94 20 01 	call	0x240	; 0x240 <GatherMuxDataD>
+ 2d8:	d8 2e       	mov	r13, r24
+		MD2 = GatherMuxDataB(2);
+ 2da:	82 e0       	ldi	r24, 0x02	; 2
+ 2dc:	0e 94 a9 00 	call	0x152	; 0x152 <GatherMuxDataB>
+ 2e0:	e8 2e       	mov	r14, r24
+		MD3 = GatherMuxDataB(3);
+ 2e2:	83 e0       	ldi	r24, 0x03	; 3
+ 2e4:	0e 94 a9 00 	call	0x152	; 0x152 <GatherMuxDataB>
+ 2e8:	f8 2e       	mov	r15, r24
+		MD4 = GatherMuxDataC(4);
+ 2ea:	84 e0       	ldi	r24, 0x04	; 4
+ 2ec:	0e 94 e0 00 	call	0x1c0	; 0x1c0 <GatherMuxDataC>
+ 2f0:	08 2f       	mov	r16, r24
+		MD5 = GatherMuxDataC(5);
+ 2f2:	85 e0       	ldi	r24, 0x05	; 5
+ 2f4:	0e 94 e0 00 	call	0x1c0	; 0x1c0 <GatherMuxDataC>
+ 2f8:	18 2f       	mov	r17, r24
+		MD6 = GatherMuxDataC(6);
+ 2fa:	86 e0       	ldi	r24, 0x06	; 6
+ 2fc:	0e 94 e0 00 	call	0x1c0	; 0x1c0 <GatherMuxDataC>
+ 300:	d8 2f       	mov	r29, r24
+		MD7 = GatherMuxDataC(7);
+ 302:	87 e0       	ldi	r24, 0x07	; 7
+ 304:	0e 94 e0 00 	call	0x1c0	; 0x1c0 <GatherMuxDataC>
+ 308:	c8 2f       	mov	r28, r24
 		
-		//uint8_t MD0 = 0x00; //GatherMuxData(0);
+		UART_lastRecievedByte = USART_Receive();
+ 30a:	0e 94 56 00 	call	0xac	; 0xac <USART_Receive>
 		
-		SetABC(6);
- 10c:	86 e0       	ldi	r24, 0x06	; 6
- 10e:	0e 94 54 00 	call	0xa8	; 0xa8 <SetABC>
-				
-		if(bit_is_clear(PIND,Mux0)) {
- 112:	4e 99       	sbic	0x09, 6	; 9
- 114:	02 c0       	rjmp	.+4      	; 0x11a <main+0x14>
-		//if ((PIND & (1<<Mux0))) {.
-			PORTB |= (1<<2);
- 116:	2a 9a       	sbi	0x05, 2	; 5
- 118:	f8 cf       	rjmp	.-16     	; 0x10a <main+0x4>
-			//MD0 = 0xFF;
-		} else {
-			PORTB &= ~(1<<2);
- 11a:	2a 98       	cbi	0x05, 2	; 5
- 11c:	f6 cf       	rjmp	.-20     	; 0x10a <main+0x4>
+		if (UART_lastRecievedByte == 0b00101000) {
+ 30e:	88 32       	cpi	r24, 0x28	; 40
+ 310:	e1 f6       	brne	.-72     	; 0x2ca <main+0x8>
+			SendData(0x00,MD0);
+ 312:	6c 2d       	mov	r22, r12
+ 314:	80 e0       	ldi	r24, 0x00	; 0
+ 316:	0e 94 58 01 	call	0x2b0	; 0x2b0 <SendData>
+			SendData(0x01,MD1);
+ 31a:	6d 2d       	mov	r22, r13
+ 31c:	81 e0       	ldi	r24, 0x01	; 1
+ 31e:	0e 94 58 01 	call	0x2b0	; 0x2b0 <SendData>
+			SendData(0x02,MD2);
+ 322:	6e 2d       	mov	r22, r14
+ 324:	82 e0       	ldi	r24, 0x02	; 2
+ 326:	0e 94 58 01 	call	0x2b0	; 0x2b0 <SendData>
+			SendData(0x03,MD3);
+ 32a:	6f 2d       	mov	r22, r15
+ 32c:	83 e0       	ldi	r24, 0x03	; 3
+ 32e:	0e 94 58 01 	call	0x2b0	; 0x2b0 <SendData>
+			SendData(0x04,MD4);
+ 332:	60 2f       	mov	r22, r16
+ 334:	84 e0       	ldi	r24, 0x04	; 4
+ 336:	0e 94 58 01 	call	0x2b0	; 0x2b0 <SendData>
+			SendData(0x05,MD5);
+ 33a:	61 2f       	mov	r22, r17
+ 33c:	85 e0       	ldi	r24, 0x05	; 5
+ 33e:	0e 94 58 01 	call	0x2b0	; 0x2b0 <SendData>
+			SendData(0x06,MD6);
+ 342:	6d 2f       	mov	r22, r29
+ 344:	86 e0       	ldi	r24, 0x06	; 6
+ 346:	0e 94 58 01 	call	0x2b0	; 0x2b0 <SendData>
+			SendData(0x07,MD7);
+ 34a:	6c 2f       	mov	r22, r28
+ 34c:	87 e0       	ldi	r24, 0x07	; 7
+ 34e:	0e 94 58 01 	call	0x2b0	; 0x2b0 <SendData>
+ 352:	bb cf       	rjmp	.-138    	; 0x2ca <main+0x8>
 
-0000011e <__tablejump2__>:
- 11e:	ee 0f       	add	r30, r30
- 120:	ff 1f       	adc	r31, r31
- 122:	05 90       	lpm	r0, Z+
- 124:	f4 91       	lpm	r31, Z
- 126:	e0 2d       	mov	r30, r0
- 128:	09 94       	ijmp
+00000354 <__tablejump2__>:
+ 354:	ee 0f       	add	r30, r30
+ 356:	ff 1f       	adc	r31, r31
+ 358:	05 90       	lpm	r0, Z+
+ 35a:	f4 91       	lpm	r31, Z
+ 35c:	e0 2d       	mov	r30, r0
+ 35e:	09 94       	ijmp
 
-0000012a <_exit>:
- 12a:	f8 94       	cli
+00000360 <_exit>:
+ 360:	f8 94       	cli
 
-0000012c <__stop_program>:
- 12c:	ff cf       	rjmp	.-2      	; 0x12c <__stop_program>
+00000362 <__stop_program>:
+ 362:	ff cf       	rjmp	.-2      	; 0x362 <__stop_program>
