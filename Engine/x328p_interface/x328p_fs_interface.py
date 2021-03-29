@@ -29,8 +29,8 @@ class gamestateMessage():
 
     def __str__(self):
         time = self.timestamp.strftime("%H:%M:%S")
-        line1 = "\n*****\nFast Scan Message ID: " + str(id(self)) + " at time:" + time
-        line2 = "- Type: "+ format(self.typ, '#010b') + " | Column: " + format(self.col, "#010b") + " | Data: " + format(self.data, "#010b")+"\n*****" + " -"
+        line1 = "Fast Scan Message ID: " + str(id(self)) + " at time:" + time
+        line2 = "- Type: "+ format(self.typ, '#010b') + " | Column: " + format(self.col, "#010b") + " | Data: " + format(self.data, "#010b")+ " -\n"
         return (line1+'\n'+line2)
 
     # return chess cell indicated by col integer
