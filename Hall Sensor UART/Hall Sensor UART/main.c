@@ -11,10 +11,10 @@
 #include <util/delay.h>
 #include <avr/io.h>
 
-//#define Mux0 6
-//#define Mux1 7
-#define Mux0 5 // register c
-#define Mux1 4 // register c
+#define Mux0 6
+#define Mux1 7
+// #define Mux0 5 // register c
+// #define Mux1 4 // register c
 #define Mux2 0
 #define Mux3 1
 #define Mux4 0
@@ -118,7 +118,7 @@ void SetABC(uint8_t row)
 
  	switch (row)
  	{
- 		case 0 :
+ 		case 6 :
  		PORTD |= (1<<C)|(1<<B);
  		PORTD &= ~(1<<A);
  		break;
@@ -126,14 +126,14 @@ void SetABC(uint8_t row)
  		PORTD |= (1<<B);
  		PORTD &= ~(1<<A) &~(1<<C);
  		break;
- 		case 2 :
+ 		case 4 :
  		PORTD |= (1<<C);
  		PORTD &= ~(1<<A)&~(1<<B);
  		break;
 		case 3 :
 		PORTD &= ~(1<<A)&~(1<<B)&~(1<<C);
  		break;
- 		case 4 :
+ 		case 2 :
  		PORTD |= (1<<A);
  		PORTD &= ~(1<<B)&~(1<<C);
  		break;
@@ -141,7 +141,7 @@ void SetABC(uint8_t row)
  		PORTD |= (1<<C)|(1<<A);
  		PORTD &= ~(1<<B);
  		break;
- 		case 6 :
+ 		case 0 :
  		PORTD |= (1<<A)|(1<<B);
  		PORTD &= ~(1<<C);
 		break;
@@ -197,55 +197,55 @@ int main(void)
 	
 	//DDRB |= (1<<2); //SetLED as output
 		
-	uint8_t UART_lastRecievedByte;
-	USART_init();
+	//uint8_t UART_lastRecievedByte;
+	//USART_init();
     while (1) 
     {
-		UART_lastRecievedByte = USART_Receive();
+// 		UART_lastRecievedByte = USART_Receive();
+// 		
+// 		if (UART_lastRecievedByte == 0b00101000) {
+// 			SendData(0x00,0x00);
+// 			SendData(0x01,0x00);
+// 			SendData(0x02,0x00);
+// 			SendData(0x03,0b00000010);
+// 			SendData(0x04,0x00);
+// 			SendData(0x05,0x00);
+// 			SendData(0x06,0x00);
+// 			SendData(0x07,0x00);
+// 		}
+// 		
+// 		UART_lastRecievedByte = USART_Receive();
+// 		
+// 		if (UART_lastRecievedByte == 0b00110000) {
+// 			SendData(0x00,0x00);
+// 			SendData(0x01,0x00);
+// 			SendData(0x02,0x00);
+// 			SendData(0x03,0b00000100);
+// 			SendData(0x04,0x00);
+// 			SendData(0x05,0x00);
+// 			SendData(0x06,0x00);
+// 			SendData(0x07,0x00);
+// 		}
 		
-		if (UART_lastRecievedByte == 0b00101000) {
-			SendData(0x00,0x00);
-			SendData(0x01,0x00);
-			SendData(0x02,0x00);
-			SendData(0x03,0b00000010);
-			SendData(0x04,0x00);
-			SendData(0x05,0x00);
-			SendData(0x06,0x00);
-			SendData(0x07,0x00);
-		}
-		
-		UART_lastRecievedByte = USART_Receive();
-		
-		if (UART_lastRecievedByte == 0b00110000) {
-			SendData(0x00,0x00);
-			SendData(0x01,0x00);
-			SendData(0x02,0x00);
-			SendData(0x03,0b00000100);
-			SendData(0x04,0x00);
-			SendData(0x05,0x00);
-			SendData(0x06,0x00);
-			SendData(0x07,0x00);
-		}
-		
-		//PIND |= (1<<Mux0);
+		PIND |= (1<<Mux1);
 		
 		//uint8_t MD0 = 0x00; //GatherMuxData(0);
 		
-// 		PINC |= (1<<Mux0);
-// 		
-// 		SetABC(0);
-// 		
+		//PINC |= (1<<Mux0);
+		
+		SetABC(0);
+		
 		//PORTD &= ~(1<<C);
 		//PORTD &= ~(1<<B);
 		//PORTD &= ~(1<<A);
 				
-// 		if(bit_is_clear(PINC,Mux0)) {
-// 		//if ((PIND & (1<<Mux0))) {.
-// 			PORTB |= (1<<2);
-// 			//MD0 = 0xFF;
-// 		} else {
-// 			PORTB &= ~(1<<2);
-// 		}
+		if(bit_is_clear(PIND,Mux1)) {
+		//if ((PIND & (1<<Mux0))) {.
+			PORTB |= (1<<2);
+			//MD0 = 0xFF;
+		} else {
+			PORTB &= ~(1<<2);
+		}
 		
 // 		PORTD |= (1<<C);
 // 		
