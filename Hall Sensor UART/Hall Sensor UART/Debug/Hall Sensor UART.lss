@@ -57,13 +57,13 @@ Disassembly of section .text:
   5c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
   60:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
   64:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
-  68:	5d 00       	.word	0x005d	; ????
+  68:	7a 00       	.word	0x007a	; ????
   6a:	62 00       	.word	0x0062	; ????
-  6c:	67 00       	.word	0x0067	; ????
+  6c:	70 00       	.word	0x0070	; ????
   6e:	6c 00       	.word	0x006c	; ????
-  70:	70 00       	.word	0x0070	; ????
+  70:	67 00       	.word	0x0067	; ????
   72:	75 00       	.word	0x0075	; ????
-  74:	7a 00       	.word	0x007a	; ????
+  74:	5d 00       	.word	0x005d	; ????
   76:	7f 00       	.word	0x007f	; ????
 
 00000078 <__ctors_end>:
@@ -159,23 +159,17 @@ int main(void)
 // 			SendData(0x07,0x00);
 // 		}
 		
-		PIND |= (1<<Mux1);
- 10a:	4f 9a       	sbi	0x09, 7	; 9
+		PIND |= (1<<Mux0);
+ 10a:	4e 9a       	sbi	0x09, 6	; 9
 		
 		//uint8_t MD0 = 0x00; //GatherMuxData(0);
 		
-		//PINC |= (1<<Mux0);
-		
-		SetABC(0);
- 10c:	80 e0       	ldi	r24, 0x00	; 0
+		SetABC(6);
+ 10c:	86 e0       	ldi	r24, 0x06	; 6
  10e:	0e 94 54 00 	call	0xa8	; 0xa8 <SetABC>
-		
-		//PORTD &= ~(1<<C);
-		//PORTD &= ~(1<<B);
-		//PORTD &= ~(1<<A);
 				
-		if(bit_is_clear(PIND,Mux1)) {
- 112:	4f 99       	sbic	0x09, 7	; 9
+		if(bit_is_clear(PIND,Mux0)) {
+ 112:	4e 99       	sbic	0x09, 6	; 9
  114:	02 c0       	rjmp	.+4      	; 0x11a <main+0x14>
 		//if ((PIND & (1<<Mux0))) {.
 			PORTB |= (1<<2);
