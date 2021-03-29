@@ -215,7 +215,7 @@ int main(void)
 		MD2 = GatherMuxDataB(2);
 		MD3 = GatherMuxDataB(3);
 		MD4 = GatherMuxDataC(4);
-		MD5 = GatherMuxDataC(5);
+		MD5 = 0x00;
 		MD6 = GatherMuxDataC(6);
 		MD7 = GatherMuxDataC(7);
 		
