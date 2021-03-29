@@ -29,7 +29,7 @@ class gamestateMessage():
 
     def __str__(self):
         time = self.timestamp.strftime("%H:%M:%S")
-        line1 = "Fast Scan Message ID: " + id(self) + " at time:" + time
+        line1 = "Fast Scan Message ID: " + str(id(self)) + " at time:" + time
         line2 = "- Type = "+ format(self.typ, '#010b') + "Column:" + format(self.col, "#010b") + "Data:" + format(self.data, "#010b") + " -"
         return (line1+'\n'+line2)
 
