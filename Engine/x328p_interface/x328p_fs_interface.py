@@ -206,11 +206,12 @@ def start_fast_scan(gs):
     transmission_byte1 = 0b00100111  # Second byte doesn't matter for start
     send_to_328p(transmission_byte0, "Start Fast Scan")
     # Transmit again
-    samState2 = receive_chess_state()
-    if(samState2 != -1):
+    samStateA = receive_chess_state() # Lift off
+    samStateB = receive_chess_state() # Placement
+    if(samStateA != -1 and samStateB != -1):
         # Finesse for testing the move resolution
         # samState2[7].data = 0b11000101
-        move = resolve_chess_move(newGs, samState2)
+        move = resolve_chess_move(newGs, samStateB)
         if move == '':
             # add a length check if we only get one cell resolved
             print("No move detected/resolved")
