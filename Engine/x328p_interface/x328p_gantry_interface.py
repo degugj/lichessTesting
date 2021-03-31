@@ -313,7 +313,7 @@ def transmit_path(path):
     send_to_328p(message_encode(0b11111,"EM"))
     #print("Wait for EM ON message (Mocking with sleep for now)")
     #recv_from_328p("EM", 10)
-    time.sleep(.02)
+
     # Loop path[1] and on:
     time.sleep(.5)
     for i in path[1:len(path)]:
@@ -335,7 +335,7 @@ def transmit_path(path):
     send_to_328p(message_encode(0b00000,"EM"))
     # Wait for EM OFF?
     #recv_from_328p("EM", 10)
-    time.sleep(.02)
+    time.sleep(.5)
 
     return
 
