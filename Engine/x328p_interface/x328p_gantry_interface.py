@@ -298,7 +298,9 @@ def transmit_path(path):
     send_to_328p(message_encode(0b11111,"GO"))
     # Wait for ARRIVED
     #print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
-    recv_from_328p("ARRIVED", 10)
+    resp = recv_from_328p("ARRIVED", 10)
+    if resp == -1:
+        return -1
     # Request RFID
     #print("RFID Req: ",format(message_encode(0b11010,"RFID"), '#010b'))
     #send_to_328p(message_encode(0b11010,"RFID"))
@@ -310,7 +312,10 @@ def transmit_path(path):
     #print("EM Message: ",format(message_encode(0b11111,"EM"), '#010b'))
     send_to_328p(message_encode(0b11111,"EM"))
     #print("Wait for EM ON message (Mocking with sleep for now)")
-    recv_from_328p("EM", 10)
+    resp = recv_from_328p("EM", 10)
+    if resp == -1:
+        send_to_328p(message_encode(0b00000,"EM"))
+        return -1
     # Loop path[1] and on:
     time.sleep(.5)
     for i in path[1:len(path)]:
@@ -325,13 +330,18 @@ def transmit_path(path):
         #print("GO Message: ", format(message_encode(node.pos[0], "GO"), '#010b'))
         send_to_328p(message_encode(node.pos[0], "GO"))
         #print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
-        recv_from_328p("ARRIVED", 10)
+        resp = recv_from_328p("ARRIVED", 10)
+        if resp == -1:
+            send_to_328p(message_encode(0b00000,"EM"))
+            return -1
         #time.sleep(1)
     # EM OFF
     #print("EM Message: ",format(message_encode(0b00000,"EM"), '#010b'))
     send_to_328p(message_encode(0b00000,"EM"))
     # Wait for EM OFF?
-    recv_from_328p("EM", 10)
+    resp = recv_from_328p("EM", 10)
+    if resp == -1:
+        return -1
     return
 
 
@@ -366,7 +376,8 @@ def recv_from_328p(messageType, timeout):
             yTrue = recv_from_328p("YADDRESS", 10)
             if xTrue or yTrue == -1:
                 print("Exiting, current address is not verified") # This could be where we try to move it back or call a scan
-                exit()
+                return -1
+                #exit()
             # Verify addresses
             return
         elif messageType == "XADDRESS":
@@ -505,7 +516,9 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     #     time.sleep(1)
     # print("Sending path via UART...")
     # send_to_328p(solution)
-    transmit_path(sl_compression(solution))
+    resp = transmit_path(sl_compression(solution))
+    if resp == -1:
+        make_physical_move(gamestate, move, startOverride, destOveride)
 
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
