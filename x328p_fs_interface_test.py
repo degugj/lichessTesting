@@ -29,7 +29,9 @@ for indexR, row in enumerate(currentGamestate.board):
 #interface.get_column(currentGamestate, 'a')
 checkStatus = interface.initial_error_check(currentGamestate)
 if checkStatus != 0:
-    exit()
+    checkStatus2 = interface.initial_error_check(currentGamestate)
+    if checkStatus2 != 0:
+        exit()
 move = interface.start_fast_scan(currentGamestate)
 print("Move resolved from Sam's subsystem:", move)
 
