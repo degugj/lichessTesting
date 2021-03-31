@@ -299,8 +299,7 @@ def transmit_path(path):
     # Wait for ARRIVED
     #print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
     resp = recv_from_328p("ARRIVED", 10)
-    #if resp == -1:
-    #    return -1
+
     # Request RFID
     #print("RFID Req: ",format(message_encode(0b11010,"RFID"), '#010b'))
     #send_to_328p(message_encode(0b11010,"RFID"))
@@ -312,10 +311,8 @@ def transmit_path(path):
     #print("EM Message: ",format(message_encode(0b11111,"EM"), '#010b'))
     send_to_328p(message_encode(0b11111,"EM"))
     #print("Wait for EM ON message (Mocking with sleep for now)")
-    resp = recv_from_328p("EM", 10)
-    #if resp == -1:
-    #    send_to_328p(message_encode(0b00000,"EM"))
-    #    return -1
+    recv_from_328p("EM", 10)
+
     # Loop path[1] and on:
     time.sleep(.5)
     for i in path[1:len(path)]:
@@ -330,18 +327,14 @@ def transmit_path(path):
         #print("GO Message: ", format(message_encode(node.pos[0], "GO"), '#010b'))
         send_to_328p(message_encode(node.pos[0], "GO"))
         #print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
-        resp = recv_from_328p("ARRIVED", 10)
-        #if resp == -1:
-        #    send_to_328p(message_encode(0b00000,"EM"))
-        #    return -1
+        recv_from_328p("ARRIVED", 10)
         #time.sleep(1)
     # EM OFF
     #print("EM Message: ",format(message_encode(0b00000,"EM"), '#010b'))
     send_to_328p(message_encode(0b00000,"EM"))
     # Wait for EM OFF?
-    resp = recv_from_328p("EM", 10)
-    #if resp == -1:
-    #    return -1
+    recv_from_328p("EM", 10)
+
     return
 
 
@@ -366,6 +359,7 @@ def recv_from_328p(messageType, timeout):
         if recType == "BUSY":
             print("Gantry is busy. Waiting for next message")
             recv_from_328p(messageType)
+
         if recType != messageType:
             print("WARNING: Recieved message:",recType,"; expected:",messageType)
         if messageType == "RFID":
