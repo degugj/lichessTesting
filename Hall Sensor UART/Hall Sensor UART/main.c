@@ -208,18 +208,19 @@ int main(void)
 	uint8_t MD6;
 	uint8_t MD7;
 	
-// 	uint8_t LD0;
-// 	uint8_t LD1;
-// 	uint8_t LD2;
-// 	uint8_t LD3;
-// 	uint8_t LD4;
-// 	uint8_t LD5;
-// 	uint8_t LD6;
-// 	uint8_t LD7;
+	uint8_t LD0;
+	uint8_t LD1;
+	uint8_t LD2;
+	uint8_t LD3;
+	uint8_t LD4;
+	uint8_t LD5;
+	uint8_t LD6;
+	uint8_t LD7;
 	
 	
     while (1) 
     {
+		// get inital data
 		MD0 = GatherMuxDataD(0);
 		MD1 = GatherMuxDataD(1);
 		MD1 &= ~(1<<3);
@@ -230,14 +231,15 @@ int main(void)
 		MD6 = 0x00;
 		MD7 = GatherMuxDataC(7);                    
 		
-// 		LD0 = MD0;
-// 		LD1 = MD1;
-// 		LD2 = MD2;
-// 		LD3 = MD3;
-// 		LD4 = MD4;
-// 		LD5 = MD5;
-// 		LD6 = MD6;
-// 		LD7 = MD7;
+		// set last
+		LD0 = MD0;
+		LD1 = MD1;
+		LD2 = MD2;
+		LD3 = MD3;
+		LD4 = MD4;
+		LD5 = MD5;
+		LD6 = MD6;
+		LD7 = MD7;
 		
 		UART_lastRecievedByte = USART_Receive();
 		
@@ -252,34 +254,35 @@ int main(void)
 			SendData(0x07,MD7);
 		}
 		
-// 		MD0 = GatherMuxDataD(0);
-// 		MD1 = GatherMuxDataD(1);
-// 		MD2 = GatherMuxDataB(2);
-// 		MD3 = GatherMuxDataB(3);
-// 		MD4 = GatherMuxDataC(4);
-// 		MD5 = GatherMuxDataC(5);
-// 		MD6 = 0x00;
-// 		MD7 = GatherMuxDataC(7);
+		MD0 = GatherMuxDataD(0);
+		MD1 = GatherMuxDataD(1);
+		MD1 &= ~(1<<3);
+		MD2 = GatherMuxDataB(2);
+		MD3 = GatherMuxDataB(3);
+		MD4 = GatherMuxDataC(4);
+		MD5 = GatherMuxDataC(5);
+		MD6 = 0x00;
+		MD7 = GatherMuxDataC(7);
 // 		
-// 		if (MD0 != LD0 || MD1 != LD1 || MD2 != LD2 || MD3 != LD3 || MD4 != LD4 || MD5 != LD5 || MD6 != LD6 || MD7 != LD7) {
-// 			SendData(0x00,MD0);
-// 			SendData(0x01,MD1);
-// 			SendData(0x02,MD2);
-// 			SendData(0x03,MD3);
-// 			SendData(0x04,MD4);
-// 			SendData(0x05,MD5);
-// 			SendData(0x06,MD6);
-// 			SendData(0x07,MD7);
-// 			
-// 			LD0 = MD0;
-// 			LD1 = MD1;
-// 			LD2 = MD2;
-// 			LD3 = MD3;
-// 			LD4 = MD4;
-// 			LD5 = MD5;
-// 			LD6 = MD6;
-// 			LD7 = MD7;
-// 		}
+		if (MD0 != LD0 || MD1 != LD1 || MD2 != LD2 || MD3 != LD3 || MD4 != LD4 || MD5 != LD5 || MD6 != LD6 || MD7 != LD7) {
+			SendData(0x00,MD0);
+			SendData(0x01,MD1);
+			SendData(0x02,MD2);
+			SendData(0x03,MD3);
+			SendData(0x04,MD4);
+			SendData(0x05,MD5);
+			SendData(0x06,MD6);
+			SendData(0x07,MD7);
+			
+			LD0 = MD0;
+			LD1 = MD1;
+			LD2 = MD2;
+			LD3 = MD3;
+			LD4 = MD4;
+			LD5 = MD5;
+			LD6 = MD6;
+			LD7 = MD7;
+		}
 		
 // 		UART_lastRecievedByte = USART_Receive();
 // 		
@@ -287,7 +290,7 @@ int main(void)
 // 			SendData(0x00,MD0);
 // 			SendData(0x01,MD1);
 // 			SendData(0x02,MD2);
-// 			SendData(0x03,MD3);
+// 			SendData(0x03,0b00100000);
 // 			SendData(0x04,MD4);
 // 			SendData(0x05,MD5);
 // 			SendData(0x06,MD6);
