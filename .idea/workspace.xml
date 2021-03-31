@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8ff659b2-d0f7-4a7e-86dc-2d39cc014c34" name="Default Changelist" comment="Printing both bytes for Sam.">
+    <list default="true" id="8ff659b2-d0f7-4a7e-86dc-2d39cc014c34" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/x328p_interface/x328p_fs_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/x328p_interface/x328p_fs_interface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/x328p_fs_interface_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/x328p_fs_interface_test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,7 +18,7 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/x328p_gantry_interface_test.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="340">
+                <state relative-caret-position="357">
                   <caret line="21" selection-start-line="21" selection-end-line="21" />
                   <folding>
                     <element signature="e#161#177#0" expanded="true" />
@@ -27,19 +27,19 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/x328p_fs_interface_test.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="51">
-                  <caret line="8" selection-start-line="8" selection-end-line="8" />
+                <state relative-caret-position="459">
+                  <caret line="32" column="24" selection-start-line="32" selection-start-column="24" selection-end-line="32" selection-end-column="24" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_gantry_interface.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-6493">
+                <state relative-caret-position="102">
                   <caret line="10" column="61" selection-start-line="10" selection-start-column="61" selection-end-line="10" selection-end-column="61" />
                   <folding>
                     <element signature="e#134#145#0" expanded="true" />
@@ -67,8 +67,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_fs_interface.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="357">
-                  <caret line="33" column="32" selection-start-line="33" selection-start-column="32" selection-end-line="33" selection-end-column="32" />
+                <state relative-caret-position="544">
+                  <caret line="32" column="108" selection-start-line="32" selection-start-column="108" selection-end-line="32" selection-end-column="108" />
                   <folding>
                     <element signature="e#137#155#0" expanded="true" />
                   </folding>
@@ -136,14 +136,14 @@
         <option value="$PROJECT_DIR$/x328p_gantry_interface_test.py" />
         <option value="$PROJECT_DIR$/Engine/x328p_interface/x328p_gantry_interface.py" />
         <option value="$PROJECT_DIR$/Engine/gameState.py" />
-        <option value="$PROJECT_DIR$/x328p_fs_interface_test.py" />
         <option value="$PROJECT_DIR$/Engine/x328p_interface/x328p_fs_interface.py" />
+        <option value="$PROJECT_DIR$/x328p_fs_interface_test.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2728" />
-    <option name="y" value="-8" />
+    <option name="x" value="712" />
+    <option name="y" value="-908" />
     <option name="width" value="1456" />
     <option name="height" value="876" />
   </component>
@@ -304,48 +304,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1601848978566</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Implemented move function for local gamestate. Fixed orientation of the board (Row 1 is white)">
-      <created>1604292130051</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1604292130051</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Working on Astar and interface with 328p. Test will not work without modification to gamestate class (talk to Jack)">
-      <created>1604345678138</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1604345678138</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Added argument to make_physical_move()">
-      <created>1604346068629</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1604346068629</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Created function to visualize position map. Translated 8x8 gamestate to map without buffer zones for now. Next step is heuristic map and astar implementation. Will upload outputs to drive.">
-      <created>1604356015230</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1604356015230</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Fixes to print position map. Implemented a successful heuristic (using straight line distance). Now we can implement astar for game board pathplanning.">
-      <created>1604446502548</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1604446502548</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Can reach goal state. Working on returning solution path.">
-      <created>1604645915675</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1604645915675</updated>
     </task>
     <task id="LOCAL-00010" summary="Implemented move function for local gamestate. Fixed orientation of the board (Row 1 is white)">
       <created>1604876387102</created>
@@ -648,11 +606,53 @@
       <option name="project" value="LOCAL" />
       <updated>1616886474635</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="More robust print statements for FS messaging and CDR demo.">
+      <created>1617031435952</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1617031435952</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Fix id to return string field.">
+      <created>1617032270981</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1617032270981</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Fix spacing on print statements.">
+      <created>1617032497367</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1617032497367</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Fix spacing on print statements.">
+      <created>1617032603267</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1617032603267</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Adding chess cell column to print statement.">
+      <created>1617033411532</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1617033411532</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Adding white pons for Sam's demo">
+      <created>1617163324140</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1617163324141</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2728" y="-8" width="1456" height="876" extended-state="6" />
+    <frame x="712" y="-908" width="1456" height="876" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.62732" />
@@ -746,11 +746,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed position map piece capture. Finds appropriate position based on piece captured." />
-    <MESSAGE value="Removed long sys out prints for testing and video." />
-    <MESSAGE value="Fixes to buffer zone position resolution." />
-    <MESSAGE value="Added integer values for sent header and payload." />
-    <MESSAGE value="Updates to diagnose errors with UART." />
     <MESSAGE value="Removed illegal diagonal moves. Ready for physical testing" />
     <MESSAGE value="Refactored interface files and added skeleton code for fs helpers." />
     <MESSAGE value="Simulator function for Sam to work on message protocol testing." />
@@ -771,7 +766,12 @@
     <MESSAGE value="Adding start FS UART message transmission." />
     <MESSAGE value="Printing the move sent by Sam." />
     <MESSAGE value="Adding print statement for resolve move bug." />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding print statement for resolve move bug." />
+    <MESSAGE value="More robust print statements for FS messaging and CDR demo." />
+    <MESSAGE value="Fix id to return string field." />
+    <MESSAGE value="Fix spacing on print statements." />
+    <MESSAGE value="Adding chess cell column to print statement." />
+    <MESSAGE value="Adding white pons for Sam's demo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding white pons for Sam's demo" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/chessPiece.py" />
@@ -886,9 +886,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_gantry_interface.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="10" column="61" selection-start-line="10" selection-start-column="61" selection-end-line="10" selection-end-column="61" />
+          <folding>
+            <element signature="e#134#145#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_fs_interface.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="32" column="108" selection-start-line="32" selection-start-column="108" selection-end-line="32" selection-end-column="108" />
+          <folding>
+            <element signature="e#137#155#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/x328p_gantry_interface_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
+        <state relative-caret-position="357">
           <caret line="21" selection-start-line="21" selection-end-line="21" />
           <folding>
             <element signature="e#161#177#0" expanded="true" />
@@ -898,28 +918,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/x328p_fs_interface_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_gantry_interface.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6970">
-          <caret line="410" column="67" lean-forward="true" selection-start-line="410" selection-start-column="67" selection-end-line="410" selection-end-column="67" />
-          <folding>
-            <element signature="e#134#145#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Engine/x328p_interface/x328p_fs_interface.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="33" column="32" selection-start-line="33" selection-start-column="32" selection-end-line="33" selection-end-column="32" />
-          <folding>
-            <element signature="e#137#155#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="459">
+          <caret line="32" column="24" selection-start-line="32" selection-start-column="24" selection-end-line="32" selection-end-column="24" />
         </state>
       </provider>
     </entry>

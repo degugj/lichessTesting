@@ -30,7 +30,7 @@ class gamestateMessage():
     def __str__(self):
         time = self.timestamp.strftime("%H:%M:%S")
         line1 = "Fast Scan Message ID: " + str(id(self)) + " at time:" + time
-        line2 = "- Type: "+ format(self.typ, '#010b') + " | Column: " + format(self.col, "#010b") + " | Data: " + format(self.data, "#010b")+ " -\n"
+        line2 = "- Type: "+ format(self.typ, '#010b') + " | Column: " + str(self.col) +" (" + columnToLetter[self.col] + ") | Data: " + format(self.data, "#010b")+ " -\n"
         return (line1+'\n'+line2)
 
     # return chess cell indicated by col integer
@@ -165,7 +165,8 @@ def receive_chess_state():
         now = datetime.now()
         recByte0 = int.from_bytes(rawRecByte0, 'little')
         print("Byte 0 Received:", format(recByte0, '#010b'))
-        recByte1 = int.from_bytes(rawRecByte1, 'little')
+        recByte1Mirror = int.from_bytes(rawRecByte1, 'little')
+        recByte1 = int('{:08b}'.format(recByte1Mirror)[::-1], 2)
         print("Byte 1 Received:", format(recByte1, '#010b'))
         #recByte0 = 0b11110010
         #recByte1 = 0b11000011
