@@ -299,7 +299,8 @@ def transmit_path(path):
     # Wait for ARRIVED
     #print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
     resp = recv_from_328p("ARRIVED", 10)
-
+    if resp == -1:
+        return -1
     # Request RFID
     #print("RFID Req: ",format(message_encode(0b11010,"RFID"), '#010b'))
     #send_to_328p(message_encode(0b11010,"RFID"))
@@ -358,7 +359,7 @@ def recv_from_328p(messageType, timeout):
         print(recType, "message recieved", format(intMessage, '#010b'))
         if recType == "BUSY":
             print("Gantry is busy. Waiting for next message")
-            recv_from_328p(messageType)
+            #recv_from_328p(messageType)
 
         if recType != messageType:
             print("WARNING: Recieved message:",recType,"; expected:",messageType)
@@ -373,7 +374,7 @@ def recv_from_328p(messageType, timeout):
             yTrue = recv_from_328p("YADDRESS", 10)
             if xTrue or yTrue == -1:
                 print("Exiting, current address is not verified") # This could be where we try to move it back or call a scan
-                return -1
+                return 0
                 #exit()
             # Verify addresses
             return
@@ -382,7 +383,7 @@ def recv_from_328p(messageType, timeout):
             recX_Addr = (intMessage&0b00011111)
             if expectedX_Addr != recX_Addr:
                 print("ERROR: Received x address:",recX_Addr,"expected x address:",expectedX_Addr)
-                return -1
+                return
             else:
                 print("Confirmed x address ({})".format(recX_Addr))
                 return
@@ -391,7 +392,7 @@ def recv_from_328p(messageType, timeout):
             recY_Addr = (intMessage&0b00011111)
             if expectedY_Addr != recY_Addr:
                 print("ERROR: Received y address:",recY_Addr,"expected y address:",expectedY_Addr)
-                return -1
+                return
             else:
                 print("Confirmed y address ({})".format(recY_Addr))
                 return
