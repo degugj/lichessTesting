@@ -14,7 +14,7 @@ ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 
 # self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
 # self.number_to_y = {'1':7, '2':6, '3':5, '4':4, '5':3, '6':2, '7':1, '8':0}
-message_types = {'XADDRESS':0b00111111, 'YADDRESS':0b01011111, 'RFID':0b01111111, 'EM':0b10011111, 'GO':0b10111111, 'ARRIVED':0b11011111,'ELSE':11111111}
+message_types = {'XADDRESS':0b00111111, 'YADDRESS':0b01011111, 'RFID':0b01111111, 'EM':0b10011111, 'GO':0b10111111, 'ARRIVED':0b11011111,'ELSE':11111111, 'BUSY':11100101}
 
 currentGantryPos=[0,0]
 
@@ -299,8 +299,8 @@ def transmit_path(path):
     # Wait for ARRIVED
     #print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
     resp = recv_from_328p("ARRIVED", 10)
-    if resp == -1:
-        return -1
+    #if resp == -1:
+    #    return -1
     # Request RFID
     #print("RFID Req: ",format(message_encode(0b11010,"RFID"), '#010b'))
     #send_to_328p(message_encode(0b11010,"RFID"))
@@ -313,9 +313,9 @@ def transmit_path(path):
     send_to_328p(message_encode(0b11111,"EM"))
     #print("Wait for EM ON message (Mocking with sleep for now)")
     resp = recv_from_328p("EM", 10)
-    if resp == -1:
-        send_to_328p(message_encode(0b00000,"EM"))
-        return -1
+    #if resp == -1:
+    #    send_to_328p(message_encode(0b00000,"EM"))
+    #    return -1
     # Loop path[1] and on:
     time.sleep(.5)
     for i in path[1:len(path)]:
@@ -331,17 +331,17 @@ def transmit_path(path):
         send_to_328p(message_encode(node.pos[0], "GO"))
         #print("Wait for ARRIVED and gantry position (Mocking with sleep for now)")
         resp = recv_from_328p("ARRIVED", 10)
-        if resp == -1:
-            send_to_328p(message_encode(0b00000,"EM"))
-            return -1
+        #if resp == -1:
+        #    send_to_328p(message_encode(0b00000,"EM"))
+        #    return -1
         #time.sleep(1)
     # EM OFF
     #print("EM Message: ",format(message_encode(0b00000,"EM"), '#010b'))
     send_to_328p(message_encode(0b00000,"EM"))
     # Wait for EM OFF?
     resp = recv_from_328p("EM", 10)
-    if resp == -1:
-        return -1
+    #if resp == -1:
+    #    return -1
     return
 
 
@@ -363,6 +363,9 @@ def recv_from_328p(messageType, timeout):
         intMessage = int.from_bytes(x, 'little')
         recType = find_message_type(intMessage)
         print(recType, "message recieved", format(intMessage, '#010b'))
+        if recType == "BUSY":
+            print("Gantry is busy. Waiting for next message")
+            recv_from_328p(messageType)
         if recType != messageType:
             print("WARNING: Recieved message:",recType,"; expected:",messageType)
         if messageType == "RFID":
@@ -517,8 +520,8 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     # print("Sending path via UART...")
     # send_to_328p(solution)
     resp = transmit_path(sl_compression(solution))
-    if resp == -1:
-        make_physical_move(gamestate, move, startOverride, destOveride)
+    #if resp == -1:
+    #    make_physical_move(gamestate, move, startOverride, destOveride)
 
     # TODO Call gamestate_to_position_map()
     # TODO Call create_heuristic_map()
