@@ -6,7 +6,7 @@ from Engine.gameState import GameState as gs
 #from Engine.x328p_interface import *
 from Engine.x328p_interface import x328p_fs_interface as interface
 # interface = importlib.import_module('.x328p_interface.x328p_fs_interface', 'Engine')
-
+import time
 
 currentGamestate = gs()  # Instantiate test gamestate
 
@@ -29,6 +29,8 @@ for indexR, row in enumerate(currentGamestate.board):
 #interface.get_column(currentGamestate, 'a')
 checkStatus = interface.initial_error_check(currentGamestate)
 if checkStatus != 0:
+    print("Waiting 5s to retry initial check...")
+    time.sleep(5)
     checkStatus2 = interface.initial_error_check(currentGamestate)
     if checkStatus2 != 0:
         exit()
