@@ -71,8 +71,8 @@ void MuxInit(void)
 	DDRD |= (1<<B);
 	DDRD |= (1<<C);
 	
-	DDRC &= ~(1<<Mux0);
-	DDRC &= ~(1<<Mux1);
+	DDRD &= ~(1<<Mux0);
+	DDRD &= ~(1<<Mux1);
 	DDRB &= ~(1<<Mux2);
 	DDRB &= ~(1<<Mux3);
 	DDRC &= ~(1<<Mux4);
@@ -132,7 +132,10 @@ uint8_t GatherMuxDataB(uint8_t Mux)
 		SetABC(i);
 		PINB |= (1<<6);
 		if(bit_is_clear(PINB,Mux)) {
-			MuxData |= (1<<i);
+			_delay_ms(10);
+			if(bit_is_clear(PINB,Mux)) {
+				MuxData |= (1<<i);
+			}
 			//USART_Transmit(0xFF);
 		}
 	}
@@ -156,7 +159,10 @@ uint8_t GatherMuxDataC(uint8_t Mux)
 		SetABC(i);
 		PINC |= (1<<6);
 		if(bit_is_clear(PINC,Mux)) {
-			MuxData |= (1<<i);
+			_delay_ms(10);
+			if(bit_is_clear(PINC,Mux)) {
+				MuxData |= (1<<i);
+			}
 			//USART_Transmit(0xFF);
 		}
 	}
@@ -176,7 +182,10 @@ uint8_t GatherMuxDataD(uint8_t Mux)
 		SetABC(i);
 		PIND |= (1<<6);
 		if(bit_is_clear(PIND,Mux)) {
-			MuxData |= (1<<i);
+			_delay_ms(10);
+			if(bit_is_clear(PIND,Mux)) {
+				MuxData |= (1<<i);
+			}
 			//USART_Transmit(0xFF);
 		}
 	}
@@ -217,7 +226,7 @@ int main(void)
 	uint8_t LD6;
 	uint8_t LD7;
 	
-	// get inital data
+	// get initial data
 	MD0 = GatherMuxDataD(0);
 	MD1 = GatherMuxDataD(1);
 	MD1 &= ~(1<<3);
@@ -257,6 +266,7 @@ int main(void)
 
     while (1) 
     {
+		//_delay_ms(100);
 		
 		MD0 = GatherMuxDataD(0);
 		MD1 = GatherMuxDataD(1);
@@ -267,8 +277,10 @@ int main(void)
 		MD5 = GatherMuxDataC(5);
 		MD6 = 0x00;
 		MD7 = GatherMuxDataC(7);
+		
+		//_delay_ms(100);
 // 		
-		if (MD0 != LD0 || MD1 != LD1 || MD2 != LD2 || MD3 != LD3 || MD4 != LD4 || MD5 != LD5 || MD6 != LD6 || MD7 != LD7) {
+		if (LD1 != MD1) {
 			SendData(0x00,MD0);
 			SendData(0x01,MD1);
 			SendData(0x02,MD2);
@@ -319,5 +331,5 @@ int main(void)
 		//USART_Transmit(MD0);
     }
 }
-}
+	}
 
