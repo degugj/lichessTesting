@@ -259,12 +259,16 @@ int main(void)
 		SendData(0x06,MD6);
 		SendData(0x07,MD7);
 	}
+	uint8_t running;
+	running = 0;
+	
+while(0){	
 	
 	UART_lastRecievedByte = USART_Receive();
 	//
 	if (UART_lastRecievedByte == 0b00110000) {
-
-    while (1) 
+running = 1;
+    while (running == 1) 
     {
 		//_delay_ms(100);
 		
@@ -298,7 +302,8 @@ int main(void)
 			LD5 = MD5;
 			LD6 = MD6;
 			LD7 = MD7;
-		}
+			running = 0;
+		} //END IF
 		
 // 		UART_lastRecievedByte = USART_Receive();
 // 		
@@ -329,7 +334,8 @@ int main(void)
 		
 		//Sending UART message 0xF0
 		//USART_Transmit(MD0);
-    }
+    }//While rinning
+}//if
+	}//main
 }
-	}
 
