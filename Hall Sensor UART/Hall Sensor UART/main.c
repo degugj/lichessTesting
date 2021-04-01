@@ -132,7 +132,7 @@ uint8_t GatherMuxDataB(uint8_t Mux)
 		SetABC(i);
 		PINB |= (1<<6);
 		if(bit_is_clear(PINB,Mux)) {
-			_delay_ms(10);
+			_delay_ms(500);
 			if(bit_is_clear(PINB,Mux)) {
 				MuxData |= (1<<i);
 			}
@@ -159,7 +159,7 @@ uint8_t GatherMuxDataC(uint8_t Mux)
 		SetABC(i);
 		PINC |= (1<<6);
 		if(bit_is_clear(PINC,Mux)) {
-			_delay_ms(10);
+			_delay_ms(500);
 			if(bit_is_clear(PINC,Mux)) {
 				MuxData |= (1<<i);
 			}
@@ -182,7 +182,7 @@ uint8_t GatherMuxDataD(uint8_t Mux)
 		SetABC(i);
 		PIND |= (1<<6);
 		if(bit_is_clear(PIND,Mux)) {
-			_delay_ms(10);
+			_delay_ms(500);
 			if(bit_is_clear(PIND,Mux)) {
 				MuxData |= (1<<i);
 			}
@@ -198,13 +198,23 @@ void SendData(uint8_t Byte1, uint8_t Byte2)
 	USART_Transmit(Byte2);
 }
 
+void LEDon(void) {
+	PORTB |= (1<<2);
+}
+
+void LEDoff(void) {
+	PORTB &= ~(1<<2);
+}
+
 int main(void)
 {
 	
 	MuxInit();
 	
-	//DDRB |= (1<<2); //SetLED as output
-		
+	DDRB |= (1<<2); //SetLED as output
+	
+	LEDoff();
+	
 	uint8_t UART_lastRecievedByte;
 	USART_init();
 	
@@ -226,10 +236,12 @@ int main(void)
 	uint8_t LD6;
 	uint8_t LD7;
 	
+	UART_lastRecievedByte = USART_Receive();
+	
 	// get initial data
 	MD0 = GatherMuxDataD(0);
-	MD1 = GatherMuxDataD(1);
-	MD1 &= ~(1<<3);
+	MD1 = 0b01000000;
+	//MD1 &= ~(1<<3);
 	MD2 = GatherMuxDataB(2);
 	MD3 = GatherMuxDataB(3);
 	MD4 = GatherMuxDataC(4);
@@ -247,7 +259,7 @@ int main(void)
 	LD6 = MD6;
 	LD7 = MD7;
 	
-	UART_lastRecievedByte = USART_Receive();
+	
 			
 	if (UART_lastRecievedByte == 0b00101000) {
 		SendData(0x00,MD0);
@@ -262,19 +274,20 @@ int main(void)
 	uint8_t running;
 	running = 0;
 	
-while(0){	
+while(1){	
 	
 	UART_lastRecievedByte = USART_Receive();
 	//
 	if (UART_lastRecievedByte == 0b00110000) {
-running = 1;
-    while (running == 1) 
+		running = 1;
+		LEDon();
+    while (running < 2) 
     {
 		//_delay_ms(100);
 		
 		MD0 = GatherMuxDataD(0);
-		MD1 = GatherMuxDataD(1);
-		MD1 &= ~(1<<3);
+		//MD1 = GatherMuxDataD(1);
+		//MD1 &= ~(1<<3);
 		MD2 = GatherMuxDataB(2);
 		MD3 = GatherMuxDataB(3);
 		MD4 = GatherMuxDataC(4);
@@ -284,7 +297,7 @@ running = 1;
 		
 		//_delay_ms(100);
 // 		
-		if (LD1 != MD1) {
+		if (MD0 != LD0 || MD1 != LD1 || MD2 != LD2 || MD3 != LD3) {
 			SendData(0x00,MD0);
 			SendData(0x01,MD1);
 			SendData(0x02,MD2);
@@ -302,7 +315,12 @@ running = 1;
 			LD5 = MD5;
 			LD6 = MD6;
 			LD7 = MD7;
-			running = 0;
+			running ++;
+			if(running == 2) {
+				running = 0;
+				LEDoff();
+			}
+			
 		} //END IF
 		
 // 		UART_lastRecievedByte = USART_Receive();
