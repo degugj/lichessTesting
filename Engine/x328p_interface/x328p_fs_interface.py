@@ -164,10 +164,10 @@ def receive_chess_state():
         rawRecByte1 = ser.read()
         now = datetime.now()
         recByte0 = int.from_bytes(rawRecByte0, 'little')
-        print("Byte 0 Received:", format(recByte0, '#010b'))
+        #print("Byte 0 Received:", format(recByte0, '#010b'))
         recByte1Mirror = int.from_bytes(rawRecByte1, 'little')
         recByte1 = int('{:08b}'.format(recByte1Mirror)[::-1], 2)
-        print("Byte 1 Received:", format(recByte1, '#010b'))
+        #print("Byte 1 Received:", format(recByte1, '#010b'))
         #recByte0 = 0b11110010
         #recByte1 = 0b11000011
         messageType = (recByte0 >> 3)
