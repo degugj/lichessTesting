@@ -13,7 +13,7 @@ def init_mixer():
 
 # game victory (checkmate, opponent resigns/aborts)
 def sound_victory():
-    pygame.mixer.music.load("Engine/audio_files/victory.mp3")
+    pygame.mixer.music.load("Engine/audio_files/victory.wav")
     pygame.mixer.music.play()
 
 
@@ -51,3 +51,19 @@ def sound_button():
 def sound_background():
     pygame.mixer.music.load("Engine/audio_files/background.mp3")
     pygame.mixer.music.play(-1, 0.0)
+
+
+def test():
+    init_mixer()
+    time.sleep(3)
+    sound_victory()
+    time.sleep(3)
+    sound_error()
+    time.sleep(3)
+    sound_gamestart()
+    time.sleep(3)
+    sound_move()
+    time.sleep(3)
+    sound_defeat()
+    time.sleep(5)
+
