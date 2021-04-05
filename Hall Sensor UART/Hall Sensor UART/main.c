@@ -11,10 +11,10 @@
 #include <util/delay.h>
 #include <avr/io.h>
 
-//#define Mux0 6
-//#define Mux1 7
-#define Mux0 5 // register c
-#define Mux1 4 // register c
+#define Mux0 6
+#define Mux1 7
+// #define Mux0 5 // register c
+// #define Mux1 4 // register c
 #define Mux2 0
 #define Mux3 1
 #define Mux4 0
@@ -71,8 +71,8 @@ void MuxInit(void)
 	DDRD |= (1<<B);
 	DDRD |= (1<<C);
 	
-	DDRC &= ~(1<<Mux0);
-	DDRC &= ~(1<<Mux1);
+	DDRD &= ~(1<<Mux0);
+	DDRD &= ~(1<<Mux1);
 	DDRB &= ~(1<<Mux2);
 	DDRB &= ~(1<<Mux3);
 	DDRC &= ~(1<<Mux4);
@@ -83,42 +83,9 @@ void MuxInit(void)
 
 void SetABC(uint8_t row)
 {
-// 	PORTD &= ~(1<<A)&~(1<<B)&~(1<<C);
-// 
-// 	if((row >> 2) & 1) {
-// 		PORTD |= (1<<C);
-// 	}
-// 
-// 
-// 	else if((row >> 1) & 1) {
-// 		PORTD |= (1<<B);
-// 	}
-// 
-// 	else if((row >> 0) & 1) {
-// 		PORTD |= (1<<A);
-// 	}
-
-// 	if((row >> 2) & 1) {
-// 		PORTD |= (1<<C);
-// 		} else {
-// 		PORTD &= ~(1<<C);
-// 	}
-// 
-// 	if((row >> 1) & 1) {
-// 		PORTD |= (1<<B);
-// 		} else {
-// 		PORTD &= ~(1<<B);
-// 	}
-// 
-// 	if((row >> 0) & 1) {
-// 		PORTD |= (1<<A);
-// 		} else {
-// 		PORTD &= ~(1<<A);
-// 	}
-
  	switch (row)
  	{
- 		case 0 :
+ 		case 6 :
  		PORTD |= (1<<C)|(1<<B);
  		PORTD &= ~(1<<A);
  		break;
@@ -126,22 +93,22 @@ void SetABC(uint8_t row)
  		PORTD |= (1<<B);
  		PORTD &= ~(1<<A) &~(1<<C);
  		break;
- 		case 2 :
+ 		case 4 :
  		PORTD |= (1<<C);
  		PORTD &= ~(1<<A)&~(1<<B);
  		break;
 		case 3 :
 		PORTD &= ~(1<<A)&~(1<<B)&~(1<<C);
  		break;
- 		case 4 :
+ 		case 2 :
  		PORTD |= (1<<A);
  		PORTD &= ~(1<<B)&~(1<<C);
  		break;
  		case 5 :
  		PORTD |= (1<<C)|(1<<A);
  		PORTD &= ~(1<<B);
- 		break;
- 		case 6 :
+		break;
+		case 0:
  		PORTD |= (1<<A)|(1<<B);
  		PORTD &= ~(1<<C);
 		break;
@@ -152,32 +119,73 @@ void SetABC(uint8_t row)
 
 }
 
-uint8_t GatherMuxData(uint8_t Mux)
+uint8_t GatherMuxDataB(uint8_t Mux)
 {
-	if(Mux == 0) {
-		Mux = Mux0;
-	} else if(Mux == 1) {
-		Mux = Mux1;
-	} else if(Mux == 2) {
+	if(Mux == 2) {
 		Mux = Mux2;
-	} else if(Mux == 3) {
-		Mux = Mux3;
-	} else if(Mux == 4) {
-		Mux = Mux4;
-	} else if(Mux == 5) {
-		Mux = Mux5;
-	} else if(Mux == 6) {
-		Mux = Mux6;
 	} else {
-		Mux = Mux7;
+		Mux = Mux3;
 	} 
 	
 	uint8_t MuxData = 0x00;
 	for (uint8_t i = 0; i < 8; i++) {
 		SetABC(i);
+		PINB |= (1<<6);
+		if(bit_is_clear(PINB,Mux)) {
+			_delay_ms(500);
+			if(bit_is_clear(PINB,Mux)) {
+				MuxData |= (1<<i);
+			}
+			//USART_Transmit(0xFF);
+		}
+	}
+	return MuxData;
+}
+
+uint8_t GatherMuxDataC(uint8_t Mux)
+{
+	if(Mux == 4) {
+		Mux = Mux4;
+	} else if (Mux == 5) {
+		Mux = Mux5;
+	} else if (Mux == 6) {
+		Mux = Mux6 ;
+	} else {
+		Mux = Mux7;
+	}
+	
+	uint8_t MuxData = 0x00;
+	for (uint8_t i = 0; i < 8; i++) {
+		SetABC(i);
+		PINC |= (1<<6);
+		if(bit_is_clear(PINC,Mux)) {
+			_delay_ms(500);
+			if(bit_is_clear(PINC,Mux)) {
+				MuxData |= (1<<i);
+			}
+			//USART_Transmit(0xFF);
+		}
+	}
+	return MuxData;
+}
+
+uint8_t GatherMuxDataD(uint8_t Mux)
+{
+	if(Mux == 0) {
+		Mux = Mux0;
+	} else {
+		Mux = Mux1;
+	}
+	
+	uint8_t MuxData = 0x00;
+	for (uint8_t i = 0; i < 8; i++) {
+		SetABC(i);
 		PIND |= (1<<6);
-		if(bit_is_clear(PIND,PD6)) {
-			MuxData |= (1<<i);
+		if(bit_is_clear(PIND,Mux)) {
+			_delay_ms(500);
+			if(bit_is_clear(PIND,Mux)) {
+				MuxData |= (1<<i);
+			}
 			//USART_Transmit(0xFF);
 		}
 	}
@@ -190,56 +198,151 @@ void SendData(uint8_t Byte1, uint8_t Byte2)
 	USART_Transmit(Byte2);
 }
 
+void LEDon(void) {
+	PORTB |= (1<<2);
+}
+
+void LEDoff(void) {
+	PORTB &= ~(1<<2);
+}
+
 int main(void)
 {
 	
 	MuxInit();
 	
-	//DDRB |= (1<<2); //SetLED as output
-		
+	DDRB |= (1<<2); //SetLED as output
+	
+	LEDoff();
+	
 	uint8_t UART_lastRecievedByte;
 	USART_init();
-    while (1) 
+	
+	uint8_t MD0;
+	uint8_t MD1;
+	uint8_t MD2;
+	uint8_t MD3;
+	uint8_t MD4;
+	uint8_t MD5;
+	uint8_t MD6;
+	uint8_t MD7;
+	
+	uint8_t LD0;
+	uint8_t LD1;
+	uint8_t LD2;
+	uint8_t LD3;
+	uint8_t LD4;
+	uint8_t LD5;
+	uint8_t LD6;
+	uint8_t LD7;
+	
+	UART_lastRecievedByte = USART_Receive();
+	
+	// get initial data
+	MD0 = GatherMuxDataD(0);
+	MD1 = 0b01000000;
+	//MD1 &= ~(1<<3);
+	MD2 = GatherMuxDataB(2);
+	MD3 = GatherMuxDataB(3);
+	MD4 = GatherMuxDataC(4);
+	MD5 = GatherMuxDataC(5);
+	MD6 = 0x00;
+	MD7 = GatherMuxDataC(7);
+			
+	// set last
+	LD0 = MD0;
+	LD1 = MD1;
+	LD2 = MD2;
+	LD3 = MD3;
+	LD4 = MD4;
+	LD5 = MD5;
+	LD6 = MD6;
+	LD7 = MD7;
+	
+	
+			
+	if (UART_lastRecievedByte == 0b00101000) {
+		SendData(0x00,MD0);
+		SendData(0x01,MD1);
+		SendData(0x02,MD2);
+		SendData(0x03,MD3);
+		SendData(0x04,MD4);
+		SendData(0x05,MD5);
+		SendData(0x06,MD6);
+		SendData(0x07,MD7);
+	}
+	uint8_t running;
+	running = 0;
+	
+while(1){	
+	
+	UART_lastRecievedByte = USART_Receive();
+	//
+	if (UART_lastRecievedByte == 0b00110000) {
+		running = 1;
+		LEDon();
+    while (running < 2) 
     {
-		UART_lastRecievedByte = USART_Receive();
+		//_delay_ms(100);
 		
-		if (UART_lastRecievedByte == 0b00101000) {
-			SendData(0x00,0x00);
-			SendData(0x01,0x00);
-			SendData(0x02,0x00);
-			SendData(0x03,0b00000010);
-			SendData(0x04,0x00);
-			SendData(0x05,0x00);
-			SendData(0x06,0x00);
-			SendData(0x07,0x00);
-		}
+		MD0 = GatherMuxDataD(0);
+		//MD1 = GatherMuxDataD(1);
+		//MD1 &= ~(1<<3);
+		MD2 = GatherMuxDataB(2);
+		MD3 = GatherMuxDataB(3);
+		MD4 = GatherMuxDataC(4);
+		MD5 = GatherMuxDataC(5);
+		MD6 = 0x00;
+		MD7 = GatherMuxDataC(7);
 		
-		UART_lastRecievedByte = USART_Receive();
+		//_delay_ms(100);
+// 		
+		if (MD0 != LD0 || MD1 != LD1 || MD2 != LD2 || MD3 != LD3) {
+			SendData(0x00,MD0);
+			SendData(0x01,MD1);
+			SendData(0x02,MD2);
+			SendData(0x03,MD3);
+			SendData(0x04,MD4);
+			SendData(0x05,MD5);
+			SendData(0x06,MD6);
+			SendData(0x07,MD7);
+			
+			LD0 = MD0;
+			LD1 = MD1;
+			LD2 = MD2;
+			LD3 = MD3;
+			LD4 = MD4;
+			LD5 = MD5;
+			LD6 = MD6;
+			LD7 = MD7;
+			running ++;
+			if(running == 2) {
+				running = 0;
+				LEDoff();
+			}
+			
+		} //END IF
 		
-		if (UART_lastRecievedByte == 0b00110000) {
-			SendData(0x00,0x00);
-			SendData(0x01,0x00);
-			SendData(0x02,0x00);
-			SendData(0x03,0b00000100);
-			SendData(0x04,0x00);
-			SendData(0x05,0x00);
-			SendData(0x06,0x00);
-			SendData(0x07,0x00);
-		}
-		
+// 		UART_lastRecievedByte = USART_Receive();
+// 		
+// 		if (UART_lastRecievedByte == 0b00110000) {
+// 			SendData(0x00,MD0);
+// 			SendData(0x01,MD1);
+// 			SendData(0x02,MD2);
+// 			SendData(0x03,0b00100000);
+// 			SendData(0x04,MD4);
+// 			SendData(0x05,MD5);
+// 			SendData(0x06,MD6);
+// 			SendData(0x07,MD7);
+// 		}
+// 		
 		//PIND |= (1<<Mux0);
 		
 		//uint8_t MD0 = 0x00; //GatherMuxData(0);
 		
-// 		PINC |= (1<<Mux0);
-// 		
-// 		SetABC(0);
-// 		
-		//PORTD &= ~(1<<C);
-		//PORTD &= ~(1<<B);
-		//PORTD &= ~(1<<A);
+		//SetABC(6);
 				
-// 		if(bit_is_clear(PINC,Mux0)) {
+// 		if(bit_is_clear(PIND,Mux0)) {
 // 		//if ((PIND & (1<<Mux0))) {.
 // 			PORTB |= (1<<2);
 // 			//MD0 = 0xFF;
@@ -247,61 +350,9 @@ int main(void)
 // 			PORTB &= ~(1<<2);
 // 		}
 		
-// 		PORTD |= (1<<C);
-// 		
-// 		//if(bit_is_clear(PIND,Mux0)) {
-// 		if ((PIND & (1<<Mux0))) {
-// 			MD0 |= (1<<1);
-// 		}
-// 		
-// 		PORTD &= ~(1<<C);
-// 		PORTD |= (1<<B);
-// 		
-// 		//if(bit_is_clear(PIND,Mux0)) {
-// 		if ((PIND & (1<<Mux0))) {
-// 			MD0 |= (1<<2);
-// 		}
-// 		
-// 		PORTD |= (1<<C);
-// 		
-// 		//if(bit_is_clear(PIND,Mux0)) {
-// 		if ((PIND & (1<<Mux0))) {
-// 			MD0 |= (1<<3);
-// 		}
-// 		
-// 		PORTD &= ~(1<<C);
-// 		PORTD &= ~(1<<B);
-// 		PORTD |= (1<<A);
-// 		
-// 		//if(bit_is_clear(PIND,Mux0)) {
-// 		if ((PIND & (1<<Mux0))) {
-// 			MD0 |= (1<<4);
-// 		}
-// 		
-// 		PORTD |= (1<<C);
-// 		
-// 		//if(bit_is_clear(PIND,Mux0)) {
-// 		if ((PIND & (1<<Mux0))) {
-// 			MD0 |= (1<<5);
-// 		}
-// 		
-// 		PORTD &= ~(1<<C);
-// 		PORTD |= (1<<B);
-// 		
-// 		//if(bit_is_clear(PIND,Mux0)) {
-// 		if ((PIND & (1<<Mux0))) {
-// 			MD0 |= (1<<6);
-// 		}
-// 		
-// 		PORTD |= (1<<C);
-// 		
-// 		//if(bit_is_clear(PIND,Mux0)) {
-// 		if ((PIND & (1<<Mux0))) {
-// 			MD0 |= (1<<7);
-// 		}
-		
 		//Sending UART message 0xF0
 		//USART_Transmit(MD0);
-    }
+    }//While rinning
+}//if
+	}//main
 }
-

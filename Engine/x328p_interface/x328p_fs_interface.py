@@ -2,6 +2,7 @@
 # Authors: Weishan Li, Jack DeGuglielmo
 # Date: 2020-11-01
 import numpy as np
+from datetime import datetime
 import time
 import serial
 ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
@@ -23,7 +24,14 @@ class gamestateMessage():
         self.typ = typ
         self.col = col
         self.data = data
+        self.timestamp = None
         self.chessCell = None
+
+    def __str__(self):
+        time = self.timestamp.strftime("%H:%M:%S")
+        line1 = "Fast Scan Message ID: " + str(id(self)) + " at time:" + time
+        line2 = "- Type: "+ format(self.typ, '#010b') + " | Column: " + str(self.col) +" (" + columnToLetter[self.col] + ") | Data: " + format(self.data, "#010b")+ " -\n"
+        return (line1+'\n'+line2)
 
     # return chess cell indicated by col integer
     """
@@ -39,7 +47,7 @@ class gamestateMessage():
         return cell
     """
 def resolve_chess_move(gs, messageArray):
-    print("Resolving Move...")
+    #print("Resolving Move...")
     #print("GS: ", gs)
     #print("Sam's Message Array:", messageArray)
     start_found = False
@@ -54,7 +62,7 @@ def resolve_chess_move(gs, messageArray):
         column = column_to_byte(get_column_byIndex(gs, c))
         #print("column:",column)
         fs_column = messageArray[c].data
-        print("fs_column:",bin(fs_column))
+        #print("fs_column:",bin(fs_column))
         # loop through each cell of column
         for i in range(len(gs)):
             # bit shift to find value of current cell
@@ -121,11 +129,6 @@ def column_to_byte(column):
     return columnInt
 
 def initial_error_check(gs):
-    # Step 1: Tell Sam to transmit all columns
-    # Step 2: Sam transmits current state (column by column).
-    # Wait for 8 messages. Compare array to gs.
-    # return to wei 1, -1, 0
-    # After transmission. Sam will send all 8 columns to check if we have congruent states
     newGs = np.array(gs.board)
     print("Starting initial check...")
     send_to_328p(0b00101000,"Dump All Sensor Data")
@@ -135,7 +138,7 @@ def initial_error_check(gs):
         return -1
     # Check congruency
     if (compare_chess_states(newGs, samInitialState) != 0):
-        print("Incongruent Gamestates. Returning 5 to Wei to tell user to fix pieces and call start again")
+        print("Incongruent Gamestates. Correct physical state and retry")
         return 5
     print("Initial Gamestates Verified and Congruent")
     return 0
@@ -159,18 +162,20 @@ def receive_chess_state():
         rawRecByte0 = ser.read()
         # Maybe add a delay here
         rawRecByte1 = ser.read()
+        now = datetime.now()
         recByte0 = int.from_bytes(rawRecByte0, 'little')
-        print("Byte0 Received:", bin(recByte0))
-        recByte1 = int.from_bytes(rawRecByte1, 'little')
-        print("Byte1 Received:", bin(recByte1))
+        #print("Byte 0 Received:", format(recByte0, '#010b'))
+        recByte1Mirror = int.from_bytes(rawRecByte1, 'little')
+        recByte1 = int('{:08b}'.format(recByte1Mirror)[::-1], 2)
+        #print("Byte 1 Received:", format(recByte1, '#010b'))
         #recByte0 = 0b11110010
         #recByte1 = 0b11000011
-        #messageType = (recByte0 >> 3)
-        messageType = None
+        messageType = (recByte0 >> 3)
         messageCol = recByte0 & 0b00000111
         #messageCol = None
         currentMessage = gamestateMessage(messageType, messageCol, recByte1)
-
+        currentMessage.timestamp = now
+        print(currentMessage)
         # Figure out message type
         # messageTypeStr = message_types[messageType]
 
@@ -184,7 +189,7 @@ def receive_chess_state():
 # Sends 328P a path via UART
 def send_to_328p(data, messageType):
     ser.flush()
-    print(messageType, "message sent (" + hex(data)+")", bin(data),')',)
+    print(messageType, "message sent (" + hex(data)+")", format(data,'#010b'))
     #while True:
     #    received_data = ser.read()  # read serial port
     #    time.sleep(0.03)
@@ -201,11 +206,12 @@ def start_fast_scan(gs):
     transmission_byte1 = 0b00100111  # Second byte doesn't matter for start
     send_to_328p(transmission_byte0, "Start Fast Scan")
     # Transmit again
-    samState2 = receive_chess_state()
-    if(samState2 != -1):
+    samStateA = receive_chess_state() # Lift off
+    samStateB = receive_chess_state() # Placement
+    if(samStateA != -1 and samStateB != -1):
         # Finesse for testing the move resolution
         # samState2[7].data = 0b11000101
-        move = resolve_chess_move(newGs, samState2)
+        move = resolve_chess_move(newGs, samStateB)
         if move == '':
             # add a length check if we only get one cell resolved
             print("No move detected/resolved")
