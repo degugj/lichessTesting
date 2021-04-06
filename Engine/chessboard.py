@@ -174,7 +174,7 @@ def draw_gametext(screen, challengerName, gamestate):
     # letter and number coordinates
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     numbers = list(range(1,9))
-    if gamestate.get_usercolor() == 'b':
+    if gamestate.get_usercolor() == 'black':
         letters = letters[::-1]
         numbers = numbers[::-1]
     

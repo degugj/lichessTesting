@@ -71,16 +71,16 @@ def create_gamestream():
 		gameid - id of game created challenge request
 """
 def challenge_user(username, **kwargs):
-
 	# match configurations
 	configurations = {     
 	    'time': 15,
 	    'increment': 0,
-	    'color': 'white',
+	    'color': kwargs["color"],
 	}
 	try:
 		r = requests.post('https://lichess.org/api/challenge/' + username, json=configurations, headers={'Authorization': 'Bearer {}'.format(api_key)})
 		# check for successful challenge response
+
 		if r.status_code == 200:
 
 			# response message from challenge request to LiChess
@@ -94,6 +94,18 @@ def challenge_user(username, **kwargs):
 	except:
 		print("Problem with challenge")
 
+
+""" challenge_cancel: cancel outgoing challenge
+	params: 
+		gameid - gameid that was generated from original challenge request
+	return:
+"""
+def challenge_cancel(gameid):
+	try:
+		response = requests.post("https://lichess.org/api/challenge/{challengeId}/cancel".format(challengeId=gameid), headers={'Authorization': 'Bearer {}'.format(api_key)})
+		return 1
+	except:
+		print("Unable ot cancel challenge")
 
 
 """ create_seek: start a seek for random opponent

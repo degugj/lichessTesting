@@ -30,13 +30,13 @@ class GameState():
 
         # set user color (i.e 'w', 'b')
         self.gameQueue = gameQueue
-        if gameQueue is None:
+        # if gameQueue is None:
+        #     self.userColor = 'w'
+        # else:
+        if self.gameQueue.get()["white"]["id"] == 'degugbot':
             self.userColor = 'w'
         else:
-            if self.gameQueue.get()["white"]["id"] == 'degugbot':
-                self.userColor = 'w'
-            else:
-                self.userColor = 'b'
+            self.userColor = 'b'
 
         # capture buffer zones
         self.wBuffer = [["--", "--"],

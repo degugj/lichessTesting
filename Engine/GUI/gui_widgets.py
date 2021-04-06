@@ -33,7 +33,7 @@ def createLabel(window, text, font, fontsize, fontweight):
 
 """
 Create entry widget
-params: window 
+params: window, bgcolor, show 
 return: entry object
 """
 def createEntry(window, bgcolor, show=None):
@@ -42,3 +42,12 @@ def createEntry(window, bgcolor, show=None):
     else:
         entry = tk.Entry(window, bg=bgcolor)
     return entry
+
+"""
+Create radio button widget
+params: window
+return: radio button object
+"""
+def createRadioButton(window, text, var, value):
+    radioButton = tk.Radiobutton(window, text=text, var=var, value=value)
+    return radioButton

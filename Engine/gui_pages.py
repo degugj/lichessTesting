@@ -166,29 +166,37 @@ class ChallengePage(tk.Frame):
         header = widgets.createLabel(self, text="Search Opponent Name", font="times", fontsize=14, fontweight="bold")
         header.pack(padx=10, pady=10)
 
-        # name input and search button
+        # name input
         usernameEntry = widgets.createEntry(self, bgcolor="beige") 
         usernameEntry.pack(pady=10)
-        challengeButton = widgets.createButton(self, function=lambda: self.challenge(controller, usernameEntry.get()),
+
+         # provide options for starting color
+        userColor = tk.StringVar()
+        widgets.createRadioButton(self, "Random", userColor, "random").pack()
+        widgets.createRadioButton(self, "White", userColor, "white").pack()
+        widgets.createRadioButton(self, "Black", userColor, "black").pack()
+
+        # challenge button
+        challengeButton = widgets.createButton(self, function=lambda: self.challenge(controller, userColor.get(), usernameEntry.get()),
                                                 text="Challenge", bgcolor="sky blue")
         challengeButton.pack(pady=10)
-
 
         # return to main menu
         returnButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
                                             text="Return to Main Menu", bgcolor="sky blue")
         returnButton.pack(pady=10)
 
+
     """ challenge user """
-    def challenge(self, controller, username=""):
-        audio.sound_button()
+    def challenge(self, controller, userColor, username=""):
+
+        print(userColor)
         if username == "":
             print("User not found")
         else:
 
             # challenge user and set gameid
-            gameid = interface.challenge_user(username)
-            print(gameid)
+            gameid = interface.challenge_user(username, color=userColor)
 
             if not gameid:
                 print("Unable to complete challenge")
@@ -196,11 +204,15 @@ class ChallengePage(tk.Frame):
 
                 interface.change_gameid(gameid)
 
+                # used to cancel challenge request after 10 seconds
+                time_out = int(time.time()) + 10
+
                 # wait until challenger accepts or declines challenge
                 accepted = False
                 declined = False
                 while not accepted and not declined:
                     try:
+
                         # grab event and check if game start has occurred
                         event = eventQueue.get_nowait()
                         if event["type"] == "gameStart":
@@ -208,18 +220,34 @@ class ChallengePage(tk.Frame):
                                 print("game accepted")
                                 accepted = True
 
-                        if event["type"] == "challengeDeclined":
+                        # check if challenge has been declined
+                        elif event["type"] == "challengeDeclined":
                             declined = True
+
+                        # cancel challenge after 10 seconds
+                        elif time.time() > time_out:
+                            declined = True
+                            interface.challenge_cancel(gameid)
+
                     except:
                         pass
 
                 if accepted:
                     ingame(username, controller)
                 if declined:
-                    print("Challenge declined by: ", username)
+                    controller.show_frame(ChallengeDeniedPage)
         return
 
 
+class ChallengeDeniedPage(tk.Frame):
+    def __init__(self, master, controller):
+        tk.Frame.__init__(self, master)
+        header = widgets.createLabel(self, text="Challenge has been declined or timed out (10s)", font="times", fontsize=14, fontweight="bold")
+        header.pack(padx=10, pady=10)
+
+        returnButton = widgets.createButton(self, function=lambda: controller.show_frame(ChallengePage),
+                                                text="Return", bgcolor="sky blue")
+        returnButton.pack(pady=10)
 """
 -------------------------------
 FUNCTIONS
