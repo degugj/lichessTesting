@@ -12,27 +12,29 @@ currentGamestate = gs()  # Instantiate test gamestate
 
 #print(currentGamestate.board)
 # Reset the board to no pieces (as Sam has no pieces)
-for indexR, row in enumerate(currentGamestate.board):
-    for indexC, item in enumerate(row):
-        currentGamestate.board[indexR][indexC] = '--'
-        if indexR == 6 and indexC == 1:
-            currentGamestate.board[indexR][indexC] = 'wP'
-        if indexR == 6 and indexC == 2:
-            currentGamestate.board[indexR][indexC] = 'wP'
-print("Initial State:")
-print(np.array(currentGamestate.board))
+# for indexR, row in enumerate(currentGamestate.board):
+#     for indexC, item in enumerate(row):
+#         currentGamestate.board[indexR][indexC] = '--'
+#         if indexR == 6 and indexC == 1:
+#             currentGamestate.board[indexR][indexC] = 'wP'
+#         if indexR == 6 and indexC == 2:
+#             currentGamestate.board[indexR][indexC] = 'wP'
+# print("Initial State:")
+# print(np.array(currentGamestate.board))
+#
+# #interface.get_column(currentGamestate, 'a')
+#
+# checkStatus = interface.initial_error_check(currentGamestate)
+# if checkStatus == 0:
+#     while True:
+#             move = interface.start_fast_scan(currentGamestate)
+#             print("Move resolved from Sam's subsystem:", move)
+#             if move == -1:
+#                 break
+#             currentGamestate.move_piece(move)
 
-#interface.get_column(currentGamestate, 'a')
-
-checkStatus = interface.initial_error_check(currentGamestate)
-if checkStatus == 0:
-    while True:
-            move = interface.start_fast_scan(currentGamestate)
-            print("Move resolved from Sam's subsystem:", move)
-            if move == -1:
-                break
-            currentGamestate.move_piece(move)
 """"
+After support for stop command
 while True:
     checkStatus = interface.initial_error_check(currentGamestate)
     if checkStatus == 0:
@@ -53,19 +55,104 @@ while True:
 
 
 
-""""
-messageNo1Init = interface.gamestateMessage(0b00001, 0b000, 0b11000011) # a2a3
-messageNo2Init = interface.gamestateMessage(0b00010, 0b001, 0b11000001)
+
+messageNo1Init = interface.gamestateMessage(0b00001, 0b000, 0b11000011)
+messageNo2Init = interface.gamestateMessage(0b00010, 0b001, 0b11000011)
 messageNo3Init = interface.gamestateMessage(0b00011, 0b010, 0b11000011)
 messageNo4Init = interface.gamestateMessage(0b00100, 0b011, 0b11000011)
-messageNo5Init = interface.gamestateMessage(0b00101, 0b100, 0b11010011)
+messageNo5Init = interface.gamestateMessage(0b00101, 0b100, 0b11000011)
 messageNo6Init = interface.gamestateMessage(0b00110, 0b101, 0b11000011)
 messageNo7Init = interface.gamestateMessage(0b00111, 0b110, 0b11000011)
 messageNo8Init = interface.gamestateMessage(0b01000, 0b111, 0b11000011)
 
-samState = [messageNo1Init, messageNo2Init, messageNo3Init, messageNo4Init,
+messageNo1InitB = interface.gamestateMessage(0b00001, 0b000, 0b11000011)
+messageNo2InitB = interface.gamestateMessage(0b00010, 0b001, 0b11000011)
+messageNo3InitB = interface.gamestateMessage(0b00011, 0b010, 0b11000001)
+messageNo4InitB = interface.gamestateMessage(0b00100, 0b011, 0b11000011)
+messageNo5InitB = interface.gamestateMessage(0b00101, 0b100, 0b11000011)
+messageNo6InitB = interface.gamestateMessage(0b00110, 0b101, 0b11000011)
+messageNo7InitB = interface.gamestateMessage(0b00111, 0b110, 0b11000011)
+messageNo8InitB = interface.gamestateMessage(0b01000, 0b111, 0b11000011)
+
+messageNo1InitC = interface.gamestateMessage(0b00001, 0b000, 0b11000011)
+messageNo2InitC = interface.gamestateMessage(0b00010, 0b001, 0b10000011)
+messageNo3InitC = interface.gamestateMessage(0b00011, 0b010, 0b11000001)
+messageNo4InitC = interface.gamestateMessage(0b00100, 0b011, 0b11000011)
+messageNo5InitC = interface.gamestateMessage(0b00101, 0b100, 0b11000011)
+messageNo6InitC = interface.gamestateMessage(0b00110, 0b101, 0b11000011)
+messageNo7InitC = interface.gamestateMessage(0b00111, 0b110, 0b11000011)
+messageNo8InitC = interface.gamestateMessage(0b01000, 0b111, 0b11000011)
+
+messageNo1InitD = interface.gamestateMessage(0b00001, 0b000, 0b11000011)
+messageNo2InitD = interface.gamestateMessage(0b00010, 0b001, 0b10000011)
+messageNo3InitD = interface.gamestateMessage(0b00011, 0b010, 0b11000011)
+messageNo4InitD = interface.gamestateMessage(0b00100, 0b011, 0b11000011)
+messageNo5InitD = interface.gamestateMessage(0b00101, 0b100, 0b11000011)
+messageNo6InitD = interface.gamestateMessage(0b00110, 0b101, 0b11000011)
+messageNo7InitD = interface.gamestateMessage(0b00111, 0b110, 0b11000011)
+messageNo8InitD = interface.gamestateMessage(0b01000, 0b111, 0b11000011)
+
+samStateConstant = [messageNo1Init, messageNo2Init, messageNo3Init, messageNo4Init,
             messageNo5Init, messageNo6Init, messageNo7Init, messageNo8Init]
+
+samStateB = [messageNo1InitB, messageNo2InitB, messageNo3InitB, messageNo4InitB,
+            messageNo5InitB, messageNo6InitB, messageNo7InitB, messageNo8InitB]
+
+samStateC = [messageNo1InitC, messageNo2InitC, messageNo3InitC, messageNo4InitC,
+            messageNo5InitC, messageNo6InitC, messageNo7InitC, messageNo8InitC]
+
+samStateD = [messageNo1InitD, messageNo2InitD, messageNo3InitD, messageNo4InitD,
+            messageNo5InitD, messageNo6InitD, messageNo7InitD, messageNo8InitD]
+
+
+messageStates = [samStateConstant, samStateB, samStateC, samStateD]
 newGs = np.array(currentGamestate.board)
+
+
+#move = interface.resolve_chess_move_v2(newGs, samStateB, samStateC)
+
+isMoveNotFound = True
+samState = None
+prevSamState = None
+startCell = None
+destCell = None
+for state in messageStates:
+    # First one is compared to local gs
+    samState = state
+    print(state)
+    time.sleep(3)
+    if startCell is None or startCell == -1:  # Check this OR condition
+        startCell = interface.find_start_cell(newGs, samState)
+        print("startCell:",startCell)
+        if startCell != -1 and startCell[1][0] != currentGamestate.userColor:
+
+            startCell = -1
+    else:
+        #print("else")
+        # Finesse for testing the move resolution
+        # samState2[7].data = 0b11000101
+        destCell = interface.resolve_chess_move_v2(newGs, samState, prevSamState)
+        # unsure about a check here
+        print("destCell",destCell)
+        if destCell != -1 and startCell != -1 and destCell == startCell: # User changed move
+            print("User placed piece back. Continue making move.")
+            startCell = -1
+            destCell = -1
+
+        if destCell != -1 and startCell != -1 and destCell != startCell:
+            # Transmit Stop
+            isMoveNotFound = False
+            # Serial write stop message to Sam
+            #transmission_byte0 = 0b00111000
+            #interface.send_to_328p(transmission_byte0, "Stop Fast Scan")
+            print("Move:",startCell[0] + destCell[0])
+
+    prevSamState = samState.copy()
+
+
+#print("Rev2 Move:", move)
+
+
 
 #move = interface.resolve_chess_move(newGs, samState)
 #print("Resolved Move:",move)
@@ -94,4 +181,4 @@ newGs = np.array(currentGamestate.board)
 # messageNo12 = gamestateMessage(0b01100, 0b111, 0b10000000)
 
 
-"""
+
