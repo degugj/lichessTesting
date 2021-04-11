@@ -19,6 +19,7 @@ from Engine.lichess import lichessInterface_new as interface
 # from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
 #from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
 
+isSoundOn = False
 
 """
 -------------------------------
@@ -30,13 +31,14 @@ class GameState():
 
         # set user color (i.e 'w', 'b')
         self.gameQueue = gameQueue
-        # if gameQueue is None:
-        #     self.userColor = 'w'
-        # else:
-        if self.gameQueue.get()["white"]["id"] == 'degugbot':
-            self.userColor = 'w'
+        # adding this so sam can test without gui (there is no game queue). can remove later
+        if gameQueue is None:
+             self.userColor = 'w'
         else:
-            self.userColor = 'b'
+            if self.gameQueue.get()["white"]["id"] == 'degugbot':
+                self.userColor = 'w'
+            else:
+                self.userColor = 'b'
 
         # capture buffer zones
         self.wBuffer = [["--", "--"],
@@ -208,8 +210,10 @@ class GameState():
 
         # move piece to destination
         self.replace_piece_onboard(move, startpiece)
-        
-        audio.sound_move()
+
+        # boolean, because Sam doesn't have wav files
+        if isSoundOn:
+            audio.sound_move()
 
         return
 
