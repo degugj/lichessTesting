@@ -30,8 +30,12 @@ if checkStatus != 0:
     checkStatus2 = interface.initial_error_check(currentGamestate)
     if checkStatus2 != 0:
         exit()
-move = interface.start_fast_scan(currentGamestate)
-print("Move resolved from Sam's subsystem:", move)
+while True:
+    move = interface.start_fast_scan(currentGamestate)
+    print("Move resolved from Sam's subsystem:", move)
+    if move == -1:
+        break
+
 
 """"
 messageNo1Init = interface.gamestateMessage(0b00001, 0b000, 0b11000011) # a2a3
