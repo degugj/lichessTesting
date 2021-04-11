@@ -31,6 +31,7 @@ if checkStatus == 0:
             print("Move resolved from Sam's subsystem:", move)
             if move == -1:
                 break
+            currentGamestate.move_piece(move)
 """"
 while True:
     checkStatus = interface.initial_error_check(currentGamestate)
