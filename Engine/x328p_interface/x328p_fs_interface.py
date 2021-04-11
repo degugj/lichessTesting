@@ -117,7 +117,7 @@ def find_start_cell(gs, messageArray):
 
                 # convert to chess coordinates and concatenate (i.e a2)
                 start_pos = start_cell_letter + str(start_cell_number)
-                return start_pos
+                return [start_pos, gs[i][c]]
 
     return -1
 
@@ -292,7 +292,7 @@ def start_fast_scan(gs):
         samState = receive_chess_state()
         if startCell is None or startCell == -1:  # Check this OR condition
             startCell = find_start_cell(newGs, samState)
-            if startCell[1][0] != gs.usercolor:
+            if startCell != -1 and startCell[1][0] != gs.userColor:
                 startCell = -1
         else:
             # Finesse for testing the move resolution
@@ -311,7 +311,7 @@ def start_fast_scan(gs):
                 # Serial write stop message to Sam
                 transmission_byte0 = 0b00111000
                 send_to_328p(transmission_byte0, "Stop Fast Scan")
-                return startCell + destCell
+                return startCell[0] + destCell[0]
 
         prevSamState = samState.copy()
     return -1
