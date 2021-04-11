@@ -3,31 +3,31 @@ Hall Sensor UART.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000400  2**0
+  0 .data         00000000  00800100  00800100  000003a8  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         0000038c  00000000  00000000  00000074  2**1
+  1 .text         00000334  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000010  00800100  00800100  00000400  2**0
+  2 .bss          00000010  00800100  00800100  000003a8  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000400  2**0
+  3 .comment      00000030  00000000  00000000  000003a8  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000430  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003d8  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000088  00000000  00000000  00000470  2**0
+  5 .debug_aranges 00000088  00000000  00000000  00000418  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000d22  00000000  00000000  000004f8  2**0
+  6 .debug_info   00000d22  00000000  00000000  000004a0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000007af  00000000  00000000  0000121a  2**0
+  7 .debug_abbrev 000007af  00000000  00000000  000011c2  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000006ad  00000000  00000000  000019c9  2**0
+  8 .debug_line   00000655  00000000  00000000  00001971  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000168  00000000  00000000  00002078  2**2
+  9 .debug_frame  00000168  00000000  00000000  00001fc8  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000472  00000000  00000000  000021e0  2**0
+ 10 .debug_str    00000472  00000000  00000000  00002130  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000005b2  00000000  00000000  00002652  2**0
+ 11 .debug_loc    000005bd  00000000  00000000  000025a2  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000c0  00000000  00000000  00002c04  2**0
+ 12 .debug_ranges 000000c0  00000000  00000000  00002b5f  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -89,19 +89,19 @@ Disassembly of section .text:
   8e:	a0 31       	cpi	r26, 0x10	; 16
   90:	b2 07       	cpc	r27, r18
   92:	e1 f7       	brne	.-8      	; 0x8c <.do_clear_bss_loop>
-  94:	0e 94 aa 01 	call	0x354	; 0x354 <main>
-  98:	0c 94 c4 01 	jmp	0x388	; 0x388 <_exit>
+  94:	0e 94 7d 01 	call	0x2fa	; 0x2fa <main>
+  98:	0c 94 98 01 	jmp	0x330	; 0x330 <_exit>
 
 0000009c <__bad_interrupt>:
   9c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 000000a0 <USART_Transmit>:
-	USART_Transmit(Byte1);
-	USART_Transmit(Byte2);
-}
-
 void LEDon(void) {
 	PORTB |= (1<<2);
+}
+
+void LEDoff(void) {
+	PORTB &= ~(1<<2);
   a0:	ef e9       	ldi	r30, 0x9F	; 159
   a2:	ff e0       	ldi	r31, 0x0F	; 15
   a4:	31 97       	sbiw	r30, 0x01	; 1
@@ -162,7 +162,7 @@ void LEDon(void) {
  10c:	fc 01       	movw	r30, r24
  10e:	ec 5c       	subi	r30, 0xCC	; 204
  110:	ff 4f       	sbci	r31, 0xFF	; 255
- 112:	0c 94 be 01 	jmp	0x37c	; 0x37c <__tablejump2__>
+ 112:	0c 94 92 01 	jmp	0x324	; 0x324 <__tablejump2__>
  116:	8b b1       	in	r24, 0x0b	; 11
  118:	88 61       	ori	r24, 0x18	; 24
  11a:	8b b9       	out	0x0b, r24	; 11
@@ -288,230 +288,186 @@ void LEDon(void) {
  208:	cf 91       	pop	r28
  20a:	08 95       	ret
 
-0000020c <LEDoff>:
-}
-
-void LEDoff(void) {
-	PORTB &= ~(1<<2);
- 20c:	2a 98       	cbi	0x05, 2	; 5
- 20e:	08 95       	ret
-
-00000210 <DumpAllData>:
+0000020c <DumpAllData>:
 }
 
 void DumpAllData(void) {
 	//MD0 = GatherMuxDataD(0);
 	MD0 = 0x00;
- 210:	10 92 03 01 	sts	0x0103, r1	; 0x800103 <MD0>
+ 20c:	10 92 03 01 	sts	0x0103, r1	; 0x800103 <MD0>
 	MD1 = 0b01000000;
- 214:	80 e4       	ldi	r24, 0x40	; 64
- 216:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <MD1>
+ 210:	80 e4       	ldi	r24, 0x40	; 64
+ 212:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <MD1>
 	//MD1 &= ~(1<<3);
 	MD2 = GatherMuxDataB(2);
- 21a:	82 e0       	ldi	r24, 0x02	; 2
- 21c:	0e 94 b7 00 	call	0x16e	; 0x16e <GatherMuxDataB>
- 220:	80 93 0a 01 	sts	0x010A, r24	; 0x80010a <MD2>
+ 216:	82 e0       	ldi	r24, 0x02	; 2
+ 218:	0e 94 b7 00 	call	0x16e	; 0x16e <GatherMuxDataB>
+ 21c:	80 93 0a 01 	sts	0x010A, r24	; 0x80010a <MD2>
 	//MD3 = GatherMuxDataB(3);
 	MD3 = 0x00;
- 224:	10 92 0b 01 	sts	0x010B, r1	; 0x80010b <MD3>
+ 220:	10 92 0b 01 	sts	0x010B, r1	; 0x80010b <MD3>
 	//MD4 = GatherMuxDataC(4);
 	MD4 = 0x00;
- 228:	10 92 0e 01 	sts	0x010E, r1	; 0x80010e <MD4>
+ 224:	10 92 0e 01 	sts	0x010E, r1	; 0x80010e <MD4>
 	//MD5 = GatherMuxDataC(5);
 	MD5 = 0x00;
- 22c:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <_edata>
+ 228:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <_edata>
 	MD6 = 0x00;
- 230:	10 92 07 01 	sts	0x0107, r1	; 0x800107 <MD6>
+ 22c:	10 92 07 01 	sts	0x0107, r1	; 0x800107 <MD6>
 	//MD7 = GatherMuxDataC(7);
 	MD7 = 0x00;
- 234:	10 92 08 01 	sts	0x0108, r1	; 0x800108 <MD7>
+ 230:	10 92 08 01 	sts	0x0108, r1	; 0x800108 <MD7>
 	
 	SendData(0x00,MD0);
- 238:	60 91 03 01 	lds	r22, 0x0103	; 0x800103 <MD0>
- 23c:	80 e0       	ldi	r24, 0x00	; 0
- 23e:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 234:	60 91 03 01 	lds	r22, 0x0103	; 0x800103 <MD0>
+ 238:	80 e0       	ldi	r24, 0x00	; 0
+ 23a:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 	SendData(0x01,MD1);
- 242:	60 91 05 01 	lds	r22, 0x0105	; 0x800105 <MD1>
- 246:	81 e0       	ldi	r24, 0x01	; 1
- 248:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 23e:	60 91 05 01 	lds	r22, 0x0105	; 0x800105 <MD1>
+ 242:	81 e0       	ldi	r24, 0x01	; 1
+ 244:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 	SendData(0x02,MD2);
- 24c:	60 91 0a 01 	lds	r22, 0x010A	; 0x80010a <MD2>
- 250:	82 e0       	ldi	r24, 0x02	; 2
- 252:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 248:	60 91 0a 01 	lds	r22, 0x010A	; 0x80010a <MD2>
+ 24c:	82 e0       	ldi	r24, 0x02	; 2
+ 24e:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 	SendData(0x03,MD3);
- 256:	60 91 0b 01 	lds	r22, 0x010B	; 0x80010b <MD3>
- 25a:	83 e0       	ldi	r24, 0x03	; 3
- 25c:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 252:	60 91 0b 01 	lds	r22, 0x010B	; 0x80010b <MD3>
+ 256:	83 e0       	ldi	r24, 0x03	; 3
+ 258:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 	SendData(0x04,MD4);
- 260:	60 91 0e 01 	lds	r22, 0x010E	; 0x80010e <MD4>
- 264:	84 e0       	ldi	r24, 0x04	; 4
- 266:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 25c:	60 91 0e 01 	lds	r22, 0x010E	; 0x80010e <MD4>
+ 260:	84 e0       	ldi	r24, 0x04	; 4
+ 262:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 	SendData(0x05,MD5);
- 26a:	60 91 00 01 	lds	r22, 0x0100	; 0x800100 <_edata>
- 26e:	85 e0       	ldi	r24, 0x05	; 5
- 270:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 266:	60 91 00 01 	lds	r22, 0x0100	; 0x800100 <_edata>
+ 26a:	85 e0       	ldi	r24, 0x05	; 5
+ 26c:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 	SendData(0x06,MD6);
- 274:	60 91 07 01 	lds	r22, 0x0107	; 0x800107 <MD6>
- 278:	86 e0       	ldi	r24, 0x06	; 6
- 27a:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 270:	60 91 07 01 	lds	r22, 0x0107	; 0x800107 <MD6>
+ 274:	86 e0       	ldi	r24, 0x06	; 6
+ 276:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 	SendData(0x07,MD7);
- 27e:	60 91 08 01 	lds	r22, 0x0108	; 0x800108 <MD7>
- 282:	87 e0       	ldi	r24, 0x07	; 7
- 284:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
- 288:	08 95       	ret
+ 27a:	60 91 08 01 	lds	r22, 0x0108	; 0x800108 <MD7>
+ 27e:	87 e0       	ldi	r24, 0x07	; 7
+ 280:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 284:	08 95       	ret
 
-0000028a <FastScan>:
+00000286 <FastScan>:
 }
 
 void FastScan(void) {
-	LD0 = MD0;
- 28a:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <MD0>
- 28e:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <LD0>
-	LD1 = MD1;
- 292:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <MD1>
- 296:	80 93 06 01 	sts	0x0106, r24	; 0x800106 <LD1>
+	//LD0 = MD0;
+	//LD1 = MD1;
 	LD2 = MD2;
- 29a:	80 91 0a 01 	lds	r24, 0x010A	; 0x80010a <MD2>
- 29e:	80 93 09 01 	sts	0x0109, r24	; 0x800109 <LD2>
-	LD3 = MD3;
- 2a2:	80 91 0b 01 	lds	r24, 0x010B	; 0x80010b <MD3>
- 2a6:	80 93 0c 01 	sts	0x010C, r24	; 0x80010c <LD3>
-	LD4 = MD4;
- 2aa:	80 91 0e 01 	lds	r24, 0x010E	; 0x80010e <MD4>
- 2ae:	80 93 0f 01 	sts	0x010F, r24	; 0x80010f <LD4>
-	LD5 = MD5;
- 2b2:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
- 2b6:	80 93 01 01 	sts	0x0101, r24	; 0x800101 <LD5>
-	LD6 = MD6;
- 2ba:	80 91 07 01 	lds	r24, 0x0107	; 0x800107 <MD6>
- 2be:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <LD6>
-	LD7 = MD7;
- 2c2:	80 91 08 01 	lds	r24, 0x0108	; 0x800108 <MD7>
- 2c6:	80 93 0d 01 	sts	0x010D, r24	; 0x80010d <LD7>
+ 286:	80 91 0a 01 	lds	r24, 0x010A	; 0x80010a <MD2>
+ 28a:	80 93 09 01 	sts	0x0109, r24	; 0x800109 <LD2>
+	//LD7 = MD7;
 	
-	MD0 = 0x00;
- 2ca:	10 92 03 01 	sts	0x0103, r1	; 0x800103 <MD0>
-	MD1 = 0b01000000;
- 2ce:	80 e4       	ldi	r24, 0x40	; 64
- 2d0:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <MD1>
+	//MD0 = 0x00;
+	//MD1 = 0b01000000;
 	//MD1 &= ~(1<<3);
 	MD2 = GatherMuxDataB(2);
- 2d4:	82 e0       	ldi	r24, 0x02	; 2
- 2d6:	0e 94 b7 00 	call	0x16e	; 0x16e <GatherMuxDataB>
- 2da:	80 93 0a 01 	sts	0x010A, r24	; 0x80010a <MD2>
-	//MD3 = GatherMuxDataB(3);
-	MD3 = 0x00;
- 2de:	10 92 0b 01 	sts	0x010B, r1	; 0x80010b <MD3>
-	//MD4 = GatherMuxDataC(4);
-	MD4 = 0x00;
- 2e2:	10 92 0e 01 	sts	0x010E, r1	; 0x80010e <MD4>
-	//MD5 = GatherMuxDataC(5);
-	MD5 = 0x00;
- 2e6:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <_edata>
-	MD6 = 0x00;
- 2ea:	10 92 07 01 	sts	0x0107, r1	; 0x800107 <MD6>
+ 28e:	82 e0       	ldi	r24, 0x02	; 2
+ 290:	0e 94 b7 00 	call	0x16e	; 0x16e <GatherMuxDataB>
+ 294:	80 93 0a 01 	sts	0x010A, r24	; 0x80010a <MD2>
+	//MD5 = 0x00;
+	//MD6 = 0x00;
 	//MD7 = GatherMuxDataC(7);
-	MD7 = 0x00;
- 2ee:	10 92 08 01 	sts	0x0108, r1	; 0x800108 <MD7>
+	//MD7 = 0x00;
 	
 	if (MD2 != LD2) {
- 2f2:	90 91 09 01 	lds	r25, 0x0109	; 0x800109 <LD2>
- 2f6:	89 17       	cp	r24, r25
- 2f8:	61 f1       	breq	.+88     	; 0x352 <FastScan+0xc8>
+ 298:	90 91 09 01 	lds	r25, 0x0109	; 0x800109 <LD2>
+ 29c:	89 17       	cp	r24, r25
+ 29e:	61 f1       	breq	.+88     	; 0x2f8 <FastScan+0x72>
 		SendData(0x00,MD0);
- 2fa:	60 91 03 01 	lds	r22, 0x0103	; 0x800103 <MD0>
- 2fe:	80 e0       	ldi	r24, 0x00	; 0
- 300:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 2a0:	60 91 03 01 	lds	r22, 0x0103	; 0x800103 <MD0>
+ 2a4:	80 e0       	ldi	r24, 0x00	; 0
+ 2a6:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 		SendData(0x01,MD1);
- 304:	60 91 05 01 	lds	r22, 0x0105	; 0x800105 <MD1>
- 308:	81 e0       	ldi	r24, 0x01	; 1
- 30a:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 2aa:	60 91 05 01 	lds	r22, 0x0105	; 0x800105 <MD1>
+ 2ae:	81 e0       	ldi	r24, 0x01	; 1
+ 2b0:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 		SendData(0x02,MD2);
- 30e:	60 91 0a 01 	lds	r22, 0x010A	; 0x80010a <MD2>
- 312:	82 e0       	ldi	r24, 0x02	; 2
- 314:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 2b4:	60 91 0a 01 	lds	r22, 0x010A	; 0x80010a <MD2>
+ 2b8:	82 e0       	ldi	r24, 0x02	; 2
+ 2ba:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 		SendData(0x03,MD3);
- 318:	60 91 0b 01 	lds	r22, 0x010B	; 0x80010b <MD3>
- 31c:	83 e0       	ldi	r24, 0x03	; 3
- 31e:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 2be:	60 91 0b 01 	lds	r22, 0x010B	; 0x80010b <MD3>
+ 2c2:	83 e0       	ldi	r24, 0x03	; 3
+ 2c4:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 		SendData(0x04,MD4);
- 322:	60 91 0e 01 	lds	r22, 0x010E	; 0x80010e <MD4>
- 326:	84 e0       	ldi	r24, 0x04	; 4
- 328:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 2c8:	60 91 0e 01 	lds	r22, 0x010E	; 0x80010e <MD4>
+ 2cc:	84 e0       	ldi	r24, 0x04	; 4
+ 2ce:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 		SendData(0x05,MD5);
- 32c:	60 91 00 01 	lds	r22, 0x0100	; 0x800100 <_edata>
- 330:	85 e0       	ldi	r24, 0x05	; 5
- 332:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 2d2:	60 91 00 01 	lds	r22, 0x0100	; 0x800100 <_edata>
+ 2d6:	85 e0       	ldi	r24, 0x05	; 5
+ 2d8:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 		SendData(0x06,MD6);
- 336:	60 91 07 01 	lds	r22, 0x0107	; 0x800107 <MD6>
- 33a:	86 e0       	ldi	r24, 0x06	; 6
- 33c:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 2dc:	60 91 07 01 	lds	r22, 0x0107	; 0x800107 <MD6>
+ 2e0:	86 e0       	ldi	r24, 0x06	; 6
+ 2e2:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 		SendData(0x07,MD7);
- 340:	60 91 08 01 	lds	r22, 0x0108	; 0x800108 <MD7>
- 344:	87 e0       	ldi	r24, 0x07	; 7
- 346:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
+ 2e6:	60 91 08 01 	lds	r22, 0x0108	; 0x800108 <MD7>
+ 2ea:	87 e0       	ldi	r24, 0x07	; 7
+ 2ec:	0e 94 fd 00 	call	0x1fa	; 0x1fa <SendData>
 		
 		//LD0 = MD0;
 		//LD1 = MD1;
 		LD2 = MD2;
- 34a:	80 91 0a 01 	lds	r24, 0x010A	; 0x80010a <MD2>
- 34e:	80 93 09 01 	sts	0x0109, r24	; 0x800109 <LD2>
- 352:	08 95       	ret
+ 2f0:	80 91 0a 01 	lds	r24, 0x010A	; 0x80010a <MD2>
+ 2f4:	80 93 09 01 	sts	0x0109, r24	; 0x800109 <LD2>
+ 2f8:	08 95       	ret
 
-00000354 <main>:
+000002fa <main>:
+	}
 }
 
 int main(void)
 {
-	
 	MuxInit();
- 354:	0e 94 76 00 	call	0xec	; 0xec <MuxInit>
-	
-	DDRB |= (1<<2); //SetLED as output
- 358:	22 9a       	sbi	0x04, 2	; 4
-	
-	LEDoff();
- 35a:	0e 94 06 01 	call	0x20c	; 0x20c <LEDoff>
-	
+ 2fa:	0e 94 76 00 	call	0xec	; 0xec <MuxInit>
 	uint8_t UART_lastRecievedByte;
 	USART_init();
- 35e:	0e 94 67 00 	call	0xce	; 0xce <USART_init>
+ 2fe:	0e 94 67 00 	call	0xce	; 0xce <USART_init>
 	
+	while(1){	
+		UART_lastRecievedByte = USART_Receive();
+ 302:	0e 94 5e 00 	call	0xbc	; 0xbc <USART_Receive>
 	
+		if (UART_lastRecievedByte == 0b00101000) {
+ 306:	88 32       	cpi	r24, 0x28	; 40
+ 308:	11 f4       	brne	.+4      	; 0x30e <main+0x14>
+			DumpAllData();
+ 30a:	0e 94 06 01 	call	0x20c	; 0x20c <DumpAllData>
+		}
 	
-while(1){	
-	UART_lastRecievedByte = USART_Receive();
- 362:	0e 94 5e 00 	call	0xbc	; 0xbc <USART_Receive>
+		UART_lastRecievedByte = USART_Receive();
+ 30e:	0e 94 5e 00 	call	0xbc	; 0xbc <USART_Receive>
 	
-	
-	if (UART_lastRecievedByte == 0b00101000) {
- 366:	88 32       	cpi	r24, 0x28	; 40
- 368:	11 f4       	brne	.+4      	; 0x36e <main+0x1a>
-		DumpAllData();
- 36a:	0e 94 08 01 	call	0x210	; 0x210 <DumpAllData>
-	}
-	
-	UART_lastRecievedByte = USART_Receive();
- 36e:	0e 94 5e 00 	call	0xbc	; 0xbc <USART_Receive>
-	//
-	if (UART_lastRecievedByte == 0b00110000) {
- 372:	80 33       	cpi	r24, 0x30	; 48
- 374:	b1 f7       	brne	.-20     	; 0x362 <main+0xe>
-		while (1) {
-			FastScan();
- 376:	0e 94 45 01 	call	0x28a	; 0x28a <FastScan>
- 37a:	fd cf       	rjmp	.-6      	; 0x376 <main+0x22>
+		if (UART_lastRecievedByte == 0b00110000) {
+ 312:	80 33       	cpi	r24, 0x30	; 48
+ 314:	b1 f7       	brne	.-20     	; 0x302 <main+0x8>
+			while (1) {
+				FastScan();
+ 316:	0e 94 43 01 	call	0x286	; 0x286 <FastScan>
+				UART_lastRecievedByte = USART_Receive();
+ 31a:	0e 94 5e 00 	call	0xbc	; 0xbc <USART_Receive>
+				if (UART_lastRecievedByte == 0b00111000) {
+ 31e:	88 33       	cpi	r24, 0x38	; 56
+ 320:	d1 f7       	brne	.-12     	; 0x316 <main+0x1c>
+ 322:	ef cf       	rjmp	.-34     	; 0x302 <main+0x8>
 
-0000037c <__tablejump2__>:
- 37c:	ee 0f       	add	r30, r30
- 37e:	ff 1f       	adc	r31, r31
- 380:	05 90       	lpm	r0, Z+
- 382:	f4 91       	lpm	r31, Z
- 384:	e0 2d       	mov	r30, r0
- 386:	09 94       	ijmp
+00000324 <__tablejump2__>:
+ 324:	ee 0f       	add	r30, r30
+ 326:	ff 1f       	adc	r31, r31
+ 328:	05 90       	lpm	r0, Z+
+ 32a:	f4 91       	lpm	r31, Z
+ 32c:	e0 2d       	mov	r30, r0
+ 32e:	09 94       	ijmp
 
-00000388 <_exit>:
- 388:	f8 94       	cli
+00000330 <_exit>:
+ 330:	f8 94       	cli
 
-0000038a <__stop_program>:
- 38a:	ff cf       	rjmp	.-2      	; 0x38a <__stop_program>
+00000332 <__stop_program>:
+ 332:	ff cf       	rjmp	.-2      	; 0x332 <__stop_program>

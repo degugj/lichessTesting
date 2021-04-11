@@ -252,28 +252,28 @@ void DumpAllData(void) {
 }
 
 void FastScan(void) {
-	LD0 = MD0;
-	LD1 = MD1;
+	//LD0 = MD0;
+	//LD1 = MD1;
 	LD2 = MD2;
-	LD3 = MD3;
-	LD4 = MD4;
-	LD5 = MD5;
-	LD6 = MD6;
-	LD7 = MD7;
+	//LD3 = MD3;
+	//LD4 = MD4;
+	//LD5 = MD5;
+	//LD6 = MD6;
+	//LD7 = MD7;
 	
-	MD0 = 0x00;
-	MD1 = 0b01000000;
+	//MD0 = 0x00;
+	//MD1 = 0b01000000;
 	//MD1 &= ~(1<<3);
 	MD2 = GatherMuxDataB(2);
 	//MD3 = GatherMuxDataB(3);
-	MD3 = 0x00;
+	//MD3 = 0x00;
 	//MD4 = GatherMuxDataC(4);
-	MD4 = 0x00;
+	//MD4 = 0x00;
 	//MD5 = GatherMuxDataC(5);
-	MD5 = 0x00;
-	MD6 = 0x00;
+	//MD5 = 0x00;
+	//MD6 = 0x00;
 	//MD7 = GatherMuxDataC(7);
-	MD7 = 0x00;
+	//MD7 = 0x00;
 	
 	if (MD2 != LD2) {
 		SendData(0x00,MD0);
@@ -299,50 +299,30 @@ void FastScan(void) {
 
 int main(void)
 {
-	
 	MuxInit();
-	
-	DDRB |= (1<<2); //SetLED as output
-	
-	LEDoff();
-	
 	uint8_t UART_lastRecievedByte;
 	USART_init();
 	
+	while(1){	
+		UART_lastRecievedByte = USART_Receive();
 	
-while(1){	
-	UART_lastRecievedByte = USART_Receive();
-	
-	
-	if (UART_lastRecievedByte == 0b00101000) {
-		DumpAllData();
-	}
-	
-	UART_lastRecievedByte = USART_Receive();
-	//
-	if (UART_lastRecievedByte == 0b00110000) {
-		while (1) {
-			FastScan();
-			UART_lastRecievedByte = USART_Receive();
-			if (UART_lastRecievedByte == 0b00110000) {
-				break;
-			}
-			
+		if (UART_lastRecievedByte == 0b00101000) {
+			DumpAllData();
 		}
-	}
-		//PIND |= (1<<Mux0);
-		
-		//uint8_t MD0 = 0x00; //GatherMuxData(0);
-		
-		//SetABC(6);
-				
-// 		if(bit_is_clear(PIND,Mux0)) {
-// 		//if ((PIND & (1<<Mux0))) {.
-// 			PORTB |= (1<<2);
-// 			//MD0 = 0xFF;
-// 		} else {
-// 			PORTB &= ~(1<<2);
-// 		}
+	
+		UART_lastRecievedByte = USART_Receive();
+	
+		if (UART_lastRecievedByte == 0b00110000) {
+			while (1) {
+				FastScan();
+				UART_lastRecievedByte = USART_Receive();
+				if (UART_lastRecievedByte == 0b00111000) {
+					break;
+				}
+			
+			}
+			//FastScan();
+		}
 
    }
 }
