@@ -73,15 +73,6 @@ class Node:
         return succs
 
     def __str__(self):
-        # if self.isGoal:
-        #     return " G  "
-        # if self.heuristic == math.inf:
-        #     return "null"
-        # else:
-        #     if len(str(self.heuristic)) == 3:
-        #         return str(self.state)[0:4] + " "
-        #     else:
-        #         return str(self.state)[0:4]
         return self.state
 
 def next_buffer_pos(gamestate, piece):
@@ -147,7 +138,6 @@ def gamestate_to_position_map(gamestate):
 
 # Creates a heuristic map of weights equal to the distance from the destination position
 def create_heuristic_map(posMap, endPos):
-    # posMap[endPos[0]][endPos[1]].heuristic = " G  "
     for i in range(len(posMap)):
         for j in range(len(posMap[i])):
             if posMap[i][j].state == '. ':
@@ -155,13 +145,9 @@ def create_heuristic_map(posMap, endPos):
                 posMap[i][j].heuristic = straightLineDist
             else:
                 posMap[i][j].heuristic = math.inf
-        # time.sleep(.7)
-        # print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-        # print_posMap(posMap)
-        # print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+
 
     posMap[endPos[0]][endPos[1]].isGoal = 1
-    # print(posMap[endPos[0]][endPos[1]].pos)
     return posMap
 
 # Straightline path compression for gantry optimization
@@ -169,26 +155,19 @@ def sl_compression(solution):
     compressed_path = []
     compressed_path.append(solution[0])
     for i in range(1,len(solution)-1):
-        #print('Hello: ',solution[i], solution[i-1])
         if solution[i][1] == solution[i+1][1]:
             pass
         else:
-            #print("Added: ", solution[i])
             compressed_path.append(solution[i])
     compressed_path.append(solution[len(solution)-1])
-    #print(len(solution), len(compressed_path))
     return compressed_path
 
 # Returns the Astar path of
 def greedy(heurMap, startNode):
-    # print(inputPuzzle.pretty())
-
     solution = []
     frontier = []
     explored = set()
 
-    # solution.append(startNode)  # Start is first solution
-    # heapq.heappush(frontier, (0,id(startNode),startNode))
     frontier.append((startNode, ''))
     frontierCount = 1
     expandCount = 0
@@ -198,73 +177,27 @@ def greedy(heurMap, startNode):
     while len(frontier) != 0:
         node = heapq.heappop(frontier)
         solution.append(node)
-        # time.sleep(1)
-        # print_posMap(heurMap)
-        # print("Checking: ", node.pos)
-        # time.sleep(1)
-        # print("Heur: ", node[1].heuristic)
         if node[0].isGoal:
-            # tmpNode = node[2]
-            # while tmpNode.parent is not None:
-            #     solution.insert(1, tmpNode)
-            #     print("Node added: ", tmpNode.pos)
-            #     tmpNode = tmpNode.parent
-            #     time.sleep(1)
             return solution
 
         explored.add(node)
         succ = node[0].successors(heurMap)
-        # for i in succ:
-        #     print(i.pos)
         expandCount += 1
         if expandCount >= 100000:
-            # print("Search halted")
+            print("Search halted")
             return -1
         bestNode = (Node(), '')
         for n in succ:
-            #print(n)
             succNode = n[0]
-            # print("Child: ", n.pos)
             if succNode.heuristic != math.inf and n not in explored:
-                # print("Good to check")
-
                 if bestNode[0].heuristic > succNode.heuristic:
-                    # print("better heur node")
                     bestNode = n
             else:
                 pass
-                # print("skip child")
             if succNode.isGoal == 1:
                 solution.append(n)
                 return solution
         frontier.append(bestNode)
-            # print(succ)
-            # if n is not None:
-            #     # print(n.pos)
-            #     # print(n)
-            #     if n.parent is not None:
-            #         tmpCost = 1 + n.parent.cost
-            #         if tmpCost < n.cost:
-            #             n.cost = tmpCost
-            #             n.parent = node[2]
-            #         else:
-            #             pass  # Cost created and new cost is not better. Dont update cost or rset parent
-            #         # n.cost = 1 + n.parent.cost
-            #         # n.parent = node[2]
-            #         # n.costCreated = 1
-            #     else:
-            #         n.cost = 1
-
-            # else:
-            #     n.cost = 0
-            # test = False
-            # for i in frontier:
-            #     if(i[2] == n):
-            #         test = True
-            # if not test and (n not in explored):
-            #     # print("pos added: ",n.pos)
-            #     heapq.heappush(frontier, (n.heuristic + n.cost,id(n), n))
-            #     frontierCount += 1
 
     print("no solution")
     # print("path cost: N/A since no solution was found")
@@ -275,7 +208,6 @@ def greedy(heurMap, startNode):
 # Returns an 8-bit address message
 def message_encode(value, type):
     justValue = 0b11100000 | int(value)  # Populate hot bits in message type bits
-    #print(justValue& message_types[type])
     message = justValue& message_types[type]
     print("\nEncoded", type, "message:", format(message, '#010b'))
     return message
@@ -368,15 +300,11 @@ def recv_from_328p(messageType, timeout):
             print("Do nothing...")
             return
         elif messageType == "ARRIVED":
-        # we need to recieve additional messages confirming position
-            #print((int.from_bytes(x, 'little')& 0b11100000)| 0b00011111)
-            #print(int(message_types[messageType]))
             xTrue = recv_from_328p("XADDRESS", 10)
             yTrue = recv_from_328p("YADDRESS", 10)
             if xTrue or yTrue == -1:
                 print("Exiting, current address is not verified") # This could be where we try to move it back or call a scan
                 return 0
-                #exit()
             # Verify addresses
             return
         elif messageType == "XADDRESS":
@@ -412,20 +340,8 @@ def recv_from_328p(messageType, timeout):
 def send_to_328p(data):
     ser.flush()
     print("Message sent (" + hex(data)+")","(Header:", (data&0b11100000),"Payload:",(data&0b00011111),')')
-    #while True:
-    #    received_data = ser.read()  # read serial port
-    #    time.sleep(0.03)
-    #    data_left = ser.inWaiting()  # check for remaining byte
-    #    received_data += ser.read(data_left)
-    #    print("Sent Data: ",format(data, '#010b'))  # print received data
     ser.write(data.to_bytes(1, 'little'))  # transmit data serially
 
-    
-    #print("Solution Path:")
-    #for i in path:
-    #    print(i.pos)
-
-    # Maybe use length to confirm path or some kind of checksum
     return 0
 
 def print_posMap(map, path=None):
@@ -453,21 +369,13 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     # TODO Extract and interpret move as start and end pos
     posMap = gamestate_to_position_map(gamestate)  # convert 8x8 to position map
 
-    # print("Move: ", move)
-    # print("Position State: ")
-
-
-    # print('')
     startPos = [0,0]
     endPos = [0, 0]
     if move is not None:
         startPos[0] = (int(move[1]) * 2) - 1
         startPos[1] = letterToColumn[move[0]]
-        # print("Start Node: ", startPos, "(Cell: " + move[0:2] +")")
-        # print("start: ", str(startPos))
 
         endPos[0] = (int(move[3:len(move)]) * 2) - 1
-        # print(move[3:len(move)])
         endPos[1] = letterToColumn[move[2]]
     else:
         startPos = startOverride
@@ -476,53 +384,22 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     destNode = posMap[endPos[0]][endPos[1]]
 
     if destNode.state != '. ':
-        #print("Moving Captured piece to buffer zone")
         capturedPos = destNode.pos
-        #bufferPos = pieceToBuffer[destNode.state]
         bufferPos = next_buffer_pos(gamestate, destNode.state)
-        #print(bufferPos)
         if destNode.state[0] == 'b':
             bufferPosMap = [(15 - (int(bufferPos[0]) * 2)), (int(bufferPos[1]) * 2) + 22]
         else:
             bufferPosMap = [(15-(int(bufferPos[0])*2)), int(bufferPos[1])*2]
         make_physical_move(gamestate, None, capturedPos, bufferPosMap)
 
-
-    # print("Goal Node: ", endPos, "(Cell: " + move[2:4] +")")
-
     heurMap = create_heuristic_map(posMap, endPos)
-    # interface.print_posMap(heurMap)
 
     solution = greedy(heurMap, heurMap[startPos[0]][startPos[1]])
-    # print("Path: ")
-    #print("Initial Position Map: ")
-    #print_posMap(posMap)
-    # print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
     print("\nBefore Straightline Path Compression: ")
     print_posMap(heurMap, solution)
-    #print("\nAfter Straightline Path Compression: ")
-    #print_posMap(heurMap, sl_compression(solution))
-
-    # time.sleep(5)
-    # for i in range(len(solution)):
-    #     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-    #     solNode = solution[i]
-    #     sys.stdout.write("\n\r{0}".format(str(i)))
-    #     posMap[solNode.pos[0]][solNode.pos[1]].state = u"\u26AA"
-    #     print_posMap(heurMap)
-    #     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-    #     # sys.stdout.flush()
-    #     time.sleep(1)
-    # print("Sending path via UART...")
-    # send_to_328p(solution)
     resp = transmit_path(sl_compression(solution))
+
     #if resp == -1:
     #    make_physical_move(gamestate, move, startOverride, destOveride)
 
-    # TODO Call gamestate_to_position_map()
-    # TODO Call create_heuristic_map()
-    # TODO Call find_astar_path() using the arguments obtained above
-    # TODO Call send_to_328P() with path returned above
-
-    # TODO Figure out UART, logic analyzer and returns for Wei
     return 0
