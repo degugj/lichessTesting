@@ -17,7 +17,7 @@ for indexR, row in enumerate(currentGamestate.board):
         currentGamestate.board[indexR][indexC] = '--'
         if indexR == 5 and indexC == 0:
             currentGamestate.board[indexR][indexC] = 'wP'
-        if indexR == 6 and indexC == 1:
+        if indexR == 5 and indexC == 1:
             currentGamestate.board[indexR][indexC] = 'wP'
         if indexR == 6 and indexC == 2:
             currentGamestate.board[indexR][indexC] = 'wP'
