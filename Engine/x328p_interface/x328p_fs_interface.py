@@ -295,6 +295,7 @@ def start_fast_scan(gs):
             startCell = find_start_cell(newGs, samState)
             print("Start Cell Resolved:", startCell)
             if startCell != -1 and startCell[1][0] != gs.userColor:
+                print("setting start cell to -1", gs.userColor, startCell)
                 startCell = -1
         else:
             # Finesse for testing the move resolution
