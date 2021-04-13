@@ -275,7 +275,7 @@ def send_to_328p(data, messageType):
 
 def start_fast_scan(gs):
     newGs = np.array(gs.board)
-
+    print("newGs",newGs)
     # Serial write start message to Sam
     transmission_byte0 = 0b00110000
     transmission_byte1 = 0b00100111  # Second byte doesn't matter for start
