@@ -290,6 +290,7 @@ def start_fast_scan(gs):
     while isMoveNotFound:
         # First one is compared to local gs
         samState = receive_chess_state()
+        print("startCell before entering if", startCell)
         if startCell is None or startCell == -1:  # Check this OR condition
             startCell = find_start_cell(newGs, samState)
             print("Start Cell Resolved:", startCell)
@@ -304,8 +305,8 @@ def start_fast_scan(gs):
 
             if destCell != -1 and startCell != -1 and destCell == startCell: # User changed move
                 print("User placed piece back. Continue making move.")
-                startCell = -1
-                destCell = -1
+                #startCell = -1
+                #destCell = -1
 
             if destCell != -1 and startCell != -1 and destCell != startCell:
                 # Transmit Stop
