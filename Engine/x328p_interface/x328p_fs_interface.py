@@ -309,9 +309,10 @@ def start_fast_scan(gs):
                 # Transmit Stop
                 isMoveNotFound = False
                 # Serial write stop message to Sam
-                transmission_byte0 = 0b00111000
-                send_to_328p(transmission_byte0, "Stop Fast Scan")
-                return startCell[0] + destCell[0]
+                #transmission_byte0 = 0b00111000
+                #send_to_328p(transmission_byte0, "Stop Fast Scan")
+                #return startCell[0] + destCell[0]
+                print(startCell[0] + destCell[0])
 
         prevSamState = samState.copy()
     return -1
