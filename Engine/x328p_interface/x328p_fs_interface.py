@@ -292,6 +292,7 @@ def start_fast_scan(gs):
         samState = receive_chess_state()
         if startCell is None or startCell == -1:  # Check this OR condition
             startCell = find_start_cell(newGs, samState)
+            print("Start Cell Resolved:", startCell)
             if startCell != -1 and startCell[1][0] != gs.userColor:
                 startCell = -1
         else:
@@ -299,6 +300,7 @@ def start_fast_scan(gs):
             # samState2[7].data = 0b11000101
             destCell = resolve_chess_move_v2(newGs, samState, prevSamState)
             # unsure about a check here
+            print("Dest Cell Resolved:", startCell)
 
             if destCell != -1 and startCell != -1 and destCell == startCell: # User changed move
                 print("User placed piece back. Continue making move.")
@@ -311,8 +313,8 @@ def start_fast_scan(gs):
                 # Serial write stop message to Sam
                 #transmission_byte0 = 0b00111000
                 #send_to_328p(transmission_byte0, "Stop Fast Scan")
-                #return startCell[0] + destCell[0]
-                print(startCell[0] + destCell[0])
+                return startCell[0] + destCell[0]
+                #print(startCell[0] + destCell[0])
 
         prevSamState = samState.copy()
     return -1
