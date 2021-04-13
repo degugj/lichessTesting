@@ -117,7 +117,7 @@ def find_start_cell(gs, messageArray):
 
                 # convert to chess coordinates and concatenate (i.e a2)
                 start_pos = start_cell_letter + str(start_cell_number)
-                return [start_pos, gs[i][c]]
+                return [start_pos, gs[c][i]]
 
     return -1
 
