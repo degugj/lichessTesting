@@ -276,24 +276,27 @@ void FastScan(void) {
 	//MD7 = 0x00;
 	
 	if (MD2 != LD2) {
-		SendData(0x00,MD0);
-		SendData(0x01,MD1);
-		SendData(0x02,MD2);
-		SendData(0x03,MD3);
-		SendData(0x04,MD4);
-		SendData(0x05,MD5);
-		SendData(0x06,MD6);
-		SendData(0x07,MD7);
-		
-		//LD0 = MD0;
-		//LD1 = MD1;
-		LD2 = MD2;
-		//LD3 = MD3;
-		//LD4 = MD4;
-		//LD5 = MD5;
-		//LD6 = MD6;
-		//LD7 = MD7;
-		
+		_delay_ms(250);
+		MD2 = GatherMuxDataB(2);
+		if(MD2 != LD2) {
+			SendData(0x00,MD0);
+			SendData(0x01,MD1);
+			SendData(0x02,MD2);
+			SendData(0x03,MD3);
+			SendData(0x04,MD4);
+			SendData(0x05,MD5);
+			SendData(0x06,MD6);
+			SendData(0x07,MD7);
+			
+			//LD0 = MD0;
+			//LD1 = MD1;
+			LD2 = MD2;
+			//LD3 = MD3;
+			//LD4 = MD4;
+			//LD5 = MD5;
+			//LD6 = MD6;
+			//LD7 = MD7;
+		}		
 	}
 }
 
@@ -315,10 +318,10 @@ int main(void)
 		if (UART_lastRecievedByte == 0b00110000) {
 			while (1) {
 				FastScan();
-				UART_lastRecievedByte = USART_Receive();
-				if (UART_lastRecievedByte == 0b00111000) {
-					break;
-				}
+// 				UART_lastRecievedByte = USART_Receive();
+// 				if (UART_lastRecievedByte == 0b00111000) {
+// 					break;
+// 				}
 			
 			}
 			//FastScan();
