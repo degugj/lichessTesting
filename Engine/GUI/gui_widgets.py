@@ -51,3 +51,16 @@ return: radio button object
 def createRadioButton(window, text, var, value):
     radioButton = tk.Radiobutton(window, text=text, var=var, value=value)
     return radioButton
+
+"""
+Create scrollbar
+"""
+def createScrollbar(window):
+    scrollbar = tk.Scrollbar(window, orient=tk.VERTICAL)
+    return scrollbar
+
+"""
+Create listbox
+"""
+def createListbox(window, width, yscrollcommand):
+    return tk.Listbox(window, width=width, yscrollcommand=yscrollcommand)

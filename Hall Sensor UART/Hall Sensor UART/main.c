@@ -134,7 +134,7 @@ void SetABC(uint8_t row)
 		PORTD |= (1<<A)|(1<<B)|(1<<C);
 		break;
 	}
-	_delay_ms(10);
+	_delay_ms(5);
 
 }
 
@@ -151,7 +151,7 @@ uint8_t GatherMuxDataB(uint8_t Mux)
 		SetABC(i);
 		PINB |= (1<<6);
 		if(bit_is_clear(PINB,Mux)) {
-			_delay_ms(250);
+			_delay_ms(100);
 			if(bit_is_clear(PINB,Mux)) {
 				MuxData |= (1<<i);
 			}
@@ -178,7 +178,7 @@ uint8_t GatherMuxDataC(uint8_t Mux)
 		SetABC(i);
 		PINC |= (1<<6);
 		if(bit_is_clear(PINC,Mux)) {
-			_delay_ms(250);
+			_delay_ms(100);
 			if(bit_is_clear(PINC,Mux)) {
 				MuxData |= (1<<i);
 			}
@@ -201,7 +201,7 @@ uint8_t GatherMuxDataD(uint8_t Mux)
 		SetABC(i);
 		PIND |= (1<<6);
 		if(bit_is_clear(PIND,Mux)) {
-			_delay_ms(250);
+			_delay_ms(100);
 			if(bit_is_clear(PIND,Mux)) {
 				MuxData |= (1<<i);
 			}
@@ -227,10 +227,10 @@ void LEDoff(void) {
 
 void DumpAllData(void) {
 	//MD0 = GatherMuxDataD(0);
-	MD0 = 0x00;
-	MD1 = 0b01000000;
-	//MD1 &= ~(1<<3);
-	MD2 = GatherMuxDataB(2);
+	MD0 = GatherMuxDataD(0);
+	MD1 = GatherMuxDataD(1);
+	MD1 &= ~(1<<3);
+	MD2 = 0b00000000;
 	//MD3 = GatherMuxDataB(3);
 	MD3 = 0x00;
 	//MD4 = GatherMuxDataC(4);
@@ -252,19 +252,20 @@ void DumpAllData(void) {
 }
 
 void FastScan(void) {
-	//LD0 = MD0;
-	//LD1 = MD1;
-	LD2 = MD2;
+	LD0 = MD0;
+	LD1 = MD1;
+	//LD2 = MD2;
 	//LD3 = MD3;
 	//LD4 = MD4;
 	//LD5 = MD5;
 	//LD6 = MD6;
 	//LD7 = MD7;
 	
-	//MD0 = 0x00;
-	//MD1 = 0b01000000;
-	//MD1 &= ~(1<<3);
-	MD2 = GatherMuxDataB(2);
+	MD0 = GatherMuxDataD(0);
+	MD1 = GatherMuxDataD(1);
+	MD1 &= ~(1<<3);
+	//MD2 = GatherMuxDataB(2);
+	//MD2 = 0b01000000;
 	//MD3 = GatherMuxDataB(3);
 	//MD3 = 0x00;
 	//MD4 = GatherMuxDataC(4);
@@ -275,10 +276,13 @@ void FastScan(void) {
 	//MD7 = GatherMuxDataC(7);
 	//MD7 = 0x00;
 	
-	if (MD2 != LD2) {
-		_delay_ms(250);
-		MD2 = GatherMuxDataB(2);
-		if(MD2 != LD2) {
+	if ((MD0 != LD0) | (MD1 != LD1)) {
+		//_delay_ms(100);
+		MD0 = GatherMuxDataD(0);
+		MD1 = GatherMuxDataD(1);
+		MD1 &= ~(1<<3);
+		//MD2 = GatherMuxDataB(2);
+		if((MD0 != LD0) | (MD1 != LD1)) {
 			SendData(0x00,MD0);
 			SendData(0x01,MD1);
 			SendData(0x02,MD2);
@@ -288,9 +292,9 @@ void FastScan(void) {
 			SendData(0x06,MD6);
 			SendData(0x07,MD7);
 			
-			//LD0 = MD0;
-			//LD1 = MD1;
-			LD2 = MD2;
+			LD0 = MD0;
+			LD1 = MD1;
+			//LD2 = MD2;
 			//LD3 = MD3;
 			//LD4 = MD4;
 			//LD5 = MD5;

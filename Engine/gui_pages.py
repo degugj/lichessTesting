@@ -111,21 +111,20 @@ class MainMenuPage(tk.Frame):
         
     def menuButtons(self, controller):
         """ main menu options """
-        playbotButton = widgets.createButton(self, function=lambda: controller.show_frame(PlayBotPage),
-                                             text="Play Bot", bgcolor="sky blue")
-        playbotButton.pack(pady=5)
+        widgets.createButton(self, function=lambda: controller.show_frame(PlayBotPage),
+                                             text="Play Bot", bgcolor="sky blue").pack(pady=5)
         
-        playrandButton = widgets.createButton(self, function=lambda: controller.show_frame(PlayRandomPage),
-                                             text="Seek an Opponent", bgcolor="sky blue")
-        playrandButton.pack(pady=5)
+        # widgets.createButton(self, function=lambda: controller.show_frame(PlayRandomPage),
+        #                                      text="Seek an Opponent", bgcolor="sky blue").pack(pady=5)
         
-        playfriendButton = widgets.createButton(self, function=lambda: controller.show_frame(ChallengePage),
-                                             text="Challenge a Friend", bgcolor="sky blue")
-        playfriendButton.pack(pady=5)
+        widgets.createButton(self, function=lambda: controller.show_frame(ChallengePage),
+                                             text="Challenge a Friend", bgcolor="sky blue").pack(pady=5)
         
-        exitButton = widgets.createButton(self, function=quit_program,
-                                             text="Exit MagiChess", bgcolor="seashell3")
-        exitButton.pack(pady=5)
+        widgets.createButton(self, function=lambda:controller.show_frame(ReplayGamePage),
+                                                     text="Replay a Game", bgcolor="sky blue").pack(pady=5)
+
+        widgets.createButton(self, function=quit_program,
+                                             text="Exit MagiChess", bgcolor="seashell3").pack(pady=5)
         
      
 
@@ -141,7 +140,9 @@ class PlayBotPage(tk.Frame):
         returnButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
                                             text="Return to Main Menu", bgcolor="sky blue")
         returnButton.pack()
-        
+
+
+""" play random page (currently not implemented) """
 class PlayRandomPage(tk.Frame):
     def __init__(self, master, controller):
         tk.Frame.__init__(self, master)
@@ -159,7 +160,8 @@ class PlayRandomPage(tk.Frame):
         """
         
         return
-        
+
+""" challenge opponent page """        
 class ChallengePage(tk.Frame):
     def __init__(self, master, controller):
         tk.Frame.__init__(self, master)
@@ -246,9 +248,90 @@ class ChallengeDeniedPage(tk.Frame):
         header.pack(padx=10, pady=10)
 
         returnButton = widgets.createButton(self, function=lambda: controller.show_frame(ChallengePage),
+                                             text="Return", bgcolor="sky blue")
+        returnButton.pack(pady=10)
+
+
+""" replay game page """
+class ReplayGamePage(tk.Frame):
+    def __init__(self, master, controller):
+        tk.Frame.__init__(self, master)
+        header = widgets.createLabel(self, text="Want to replay a game? Input the Game ID", font="times", fontsize=14, fontweight="bold")
+        header.pack(padx=10, pady=10)
+
+        # game id entry box
+        idEntry = widgets.createEntry(self, bgcolor='beige')
+        idEntry.pack(pady=10)
+
+        widgets.createButton(self, function=lambda: self.replay(controller, idEntry.get()), 
+                            text="Replay with Gameid", bgcolor="sky blue").pack(pady=10)
+        widgets.createButton(self, function=lambda: controller.show_frame(PreviousGamesPage),
+                            text="View your previous games", bgcolor="sky blue").pack(pady=10)
+        
+        returnButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
                                                 text="Return", bgcolor="sky blue")
         returnButton.pack(pady=10)
-"""
+
+    def replay(self, controller, gameid):
+        return
+
+""" list previous games  """
+class PreviousGamesPage(tk.Frame):
+    def __init__(self, master, controller):
+        tk.Frame.__init__(self, master)
+
+        # create frame for scrollbar
+        sb_frame = tk.Frame(self)
+        sb = widgets.createScrollbar(sb_frame)
+        sb_frame.pack()
+
+        # find past 25 games (completed), put them in listbox, and put listbox in scrollbar
+        games = interface.get_all_games()
+        gamelist = widgets.createListbox(sb_frame, width=100, yscrollcommand=sb.set)
+        sb.config(command=gamelist.yview)
+        sb.pack(side='right', fill='y')
+        # make an entry for each game
+        for game in games:
+            # get date and time of game
+            date_object = time.gmtime(int(game['time'])/1000.)
+            date = time.strftime('%m/%d/%Y %H:%M', date_object)
+
+            gamelist.insert('end', game["gameid"]+" ~ White: "+game["white"]+" ~ Black: "+game["black"]+" ~ Date: "+date)
+        gamelist.pack(pady=10)
+
+        widgets.createButton(self, function=lambda: self.replay(controller, gamelist.get(gamelist.curselection())), 
+                            text="Replay your previous game", bgcolor="sky blue").pack(pady=10)
+
+        returnButton = widgets.createButton(self, function=lambda: controller.show_frame(ReplayGamePage),
+                                                text="Return", bgcolor="sky blue")
+        returnButton.pack(pady=10)
+        
+
+    def replay(self, controller, entry):
+        gameid = entry.split(" ~ ")[0]
+        white = entry.split(" ~ ")[1].split(": ")[1]
+        black = entry.split(" ~ ")[2].split(": ")[1]
+        if white == 'degugBot':
+            user_color = 'w'
+            opp_name = black
+        elif black == 'degugBot':
+            user_color = 'b'
+            opp_name = white
+
+        response = interface.create_gamestream(gameid)
+        lines = response.iter_lines()
+        #iterate through the response message
+        for line in lines:
+
+            if line:
+                event = json.loads(line.decode('utf-8'))
+                moves = event["state"]["moves"]
+                print(moves.split(" "))
+        
+        gamestate = gameState.GameState(replay=True, gameQueue=moves.split(" "), replay_user_color=user_color)
+        chessboard.init_chessboard(opp_name, gamestate)
+
+"""   
 -------------------------------
 FUNCTIONS
 -------------------------------
@@ -394,12 +477,13 @@ def quit_program():
 
 def terminate_gamestream():
     global gamestream
-    while not gameQueue.empty():
-        gameQueue.get()
-    gamestream.terminate()
-    gamestream.join()
-    print("TERMINATED GAME STREAM")
-    gamestream = None
+    if gamestream != None:
+        while not gameQueue.empty():
+            gameQueue.get()
+        gamestream.terminate()
+        gamestream.join()
+        print("TERMINATED GAME STREAM")
+        gamestream = None
 
 def terminate_eventstream():
     global eventstream

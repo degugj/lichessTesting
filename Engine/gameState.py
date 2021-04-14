@@ -27,18 +27,21 @@ GameState Class
 -------------------------------
 """
 class GameState():
-    def __init__(self, gameQueue=None):
-
-        # set user color (i.e 'w', 'b')
+    def __init__(self, gameQueue=None, replay=False, replay_user_color=None):
+        
+        # gameQueue = updating game stream queue -> live game
+        #           = list of moves -> replay game
         self.gameQueue = gameQueue
-        # adding this so sam can test without gui (there is no game queue). can remove later
-        if gameQueue is None:
-             self.userColor = 'w'
-        else:
+        self.replay = replay
+        # set user color (i.e 'w', 'b')
+        if not self.replay:
             if self.gameQueue.get()["white"]["id"] == 'degugbot':
                 self.userColor = 'w'
             else:
                 self.userColor = 'b'
+        else:
+            self.userColor = replay_user_color
+            self.moveset = gameQueue
 
         # capture buffer zones
         self.wBuffer = [["--", "--"],
@@ -60,7 +63,8 @@ class GameState():
                         ["--", "--"]]
         # dictionary that maps bishop to row 4, knight to row 5, rook to row 6, and queen to row 7 of buffer zones
         self.bufferMap = {'B':4, 'H':5, 'R':6, 'Q':7, 'K':7}
-        
+        self.defaultBuffer = self.wBuffer
+
         # user is white
         if self.userColor == 'w':
             # letter and number conversion to index self.board
@@ -119,7 +123,6 @@ class GameState():
         self.gameOver = False
 
 
-
     """ get user color """
     def get_usercolor(self):
         if self.userColor == 'w':
@@ -134,10 +137,13 @@ class GameState():
         else:
             return 'white'
 
+    """ set user color """
+    def set_usercolor(self, user_color):
+        self.userColor = user_color
+
     """ get player turn """
     def get_playerturn(self):
         return self.userMove
-
 
     """ find piece on local gamestate from chess coordinates """
     def get_piece_fromboard(self, letter, number):
@@ -351,39 +357,45 @@ class GameState():
     """ handles user/opponent moves and updates gamestate """
     def update_gamestate(self):
 
-        # user's move
-        if self.userMove:
-            move = self.get_usermove()
-
-            if move != "invalid":
-                # make move on local gamestate board
-                self.move_piece(move)
-                self.userMove = False
-                self.message = "Opponent's Turn..."
-
-            return "ok"
-
-        # opponent's move
-        else:
-            # read game stream for opponent event
-            move = self.read_gamestream()
-
-            # move has not been received by opponent
-            if move == "none":
-                return "ok"
-            # move has been received
-            elif len(move) == 4 or len(move) == 5: 
-                self.message = "Opponent move: " + str(move)
-                # move piece on local gamestate board
-                self.move_piece(move)
-                self.userMove = True
-
-                return "ok"
-            # other responses (i.e resgination, checkmate, abort) 
+        if self.replay:
+            if self.replay_move():
+                return 'ok'
             else:
-                if move[0] == "mate":
-                    self.move_piece(move[2])
-                return move
+                return 'replay_over'
+        else:
+            # user's move
+            if self.userMove:
+                move = self.get_usermove()
+
+                if move != "invalid":
+                    # make move on local gamestate board
+                    self.move_piece(move)
+                    self.userMove = False
+                    self.message = "Opponent's Turn..."
+
+                return "ok"
+
+            # opponent's move
+            else:
+                # read game stream for opponent event
+                move = self.read_gamestream()
+
+                # move has not been received by opponent
+                if move == "none":
+                    return "ok"
+                # move has been received
+                elif len(move) == 4 or len(move) == 5: 
+                    self.message = "Opponent move: " + str(move)
+                    # move piece on local gamestate board
+                    self.move_piece(move)
+                    self.userMove = True
+
+                    return "ok"
+                # other responses (i.e resgination, checkmate, abort) 
+                else:
+                    if move[0] == "mate":
+                        self.move_piece(move[2])
+                    return move
 
 
     """ read local game state for user move """
@@ -415,7 +427,7 @@ class GameState():
             return move
         else:
             self.message = response
-            chessboard.display_alert(response)
+            # chessboard.display_alert(response)
             return "invalid"
 
 
@@ -436,7 +448,7 @@ class GameState():
                 # check for abort
                 if event["status"] == "abort":
                     self.gameOver = True
-                    return "abort"
+                    return 'abort'
 
                 # handles first turn
                 if self.firstTurn:
@@ -475,10 +487,28 @@ class GameState():
         except:
             return "none"
 
+    """ replaying a game """
+    def replay_move(self):
+        try:
+            move = self.moveset[self.turn]
+            time.sleep(3)
+            self.move_piece(move)
+            return 1
+        except IndexError:
+            self.gameOver = True
+            self.message = "Replay Over"
+            return 0
 
     """ reset board to original state """ 
     def reset(self):
         self.board = self.defaultState
+        self.wBuffer = self.defaultBuffer
+        self.bBuffer = self.defaultBuffer
+        self.turns = 0
+        self.coloredCells = [(-1, -1), (-1, -1)]
+        self.gameover = False
+        self.message = ""
+        self.previousMovesEvent = None
 
     """ print board """
     def __str__(self):
