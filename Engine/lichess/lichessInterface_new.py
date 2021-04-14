@@ -5,6 +5,8 @@ IMPORTS
 """
 import requests, time, json, os
 
+#import settings
+
 from Engine.lichess import settings
 from Engine import chessboard
 
@@ -53,10 +55,10 @@ def create_eventstream():
 		gameEventsQueue
 	return:
 """
-def create_gamestream():
-	gameid = open('gameid.txt', 'r')
-	response = requests.get('https://lichess.org/api/board/game/stream/{}'.format(gameid.read()), headers={'Authorization': 'Bearer {}'.format(api_key)}, stream=True)
-	gameid.close()
+def create_gamestream(gameid=""):
+	if gameid == "":
+		gameid = open('gameid.txt', 'r').read()
+	response = requests.get('https://lichess.org/api/board/game/stream/{}'.format(gameid), headers={'Authorization': 'Bearer {}'.format(api_key)}, stream=True)
 	return response
 			
 
@@ -78,7 +80,8 @@ def challenge_user(username, **kwargs):
 	    'color': kwargs["color"],
 	}
 	try:
-		r = requests.post('https://lichess.org/api/challenge/' + username, json=configurations, headers={'Authorization': 'Bearer {}'.format(api_key)})
+		r = requests.post('https://lichess.org/api/challenge/' + username, json=configurations, 
+						headers={'Authorization': 'Bearer {}'.format(api_key)})
 		# check for successful challenge response
 
 		if r.status_code == 200:
@@ -117,7 +120,6 @@ def create_seek():
 	return
 
 
-
 """ make_move: request to make move to lichess server
 	params:
 	return:
@@ -135,6 +137,44 @@ def make_move(move):
 			return r.content
 	except:
 		pass
+
+
+""" 
+"""
+def get_ongoing_games():
+	r = requests.get('https://lichess.org/api/account/playing', headers={'Authorization': 'Bearer {}'.format(api_key)})
+	lines = r.iter_lines()
+    
+	#iterate through the response message
+	for line in lines:
+
+	    if line:
+	        event = json.loads(line.decode('utf-8'))
+	        print(event['nowPlaying'], len(event['nowPlaying']))
+
+
+"""
+get all previously played games by user
+params:
+return:
+	games - array of games with 
+"""
+def get_all_games():
+	games = []
+	r = requests.get('https://lichess.org/api/games/user/{username}'.format(username='degugBot'), params={'max': 25},
+					 headers={'Accept': 'application/x-ndjson', 'Authorization': 'Bearer {}'.format(api_key)})
+	lines = r.iter_lines()
+	for line in lines:
+		event = json.loads(line.decode('utf-8'))
+		
+		gameid = event['id']
+		creationTime = event['createdAt']
+		white = event['players']['white']['user']['name']
+		black = event['players']['black']['user']['name']
+
+		games.append({'gameid':gameid, 'time':creationTime, 'white':white, 'black':black})
+
+	return games		
 
 
 """ game_over: either abort or resign
@@ -160,7 +200,6 @@ def gameover(option, screen):
 		return 1
 
 	except:
-		chessboard.display_alert(screen, "Error sending request message to LiChess server")
 		return 0
 
 

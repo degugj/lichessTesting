@@ -45,7 +45,7 @@ class MainApp(tk.Tk):
         self.frames = {}
         
         for F in (pages.StartupPage, pages.SigninPage, pages.MainMenuPage, pages.PlayBotPage, pages.PlayRandomPage,
-                  pages.ChallengePage, pages.ChallengeDeniedPage):
+                  pages.ChallengePage, pages.ChallengeDeniedPage, pages.ReplayGamePage, pages.PreviousGamesPage):
             
             #create startup page frame and update frame dictionary
             frame = F(container, self)

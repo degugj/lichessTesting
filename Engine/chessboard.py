@@ -72,23 +72,28 @@ def init_chessboard(challengerName, gamestate):
     screen.fill(pg.Color("white"))
     clock = pg.time.Clock()
     
+    replay = gamestate.replay
+
     # load chesspiece images into dictionary
     load_images()
 
     # on-screen text
     draw_gametext(screen, challengerName, gamestate)
 
-    # draw section for alerts
-    # color = pg.Color("light grey")
-    # pg.draw.rect(screen, color, pg.Rect(alertwindowCoords[0], alertwindowCoords[1], CB_WIDTH, cellSize+30))
-
+    # draw buttons
+    draw_userbuttons(screen, replay)
+    
     audio.sound_gamestart()
 
     # always run until quit event
     run = draw = True
-    while run:
 
-        # check pygame events (ex. close window, mouse click)
+    # up_gs_process = mp.Process(target=updating_gamestate, args=(gamestate,))
+    # up_gs_process.start()
+    # print("updating gs PID: ", up_gs_process.pid)
+    
+    while run:        
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 run = False
@@ -96,30 +101,31 @@ def init_chessboard(challengerName, gamestate):
 
             # check for mouse click event
             elif event.type == pg.MOUSEBUTTONDOWN:
-                print("mouse button pressed")
+                print("button pressed")
                 # get position of mouse, and check if hovering button
                 mouse = pg.mouse.get_pos()
                 # check if mouse hovering button
                 button = check_buttons(screen, mouse, gamestate)
-                if button == "resign":
+                if button == "resign" and not replay:
                     # user has resigned the game
                     if gameover(("resign", gamestate.get_opponentcolor()), gamestate):
                         draw = False
                         run = False
                         time.sleep(3)
                         break
-                if button == "abort":
+                if button == "abort" and not replay:
                     # user has aborted the game
                     if gameover(("abort", gamestate.get_opponentcolor()), gamestate):
                         draw = False
                         run = False
                         time.sleep(3)
                         break
+                if button == "quit":
+                    draw = False
+                    run = False
+
 
         if draw:
-
-            # draw buttons
-            draw_userbuttons(screen, gamestate.turn)
 
             # draw chessboard, buffer zones, pieces
             draw_gamestate(screen, gamestate)
@@ -136,8 +142,8 @@ def init_chessboard(challengerName, gamestate):
             if gamestateUpdate != 'ok':
                 draw_gamestate(screen, gamestate)
                 gameover(gamestateUpdate, gamestate)
-                time.sleep(3)
-                run = False
+
+                draw = False
 
     # terminate gamestream
     pages.terminate_gamestream()
@@ -212,20 +218,24 @@ def display_text(screen, message, color, size, x, y):
     params: screen
     return:
 """
-def draw_userbuttons(screen, turn):
-    # resign button
-    draw_button(screen, pg.Color("grey"), resignbuttonCoords[0], resignbuttonCoords[1], 
-                    cellSize*2, cellSize//2, "Resign Game")
-    if turn < 2:
+def draw_userbuttons(screen, replay):
+    
+    # pg.draw.rect(screen, pg.Color("white"), pg.Rect(abortbuttonCoords[0], abortbuttonCoords[1], 
+    #                 cellSize*2, cellSize//2))
+
+    if replay:
+        # quit button
+        draw_button(screen, pg.Color("red"), abortbuttonCoords[0], abortbuttonCoords[1], 
+                    cellSize*2, cellSize//2, "Exit")
+    else:
+        # resign button
+        draw_button(screen, pg.Color("grey"), resignbuttonCoords[0], resignbuttonCoords[1], 
+                        cellSize*2, cellSize//2, "Resign Game")
         # abort button
         draw_button(screen, pg.Color("red"), abortbuttonCoords[0], abortbuttonCoords[1], 
                         cellSize*2, cellSize//2, "Abort Game")
-    elif turn == 2:
-        pg.draw.rect(screen, pg.Color("white"), pg.Rect(abortbuttonCoords[0], abortbuttonCoords[1], 
-                        cellSize*2, cellSize//2))
 
     return
-
 
 
 """ draw_button: create a button
@@ -256,19 +266,15 @@ def remove_button(screen, x, y, length, height):
 """
 def check_buttons(screen, mouse, gamestate):
     # check if button hovering resign game button
-    if resignbuttonCoords[0] < mouse[0] < (resignbuttonCoords[0] + cellSize*2) and resignbuttonCoords[1] < mouse[1] < (resignbuttonCoords[1]) + cellSize//2:
-        # change button color if pressed
-        draw_button(screen, pg.Color("grey"), resignbuttonCoords[0], resignbuttonCoords[1], 
-                    cellSize*2, cellSize//2, "Resign Game")
-        time.sleep(0.5)
-        return "resign"
-    # check if button hovering is abort button
-    if gamestate.turn < 2 and abortbuttonCoords[0] < mouse[0] < (abortbuttonCoords[0] + cellSize*2) and abortbuttonCoords[1] < mouse[1] < (abortbuttonCoords[1] + cellSize//2):
-        # change button color if pressed
-        draw_button(screen, pg.Color("grey"), abortbuttonCoords[0], abortbuttonCoords[1], 
-                    cellSize*2, cellSize//2, "Abort Game")
-        time.sleep(0.5)
-        return "abort"
+    if not gamestate.replay:
+        if resignbuttonCoords[0] < mouse[0] < (resignbuttonCoords[0] + cellSize*2) and resignbuttonCoords[1] < mouse[1] < (resignbuttonCoords[1]) + cellSize//2:
+            return "resign"
+        # check if button hovering is abort button
+        if gamestate.turn < 2 and abortbuttonCoords[0] < mouse[0] < (abortbuttonCoords[0] + cellSize*2) and abortbuttonCoords[1] < mouse[1] < (abortbuttonCoords[1] + cellSize//2):
+            return "abort"
+    elif abortbuttonCoords[0] < mouse[0] < (abortbuttonCoords[0]+cellSize*2) and abortbuttonCoords[1] < mouse[1] < (abortbuttonCoords[1] + cellSize//2):
+        return "quit"
+
 
 
 """ display_alert: display alert text in alerts window
@@ -409,9 +415,14 @@ def gameover(reason, gamestate):
             gamestate.message = "GAME OVER! The opponent has won by checkmate!"
 
 
-    display_alert(gamestate.message)
+    # display_alert(gamestate.message)
 
-
+"""
+updating and drawing gamestate on screen
+"""
+def updating_gamestate(gamestate):
+    return
+    
 # quit pygame module
 def terminate_pygame():
     pg.quit()
