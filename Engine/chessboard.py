@@ -376,8 +376,11 @@ def draw_pieces(screen, gamestate):
     return:
 """
 def gameover(reason, gamestate):
+    
+    if reason == 'replay_over':
+        pass
     # user has won
-    if reason[1] == gamestate.get_usercolor():
+    elif reason[1] == gamestate.get_usercolor():
         # play victory tone
         audio.sound_victory()
         # opponent has resigned
@@ -415,7 +418,7 @@ def gameover(reason, gamestate):
             gamestate.message = "GAME OVER! The opponent has won by checkmate!"
 
 
-    # display_alert(gamestate.message)
+    display_alert(gamestate.message)
 
 """
 updating and drawing gamestate on screen

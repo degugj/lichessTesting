@@ -358,8 +358,10 @@ class GameState():
     def update_gamestate(self):
 
         if self.replay:
-            self.replay_move()
-            return 'ok'
+            if self.replay_move():
+                return 'ok'
+            else:
+                return 'replay_over'
         else:
             # user's move
             if self.userMove:
@@ -446,7 +448,7 @@ class GameState():
                 # check for abort
                 if event["status"] == "abort":
                     self.gameOver = True
-                    return "abort"
+                    return 'abort'
 
                 # handles first turn
                 if self.firstTurn:
@@ -487,10 +489,15 @@ class GameState():
 
     """ replaying a game """
     def replay_move(self):
-        move = self.moveset[self.turn]
-        time.sleep(3)
-        self.move_piece(move)
-
+        try:
+            move = self.moveset[self.turn]
+            time.sleep(3)
+            self.move_piece(move)
+            return 1
+        except IndexError:
+            self.gameOver = True
+            self.message = "Replay Over"
+            return 0
 
     """ reset board to original state """ 
     def reset(self):
