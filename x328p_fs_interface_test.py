@@ -10,19 +10,19 @@ import time
 
 currentGamestate = gs()  # Instantiate test gamestate
 
-#print(currentGamestate.board)
+# print(currentGamestate.board)
 # Reset the board to no pieces (as Sam has no pieces)
-# for indexR, row in enumerate(currentGamestate.board):
-#     for indexC, item in enumerate(row):
-#         currentGamestate.board[indexR][indexC] = '--'
-#         if indexR == 6 and indexC == 0:
-#             currentGamestate.board[indexR][indexC] = 'wP'
-#         if indexR == 6 and indexC == 1:
-#             currentGamestate.board[indexR][indexC] = 'wP'
-#         #if indexR == 6 and indexC == 2:
-#         #    currentGamestate.board[indexR][indexC] = 'wP'
-# print("Initial State:")
-# print(np.array(currentGamestate.board))
+for indexR, row in enumerate(currentGamestate.board):
+    for indexC, item in enumerate(row):
+        currentGamestate.board[indexR][indexC] = '--'
+        if indexR == 6 and indexC == 0:
+            currentGamestate.board[indexR][indexC] = 'wP'
+        if indexR == 6 and indexC == 1:
+            currentGamestate.board[indexR][indexC] = 'wP'
+        #if indexR == 6 and indexC == 2:
+        #    currentGamestate.board[indexR][indexC] = 'wP'
+print("Initial State:")
+print(np.array(currentGamestate.board))
 
 #interface.get_column(currentGamestate, 'a')
 
