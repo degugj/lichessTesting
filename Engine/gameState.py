@@ -34,14 +34,17 @@ class GameState():
         self.gameQueue = gameQueue
         self.replay = replay
         # set user color (i.e 'w', 'b')
-        if not self.replay:
-            if self.gameQueue.get()["white"]["id"] == 'degugbot':
-                self.userColor = 'w'
-            else:
-                self.userColor = 'b'
+        if gameQueue is None: # Need this to test without gamequeue
+            self.userColor = 'w'
         else:
-            self.userColor = replay_user_color
-            self.moveset = gameQueue
+            if not self.replay:
+                if self.gameQueue.get()["white"]["id"] == 'degugbot':
+                    self.userColor = 'w'
+                else:
+                    self.userColor = 'b'
+            else:
+                self.userColor = replay_user_color
+                self.moveset = gameQueue
 
         # capture buffer zones
         self.wBuffer = [["--", "--"],
