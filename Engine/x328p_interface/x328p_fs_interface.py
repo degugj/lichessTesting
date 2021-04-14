@@ -4,8 +4,8 @@
 import numpy as np
 from datetime import datetime
 import time
-#import serial
-#ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
+import serial
+ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 letterToColumn = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5,'g': 6,'h': 7}  # To translate cell to posMap location
 columnToLetter = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
 message_types = {0b00000 : 'N/A', 0b00001: 'Piece Picked Up', 0b00010: 'Piece Put Down', 0b01011: 'Invalid I2C Command'}
@@ -117,7 +117,7 @@ def find_start_cell(gs, messageArray):
 
                 # convert to chess coordinates and concatenate (i.e a2)
                 start_pos = start_cell_letter + str(start_cell_number)
-                return [start_pos, gs[c][i]]
+                return [start_pos, gs[i][c]]
 
     return -1
 
