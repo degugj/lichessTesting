@@ -33,6 +33,11 @@ class gamestateMessage():
         line2 = "- Type: "+ format(self.typ, '#010b') + " | Column: " + str(self.col) +" (" + columnToLetter[self.col] + ") | Data: " + format(self.data, "#010b")+ " -\n"
         return (line1+'\n'+line2)
 
+    def equals(self, nextMessage):
+        if self.typ == nextMessage.typ and self.data == nextMessage.data and self.col == nextMessage.col:
+            return True
+        return False
+
     # return chess cell indicated by col integer
     """
     def return_chess_cell(self):
@@ -88,8 +93,78 @@ def resolve_chess_move(gs, messageArray):
                 dest_found = True
     return start_pos + dest_pos
 
-        # print(bin(column_to_byte(column)))
-        # print(bin(messageArray[c].data))
+
+def find_start_cell(gs, messageArray):
+    start_pos = ""
+
+    # loop through each column
+    for c in range(len(gs)):
+        # convert column to byte form to compare with fast scan byte (i.e 0b11000011)
+        column = column_to_byte(get_column_byIndex(gs, c))
+        # print("column:",column)
+        fs_column = messageArray[c].data
+        # print("fs_column:",bin(fs_column))
+        # loop through each cell of column
+        for i in range(len(gs)):
+            # bit shift to find value of current cell
+            cell = (column >> i) & 1
+            cell_fs = (fs_column >> i) & 1
+
+            # check for start location; once found, turn bool off
+            if cell_fs == 0 and cell == 1:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                start_pos = start_cell_letter + str(start_cell_number)
+                return [start_pos, gs[c][i]]
+
+    return -1
+
+def resolve_chess_move_v2(gs, statePrev, stateNext):
+    # print("Resolving Move...")
+    # print("GS: ", gs)
+    # print("Sam's Message Array:", messageArray)
+    if compare_message_lists(statePrev, stateNext):
+        print("Same state transmitted")
+        return 1
+
+    cell = ""
+
+    # loop through each column
+    for c in range(8):
+        fs_columnPrev = statePrev[c].data
+        fs_columnNext = stateNext[c].data
+        # print("fs_column:",bin(fs_column))
+        # loop through each cell of column
+        for i in range(8):
+            # bit shift to find value of current cell
+            cellBitPrev = (fs_columnPrev >> i) & 1
+            cellBitNext = (fs_columnNext >> i) & 1
+
+            # check for start location; once found, turn bool off
+            if cellBitPrev == 0 and cellBitNext == 1:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                cell = start_cell_letter + str(start_cell_number)
+                return [cell, gs[i][c]]
+
+            elif cellBitPrev == 1 and cellBitNext == 0:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                cell = start_cell_letter + str(start_cell_number)
+                return [cell, gs[i][c]]
+    return -1
+
+def compare_message_lists(stateA, stateB):
+    for i in range(8):
+        if not stateA[i].equals(stateB[i]):
+            return False
+    return True
 
 def compare_chess_states(gs, messageArray):
     #print("GS: ", gs)
@@ -200,26 +275,52 @@ def send_to_328p(data, messageType):
 
 def start_fast_scan(gs):
     newGs = np.array(gs.board)
-
+    print("newGs",newGs)
     # Serial write start message to Sam
     transmission_byte0 = 0b00110000
     transmission_byte1 = 0b00100111  # Second byte doesn't matter for start
     send_to_328p(transmission_byte0, "Start Fast Scan")
     # Transmit again
-    samStateA = receive_chess_state() # Lift off
-    samStateB = receive_chess_state() # Placement
-    if(samStateA != -1 and samStateB != -1):
-        # Finesse for testing the move resolution
-        # samState2[7].data = 0b11000101
-        move = resolve_chess_move(newGs, samStateB)
-        if move == '':
-            # add a length check if we only get one cell resolved
-            print("No move detected/resolved")
-            return -1
-        return move
-    else:
-        print("Error resolving move/start FS function")
-        return -1
+
+    isMoveNotFound = True
+    samState = None
+    prevSamState = None
+    startCell = None
+    destCell = None
+    while isMoveNotFound:
+        # First one is compared to local gs
+        samState = receive_chess_state()
+        print("startCell before entering if", startCell)
+        if startCell is None or startCell == -1:  # Check this OR condition
+            startCell = find_start_cell(newGs, samState)
+            print("Start Cell Resolved:", startCell)
+            if startCell != -1 and startCell[1][0] != gs.userColor:
+                print("setting start cell to -1", gs.userColor, startCell)
+                startCell = -1
+        else:
+            # Finesse for testing the move resolution
+            # samState2[7].data = 0b11000101
+            destCell = resolve_chess_move_v2(newGs, samState, prevSamState)
+            # unsure about a check here
+            print("Dest Cell Resolved:", startCell)
+
+            if destCell != -1 and startCell != -1 and destCell == startCell: # User changed move
+                print("User placed piece back. Continue making move.")
+                #startCell = -1
+                #destCell = -1
+
+            if destCell != -1 and startCell != -1 and destCell != startCell:
+                # Transmit Stop
+                isMoveNotFound = False
+                # Serial write stop message to Sam
+                #transmission_byte0 = 0b00111000
+                #send_to_328p(transmission_byte0, "Stop Fast Scan")
+                return startCell[0] + destCell[0]
+                #print(startCell[0] + destCell[0])
+
+        prevSamState = samState.copy()
+    return -1
+
 
     #move = resolve_chess_move(newGs, samState)
     #print("Resolved Move:", move)
@@ -241,6 +342,7 @@ def start_fast_scan(gs):
 
     # return move
     return 0
+
 
 def stop_fast_scan():
     return 0
