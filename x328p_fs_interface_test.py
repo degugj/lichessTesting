@@ -10,7 +10,7 @@ import time
 
 currentGamestate = gs()  # Instantiate test gamestate
 
-#print(currentGamestate.board)
+# print(currentGamestate.board)
 # Reset the board to no pieces (as Sam has no pieces)
 for indexR, row in enumerate(currentGamestate.board):
     for indexC, item in enumerate(row):
@@ -56,22 +56,21 @@ while True:
 
 
 
-""""
-messageNo1Init = interface.gamestateMessage(0b00001, 0b000, 0b11000011) # a2a3
-messageNo2Init = interface.gamestateMessage(0b00010, 0b001, 0b11000001)
-messageNo3Init = interface.gamestateMessage(0b00011, 0b010, 0b11000011)
-messageNo4Init = interface.gamestateMessage(0b00100, 0b011, 0b11000011)
-messageNo5Init = interface.gamestateMessage(0b00101, 0b100, 0b11010011)
-messageNo6Init = interface.gamestateMessage(0b00110, 0b101, 0b11000011)
-messageNo7Init = interface.gamestateMessage(0b00111, 0b110, 0b11000011)
-messageNo8Init = interface.gamestateMessage(0b01000, 0b111, 0b11000011)
 
-samState = [messageNo1Init, messageNo2Init, messageNo3Init, messageNo4Init,
-            messageNo5Init, messageNo6Init, messageNo7Init, messageNo8Init]
-newGs = np.array(currentGamestate.board)
-
-=======
+# messageNo1Init = interface.gamestateMessage(0b00001, 0b000, 0b11000011) # a2a3
+# messageNo2Init = interface.gamestateMessage(0b00010, 0b001, 0b11000001)
+# messageNo3Init = interface.gamestateMessage(0b00011, 0b010, 0b11000011)
+# messageNo4Init = interface.gamestateMessage(0b00100, 0b011, 0b11000011)
+# messageNo5Init = interface.gamestateMessage(0b00101, 0b100, 0b11010011)
+# messageNo6Init = interface.gamestateMessage(0b00110, 0b101, 0b11000011)
+# messageNo7Init = interface.gamestateMessage(0b00111, 0b110, 0b11000011)
+# messageNo8Init = interface.gamestateMessage(0b01000, 0b111, 0b11000011)
 #
+# samState = [messageNo1Init, messageNo2Init, messageNo3Init, messageNo4Init,
+#             messageNo5Init, messageNo6Init, messageNo7Init, messageNo8Init]
+# newGs = np.array(currentGamestate.board)
+
+
 # messageNo1Init = interface.gamestateMessage(0b00001, 0b000, 0b11000011)
 # messageNo2Init = interface.gamestateMessage(0b00010, 0b001, 0b11000011)
 # messageNo3Init = interface.gamestateMessage(0b00011, 0b010, 0b11000011)
@@ -164,13 +163,12 @@ newGs = np.array(currentGamestate.board)
 #             print("Move:",startCell[0] + destCell[0])
 #
 #     prevSamState = samState.copy()
-#
-
-#print("Rev2 Move:", move)
 
 
 
->>>>>>> Stashed changes
+
+
+# >>>>>>> Stashed changes
 #move = interface.resolve_chess_move(newGs, samState)
 #print("Resolved Move:",move)
 #interface.compare_chess_states(newGs, samState)
@@ -198,4 +196,4 @@ newGs = np.array(currentGamestate.board)
 # messageNo12 = gamestateMessage(0b01100, 0b111, 0b10000000)
 
 
-"""
+
