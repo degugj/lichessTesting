@@ -185,7 +185,7 @@ def compare_chess_states(gs, messageArray):
         if(column_to_byte(column) != messageArray[message.col].data):
             print("Incongruent gamestates")
             return -1
-    print("Verified Congruent Gamestates")
+    #print("Verified Congruent Gamestates")
     return 0
 
 def return_message_dict(two_byte_message):
@@ -238,7 +238,7 @@ def recv_from_328p(timeout):
 """
 
 def receive_chess_state():
-    print("Waiting for Sam's Chess State...")
+    #print("Waiting for Sam's Chess State...")
     samState = []
     while True:
         # Serial receive 2 bytes from Sam

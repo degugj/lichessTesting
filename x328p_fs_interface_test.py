@@ -30,12 +30,12 @@ checkStatus = interface.initial_error_check(currentGamestate)
 if checkStatus == 0:
     while True:
             move = interface.start_fast_scan(currentGamestate)
-            print("Move resolved from Sam's subsystem:", move)
+            print("\nMove resolved from Sam's subsystem:", move)
             if move == -1:
                 break
             currentGamestate.move_piece(move)
-            print("State after sensed physical move\n")
-            print(currentGamestate.board)
+            print("State after sensed physical move")
+            print(np.array(currentGamestate.board))
 """"
 while True:
     checkStatus = interface.initial_error_check(currentGamestate)
