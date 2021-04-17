@@ -118,6 +118,8 @@ def find_start_cell(gs, messageArray):
 
                 # convert to chess coordinates and concatenate (i.e a2)
                 start_pos = start_cell_letter + str(start_cell_number)
+                print("Column before:", gs[c-1])
+                print("Column after:", gs[c + 1])
                 print("GS[c]:",gs[c])
                 print("cell at:",gs[c][7-i])
                 print("cell before:", gs[c][6 - i])
