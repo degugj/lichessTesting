@@ -295,17 +295,21 @@ def start_fast_scan(gs):
     prevSamState = None
     startCell = None
     destCell = None
+    isOpponentLifted = False
     while isMoveNotFound:
         # First one is compared to local gs
         samState = receive_chess_state()
         #print("startCell before entering if", startCell)
         if startCell is None or startCell == -1:  # Check this OR condition
-            startCell = find_start_cell(newGs, samState)
+            if not isOpponentLifted:
+                startCell = find_start_cell(newGs, samState)
+            else:
+                startCell = resolve_chess_move_v2(newGs, prevSamState, samState)
             #print("Start Cell Resolved:", startCell)
             if startCell != -1 and startCell[1][0] != gs.userColor:
                 print("User has lifted opponent's piece. Start Cell has not been resolved.", startCell)
                 samState2 = receive_chess_state()
-                startCell = resolve_chess_move_v2(gs, samState, samState2)
+
             else:
                 startCell = -1
         else:
