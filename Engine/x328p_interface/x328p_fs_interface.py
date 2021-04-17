@@ -310,7 +310,7 @@ def start_fast_scan(gs):
             # samState2[7].data = 0b11000101
             destCell = resolve_chess_move_v2(newGs, samState, prevSamState)
             # unsure about a check here
-            print("Dest Cell Resolved:", startCell)
+            print("Dest Cell Resolved:", destCell)
 
             if destCell != -1 and startCell != -1 and destCell == startCell: # User changed move
                 print("User placed piece back. Continue making move.")
