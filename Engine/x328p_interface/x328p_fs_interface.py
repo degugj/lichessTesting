@@ -197,6 +197,7 @@ def resolve_chess_move_v3(gs, statePrev, stateNext):
 
                 # convert to chess coordinates and concatenate (i.e a2)
                 cell = start_cell_letter + str(start_cell_number)
+                print(gs[7-i])
                 return [cell, gs[7-i][c]]
 
             elif cellBitPrev == 1 and cellBitNext == 0:
