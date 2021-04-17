@@ -158,7 +158,7 @@ def resolve_chess_move_v2(gs, statePrev, stateNext):
 
                 # convert to chess coordinates and concatenate (i.e a2)
                 cell = start_cell_letter + str(start_cell_number)
-                return [cell, gs[c][7-1]]
+                return [cell, gs[c][7-i]]
 
             elif cellBitPrev == 1 and cellBitNext == 0:
                 start_cell_letter = columnToLetter[c]
@@ -168,6 +168,8 @@ def resolve_chess_move_v2(gs, statePrev, stateNext):
                 cell = start_cell_letter + str(start_cell_number)
                 return [cell, gs[c][7-i]]
     return -1
+
+
 
 def compare_message_lists(stateA, stateB):
     for i in range(8):
