@@ -354,9 +354,6 @@ def start_fast_scan(gs):
                 #samState2 = receive_chess_state()
                 startCell = -1
                 isOpponentLifted = True
-
-            else:
-                startCell = -1
         else:
             # Finesse for testing the move resolution
             # samState2[7].data = 0b11000101
