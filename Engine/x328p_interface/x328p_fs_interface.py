@@ -169,6 +169,45 @@ def resolve_chess_move_v2(gs, statePrev, stateNext):
                 return [cell, gs[c][7-i]]
     return -1
 
+def resolve_chess_move_v3(gs, statePrev, stateNext):
+    # print("Resolving Move...")
+    # print("GS: ", gs)
+    # print("Sam's Message Array:", messageArray)
+    if compare_message_lists(statePrev, stateNext):
+        print("Same state transmitted")
+        return 1
+
+    cell = ""
+
+    # loop through each column
+    for c in range(8):
+        fs_columnPrev = statePrev[c].data
+        fs_columnNext = stateNext[c].data
+        # print("fs_column:",bin(fs_column))
+        # loop through each cell of column
+        for i in range(8):
+            # bit shift to find value of current cell
+            cellBitPrev = (fs_columnPrev >> i) & 1
+            cellBitNext = (fs_columnNext >> i) & 1
+
+            # check for start location; once found, turn bool off
+            if cellBitPrev == 0 and cellBitNext == 1:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                cell = start_cell_letter + str(start_cell_number)
+                return [cell, gs[7-i][c]]
+
+            elif cellBitPrev == 1 and cellBitNext == 0:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                cell = start_cell_letter + str(start_cell_number)
+                return [cell, gs[7-i][c]]
+    return -1
+
 
 
 def compare_message_lists(stateA, stateB):
@@ -306,7 +345,7 @@ def start_fast_scan(gs):
             if not isOpponentLifted:
                 startCell = find_start_cell(newGs, samState)
             else:
-                startCell = resolve_chess_move_v2(newGs, prevSamState, samState)
+                startCell = resolve_chess_move_v3(newGs, prevSamState, samState)
             #print("Start Cell Resolved:", startCell)
             if startCell != -1 and startCell[1][0] != gs.userColor:
                 print("User has lifted opponent's piece. Start Cell has not been resolved.", startCell)
