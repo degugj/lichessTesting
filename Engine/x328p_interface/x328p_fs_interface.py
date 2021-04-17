@@ -101,9 +101,10 @@ def find_start_cell(gs, messageArray):
     for c in range(len(gs)):
         # convert column to byte form to compare with fast scan byte (i.e 0b11000011)
         column = column_to_byte(get_column_byIndex(gs, c))
+        print("init column:", bin(column))
         # print("column:",column)
         fs_column = messageArray[c].data
-        # print("fs_column:",bin(fs_column))
+        print("fs_column:",bin(fs_column))
         # loop through each cell of column
         for i in range(len(gs)):
             # bit shift to find value of current cell
