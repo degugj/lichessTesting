@@ -346,7 +346,7 @@ def start_fast_scan(gs):
                 startCell = find_start_cell(newGs, samState)
             else:
                 startCell = resolve_chess_move_v3(newGs, prevSamState, samState)
-            #print("Start Cell Resolved:", startCell)
+            print("Start Cell Resolved:", startCell)
             if startCell != -1 and startCell[1][0] != gs.userColor:
                 print("User has lifted opponent's piece. Start Cell has not been resolved.", startCell)
                 newGs[5][4] = '--'
