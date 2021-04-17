@@ -182,8 +182,7 @@ def compare_chess_states(gs, messageArray):
         column = get_column_byIndex(gs, message.col)
         #print(column)
         #print(column_to_byte(column))
-        if(column_to_byte(column) != messageArray[message.col].data):
-            #print("Incongruent gamestates")
+        if(column_to_byte(column) != messageArray[message.col].daprint("Incongruent gamestates")
             return -1
     #print("Verified Congruent Gamestates")
     return 0
@@ -312,20 +311,20 @@ def start_fast_scan(gs):
             destCell = resolve_chess_move_v2(newGs, samState, prevSamState)
             # unsure about a check here
             #print("Dest Cell Resolved:", destCell)
+            if destCell != -1:
+                if startCell[0] != -1 and destCell[0] == startCell[0]: # User changed move
+                    print("User placed piece back. Continue making move.")
+                    #startCell = -1
+                    #destCell = -1
 
-            if destCell != -1 and startCell != -1 and destCell == startCell: # User changed move
-                print("User placed piece back. Continue making move.")
-                #startCell = -1
-                #destCell = -1
-
-            if destCell != -1 and startCell != -1 and destCell != startCell:
-                # Transmit Stop
-                isMoveNotFound = False
-                # Serial write stop message to Sam
-                #transmission_byte0 = 0b00111000
-                #send_to_328p(transmission_byte0, "Stop Fast Scan")
-                return startCell[0] + destCell[0]
-                #print(startCell[0] + destCell[0])
+                if startCell != -1 and destCell[0] != startCell[0]:
+                    # Transmit Stop
+                    isMoveNotFound = False
+                    # Serial write stop message to Sam
+                    #transmission_byte0 = 0b00111000
+                    #send_to_328p(transmission_byte0, "Stop Fast Scan")
+                    return startCell[0] + destCell[0]
+                    #print(startCell[0] + destCell[0])
 
         prevSamState = samState.copy()
     return -1
