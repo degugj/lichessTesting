@@ -363,7 +363,6 @@ def print_posMap(map, path=None):
 
 
 
-
 # External function used to interface with GUI and game execution. Takes current gamestate and string move (ie 'e4e5')
 def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     # TODO Extract and interpret move as start and end pos
@@ -403,3 +402,8 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     #    make_physical_move(gamestate, move, startOverride, destOveride)
 
     return 0
+
+def transmit_uart_sim():
+    while True:
+        time.sleep(.03)
+        send_to_328p(0x91)
