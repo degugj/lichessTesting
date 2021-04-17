@@ -152,7 +152,7 @@ def resolve_chess_move_v2(gs, statePrev, stateNext):
 
                 # convert to chess coordinates and concatenate (i.e a2)
                 cell = start_cell_letter + str(start_cell_number)
-                return [cell, gs[i][c]]
+                return [cell, gs[c][7-1]]
 
             elif cellBitPrev == 1 and cellBitNext == 0:
                 start_cell_letter = columnToLetter[c]
