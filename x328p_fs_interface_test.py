@@ -34,6 +34,8 @@ if checkStatus == 0:
             if move == -1:
                 break
             currentGamestate.move_piece(move)
+            print("State after sensed physical move\n")
+            print(currentGamestate.board)
 """"
 while True:
     checkStatus = interface.initial_error_check(currentGamestate)

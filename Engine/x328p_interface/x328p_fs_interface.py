@@ -101,14 +101,14 @@ def find_start_cell(gs, messageArray):
     for c in range(len(gs)):
         # convert column to byte form to compare with fast scan byte (i.e 0b11000011)
         column = column_to_byte(get_column_byIndex(gs, c))
-        print("init column:", bin(column))
+        # print("init column:", bin(column))
         # print("column:",column)
         fs_column = messageArray[c].data
-        print("fs_column:",bin(fs_column))
+        # print("fs_column:",bin(fs_column))
         # loop through each cell of column
         for i in range(len(gs)):
             # bit shift to find value of current cell
-            print("Evaluating:", gs[7-i][c])
+            # print("Evaluating:", gs[7-i][c])
             cell = (column >> i) & 1
             cell_fs = (fs_column >> i) & 1
 
@@ -119,12 +119,12 @@ def find_start_cell(gs, messageArray):
 
                 # convert to chess coordinates and concatenate (i.e a2)
                 start_pos = start_cell_letter + str(start_cell_number)
-                print("Column before:", gs[c-1])
-                print("Column after:", gs[c + 1])
-                print("GS[c]:",gs[c])
-                print("cell at:",gs[c+1][7-i])
-                print("cell before:", gs[c+1][6 - i])
-                print("cell after:", gs[c+1][8 - i])
+                # print("Column before:", gs[c-1])
+                # print("Column after:", gs[c + 1])
+                # print("GS[c]:",gs[c])
+                # print("cell at:",gs[c+1][7-i])
+                # print("cell before:", gs[c+1][6 - i])
+                # print("cell after:", gs[c+1][8 - i])
 
                 return [start_pos, gs[7-i][c]]
 
@@ -259,7 +259,7 @@ def receive_chess_state():
         #messageCol = None
         currentMessage = gamestateMessage(messageType, messageCol, recByte1)
         currentMessage.timestamp = now
-        print(currentMessage)
+        #print(currentMessage)
         # Figure out message type
         # messageTypeStr = message_types[messageType]
 
@@ -273,7 +273,7 @@ def receive_chess_state():
 # Sends 328P a path via UART
 def send_to_328p(data, messageType):
     ser.flush()
-    print(messageType, "message sent (" + hex(data)+")", format(data,'#010b'))
+    #print(messageType, "message sent (" + hex(data)+")", format(data,'#010b'))
     #while True:
     #    received_data = ser.read()  # read serial port
     #    time.sleep(0.03)
@@ -284,7 +284,7 @@ def send_to_328p(data, messageType):
 
 def start_fast_scan(gs):
     newGs = np.array(gs.board)
-    print("newGs",newGs)
+    #print("newGs",newGs)
     # Serial write start message to Sam
     transmission_byte0 = 0b00110000
     transmission_byte1 = 0b00100111  # Second byte doesn't matter for start
@@ -299,10 +299,10 @@ def start_fast_scan(gs):
     while isMoveNotFound:
         # First one is compared to local gs
         samState = receive_chess_state()
-        print("startCell before entering if", startCell)
+        #print("startCell before entering if", startCell)
         if startCell is None or startCell == -1:  # Check this OR condition
             startCell = find_start_cell(newGs, samState)
-            print("Start Cell Resolved:", startCell)
+            #print("Start Cell Resolved:", startCell)
             if startCell != -1 and startCell[1][0] != gs.userColor:
                 print("setting start cell to -1", gs.userColor, startCell)
                 startCell = -1
@@ -311,7 +311,7 @@ def start_fast_scan(gs):
             # samState2[7].data = 0b11000101
             destCell = resolve_chess_move_v2(newGs, samState, prevSamState)
             # unsure about a check here
-            print("Dest Cell Resolved:", destCell)
+            #print("Dest Cell Resolved:", destCell)
 
             if destCell != -1 and startCell != -1 and destCell == startCell: # User changed move
                 print("User placed piece back. Continue making move.")
