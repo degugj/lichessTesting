@@ -308,7 +308,7 @@ def start_fast_scan(gs):
             #print("Start Cell Resolved:", startCell)
             if startCell != -1 and startCell[1][0] != gs.userColor:
                 print("User has lifted opponent's piece. Start Cell has not been resolved.", startCell)
-                samState2 = receive_chess_state()
+                #samState2 = receive_chess_state()
                 isOpponentLifted = True
 
             else:
