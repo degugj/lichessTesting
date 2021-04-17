@@ -121,9 +121,9 @@ def find_start_cell(gs, messageArray):
                 print("Column before:", gs[c-1])
                 print("Column after:", gs[c + 1])
                 print("GS[c]:",gs[c])
-                print("cell at:",gs[c][7-i])
-                print("cell before:", gs[c][6 - i])
-                print("cell after:", gs[c][8 - i])
+                print("cell at:",gs[c+1][7-i])
+                print("cell before:", gs[c+1][6 - i])
+                print("cell after:", gs[c+1][8 - i])
 
                 return [start_pos, gs[c+1][7-i]]
 
