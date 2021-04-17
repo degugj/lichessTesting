@@ -117,10 +117,10 @@ def find_start_cell(gs, messageArray):
 
                 # convert to chess coordinates and concatenate (i.e a2)
                 start_pos = start_cell_letter + str(start_cell_number)
-                print("GS[c]:",gs[c])
-                print("c,i:",c,i)
+                #print("GS[c]:",gs[c])
+                #print("c,i:",c,i)
 
-                return [start_pos, gs[c][i]]
+                return [start_pos, gs[c][7-i]]
 
     return -1
 
@@ -160,7 +160,7 @@ def resolve_chess_move_v2(gs, statePrev, stateNext):
 
                 # convert to chess coordinates and concatenate (i.e a2)
                 cell = start_cell_letter + str(start_cell_number)
-                return [cell, gs[i][c]]
+                return [cell, gs[c][7-i]]
     return -1
 
 def compare_message_lists(stateA, stateB):
