@@ -108,6 +108,7 @@ def find_start_cell(gs, messageArray):
         # loop through each cell of column
         for i in range(len(gs)):
             # bit shift to find value of current cell
+            print("Evaluating:", gs[7-i][c])
             cell = (column >> i) & 1
             cell_fs = (fs_column >> i) & 1
 
