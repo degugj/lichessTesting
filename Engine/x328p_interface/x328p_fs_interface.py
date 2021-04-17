@@ -182,7 +182,7 @@ def compare_chess_states(gs, messageArray):
         column = get_column_byIndex(gs, message.col)
         #print(column)
         #print(column_to_byte(column))
-        if(column_to_byte(column) != messageArray[message.col].daprint("Incongruent gamestates")
+        if(column_to_byte(column) != messageArray[message.col].data):
             return -1
     #print("Verified Congruent Gamestates")
     return 0
@@ -314,8 +314,8 @@ def start_fast_scan(gs):
             if destCell != -1:
                 if startCell[0] != -1 and destCell[0] == startCell[0]: # User changed move
                     print("User placed piece back. Continue making move.")
-                    #startCell = -1
-                    #destCell = -1
+                    startCell = -1
+                    destCell = -1
 
                 if startCell != -1 and destCell[0] != startCell[0]:
                     # Transmit Stop
