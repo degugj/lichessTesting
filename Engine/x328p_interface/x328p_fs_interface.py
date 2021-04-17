@@ -183,7 +183,7 @@ def compare_chess_states(gs, messageArray):
         #print(column)
         #print(column_to_byte(column))
         if(column_to_byte(column) != messageArray[message.col].data):
-            print("Incongruent gamestates")
+            #print("Incongruent gamestates")
             return -1
     #print("Verified Congruent Gamestates")
     return 0
