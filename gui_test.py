@@ -54,7 +54,9 @@ class MainApp(tk.Tk):
             #grid the frame
             frame.grid(row=0, column=0, sticky="nsew")
             
-    
+        # bind focus to whatever was clicked
+        self.bind_all("<1>", lambda event:event.widget.focus_set())
+
         #show startup page frame
         self.show_frame(pages.StartupPage)
         
