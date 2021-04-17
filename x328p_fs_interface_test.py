@@ -15,9 +15,9 @@ currentGamestate = gs()  # Instantiate test gamestate
 for indexR, row in enumerate(currentGamestate.board):
     for indexC, item in enumerate(row):
         currentGamestate.board[indexR][indexC] = '--'
-        if indexR == 6 and indexC == 5:
+        if indexR == 6 and indexC == 4:
             currentGamestate.board[indexR][indexC] = 'bP'
-        if indexR == 6 and indexC == 6:
+        if indexR == 6 and indexC == 5:
             currentGamestate.board[indexR][indexC] = 'wP'
         #if indexR == 6 and indexC == 2:
         #    currentGamestate.board[indexR][indexC] = 'wP'
