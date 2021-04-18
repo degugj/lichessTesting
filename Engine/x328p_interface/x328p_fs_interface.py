@@ -372,8 +372,9 @@ def start_fast_scan(gs):
                     isMoveNotFound = False
                     print("Destination Cell Resolved:", destCell)
                     # Serial write stop message to Sam
-                    #transmission_byte0 = 0b00111000
-                    #send_to_328p(transmission_byte0, "Stop Fast Scan")
+                    transmission_byte0 = 0b00111000
+                    send_to_328p(transmission_byte0, "Stop Fast Scan")
+                    print("Stop FS sent")
                     return startCell[0] + destCell[0]
                     #print(startCell[0] + destCell[0])
 

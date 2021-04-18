@@ -26,9 +26,11 @@ print(np.array(currentGamestate.board))
 
 #interface.get_column(currentGamestate, 'a')
 
-checkStatus = interface.initial_error_check(currentGamestate)
-if checkStatus == 0:
-    while True:
+
+
+while True:
+        checkStatus = interface.initial_error_check(currentGamestate)
+        if checkStatus == 0:
             move = interface.start_fast_scan(currentGamestate)
             print("\nMove resolved from Sam's subsystem:", move)
             if move == -1:
@@ -36,6 +38,8 @@ if checkStatus == 0:
             currentGamestate.move_piece(move)
             print("State after sensed physical move")
             print(np.array(currentGamestate.board))
+        else:
+            print("Fix initial state")
 """"
 while True:
     checkStatus = interface.initial_error_check(currentGamestate)
