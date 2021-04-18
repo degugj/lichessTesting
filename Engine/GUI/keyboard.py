@@ -189,6 +189,9 @@ class KeyboardEntry(Frame):
 	def _destroy_popup(self):
 		self.kb._destroy_popup()
 
+	def get(self):
+		return self.entry.get()
+
 def test():  
 	root = Tk()
 	KeyboardEntry(root, keysize=6, keycolor='white').pack()

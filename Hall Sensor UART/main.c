@@ -341,20 +341,22 @@ int main(void)
 	
 	while(1){	
 		UART_lastRecievedByte = USART_Receive();
-	
-		if (UART_lastRecievedByte = 0b00101000) {
+		
+		if (UART_lastRecievedByte == 0b00101000) {
 			DumpAllData();
-			FSMode = 0;
 		}
-		if ( UART_lastRecievedByte = 0b00110000 )
-		{   
-			FSMode = 2;
-			USART_interrupt_ENA();
-			
-			while (FSMode == 2) {
+		
+		//UART_lastRecievedByte = USART_Receive();
+		
+		if (UART_lastRecievedByte == 0b00110000) {
+			while (1) {
 				FastScan();
+				// 				UART_lastRecievedByte = USART_Receive();
+				// 				if (UART_lastRecievedByte == 0b00111000) {
+				// 					break;
+				// 				}
+				
 			}
-			USART_interrupt_DIS();
 			//FastScan();
 		}
 		

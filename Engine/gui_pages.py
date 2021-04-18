@@ -9,7 +9,7 @@ import multiprocessing as mp
 
 from Engine import chessboard, gameState, audio
 
-from Engine.GUI import gui_widgets as widgets
+from Engine.GUI import gui_widgets as widgets, keyboard
 from Engine.lichess import lichessInterface_new as interface
 
 
@@ -70,7 +70,7 @@ class SigninPage(tk.Frame):
         """
 
         """ buttons """
-        loginButton = widgets.createButton(self, function=lambda: self.submit(controller=controller, username="degugBot"),
+        loginButton = widgets.createButton(self, function=lambda: self.submit(controller=controller, username="MagiChess_Bot"),
         text="Login as degugBot", bgcolor="seashell3")
         loginButton.pack(pady=4)
 
@@ -169,7 +169,7 @@ class ChallengePage(tk.Frame):
         header.pack(padx=10, pady=10)
 
         # name input
-        usernameEntry = widgets.createEntry(self, bgcolor="beige") 
+        usernameEntry = keyboard.KeyboardEntry(self) 
         usernameEntry.pack(pady=10)
 
          # provide options for starting color
@@ -260,7 +260,7 @@ class ReplayGamePage(tk.Frame):
         header.pack(padx=10, pady=10)
 
         # game id entry box
-        idEntry = widgets.createEntry(self, bgcolor='beige')
+        idEntry = keyboard.KeyboardEntry(self)
         idEntry.pack(pady=10)
 
         widgets.createButton(self, function=lambda: self.replay(controller, idEntry.get()), 
