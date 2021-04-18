@@ -337,7 +337,7 @@ int main(void)
 	MuxInit();
 	uint8_t UART_lastRecievedByte;
 	USART_init();
-	USART_interrupt_ENA();
+	//USART_interrupt_ENA();
 	
 	while(1){	
 		UART_lastRecievedByte = USART_Receive();
@@ -347,10 +347,14 @@ int main(void)
 			FSMode = 0;
 		}
 		if ( UART_lastRecievedByte = 0b00110000 )
-		{
+		{   
+			FSMode = 2;
+			USART_interrupt_ENA();
+			
 			while (FSMode == 2) {
 				FastScan();
 			}
+			USART_interrupt_DIS();
 			//FastScan();
 		}
 		
