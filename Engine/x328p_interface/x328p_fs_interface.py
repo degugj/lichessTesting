@@ -197,7 +197,7 @@ def resolve_chess_move_v3(gs, statePrev, stateNext):
 
                 # convert to chess coordinates and concatenate (i.e a2)
                 cell = start_cell_letter + str(start_cell_number)
-                print(gs[7-i])
+                #print(gs[7-i])
                 return [cell, gs[7-i][c]]
 
             elif cellBitPrev == 1 and cellBitNext == 0:
@@ -347,13 +347,14 @@ def start_fast_scan(gs):
                 startCell = find_start_cell(newGs, samState)
             else:
                 startCell = resolve_chess_move_v3(newGs, prevSamState, samState)
-            print("Start Cell Resolved:", startCell)
             if startCell != -1 and startCell[1][0] != gs.userColor:
                 print("User has lifted opponent's piece. Start Cell has not been resolved.", startCell)
-                newGs[5][4] = '--'
+                #newGs[5][4] = '--'
                 #samState2 = receive_chess_state()
                 startCell = -1
                 isOpponentLifted = True
+            else:
+                print("Start Cell Resolved:",startCell)
         else:
             # Finesse for testing the move resolution
             # samState2[7].data = 0b11000101
@@ -369,11 +370,13 @@ def start_fast_scan(gs):
                 if startCell != -1 and destCell[0] != startCell[0]:
                     # Transmit Stop
                     isMoveNotFound = False
+                    print("Destination Cell Resolved:", destCell)
                     # Serial write stop message to Sam
                     #transmission_byte0 = 0b00111000
                     #send_to_328p(transmission_byte0, "Stop Fast Scan")
                     return startCell[0] + destCell[0]
                     #print(startCell[0] + destCell[0])
+
 
         prevSamState = samState.copy()
     return -1
