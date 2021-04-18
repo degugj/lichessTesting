@@ -337,13 +337,13 @@ def start_fast_scan(gs):
     prevSamState = None
     startCell = None
     destCell = None
-    isOpponentLifted = False
+    isOpponentRemoved = False
     while isMoveNotFound:
         # First one is compared to local gs
         samState = receive_chess_state()
         #print("startCell before entering if", startCell)
         if startCell is None or startCell == -1:  # Check this OR condition
-            if not isOpponentLifted:
+            if not isOpponentRemoved:
                 startCell = find_start_cell(newGs, samState)
             else:
                 startCell = resolve_chess_move_v3(newGs, prevSamState, samState)
@@ -352,31 +352,35 @@ def start_fast_scan(gs):
                 #newGs[5][4] = '--'
                 #samState2 = receive_chess_state()
                 startCell = -1
-                isOpponentLifted = True
+                isOpponentRemoved = True
             else:
                 print("Start Cell Resolved:",startCell)
         else:
             # Finesse for testing the move resolution
             # samState2[7].data = 0b11000101
-            destCell = resolve_chess_move_v2(newGs, samState, prevSamState)
+            destCell = resolve_chess_move_v3(newGs, samState, prevSamState)
             # unsure about a check here
-            #print("Dest Cell Resolved:", destCell)
+            print("Dest Cell Resolved:", destCell)
             if destCell != -1:
-                if startCell[0] != -1 and destCell[0] == startCell[0]: # User changed move
+                if destCell[0] == startCell[0]: # User changed move
                     print("User placed piece back. Continue making move.")
                     startCell = -1
                     destCell = -1
 
-                if startCell != -1 and destCell[0] != startCell[0]:
+                if destCell[0] != startCell[0]:
                     # Transmit Stop
-                    isMoveNotFound = False
-                    print("Destination Cell Resolved:", destCell)
-                    # Serial write stop message to Sam
-                    transmission_byte0 = 0b00111000
-                    send_to_328p(transmission_byte0, "Stop Fast Scan")
-                    print("Stop FS sent")
-                    return startCell[0] + destCell[0]
-                    #print(startCell[0] + destCell[0])
+                    if destCell[1][0] == gs.get_opponentcolor()[0] and not isOpponentRemoved: 
+                         destCell = -1
+                         isOpponentRemoved = True
+                    else:
+                         isMoveNotFound = True
+                         print("Destination Cell Resolved:", destCell)
+                         # Serial write stop message to Sam
+                         transmission_byte0 = 0b00111000
+                         send_to_328p(transmission_byte0, "Stop Fast Scan")
+                         print("Stop FS sent")
+                         return startCell[0] + destCell[0]
+                         #print(startCell[0] + destCell[0])
 
 
         prevSamState = samState.copy()
