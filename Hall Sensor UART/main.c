@@ -311,18 +311,22 @@ void USART_interrupt_DIS(void)
  */
 ISR(USART_RX_vect)
 {
-	if (USART_Receive() = 0b00111000)
+	uint8_t UART_Byte;
+	UART_Byte = UDR0;
+	
+	if (UART_Byte == 0b00111000)
 	{
 		FSMode = 0; //none
 	}
-	else if (USART_Receive() = 0b00101000)
-	{
-		FSMode = 1; //dump
-	}
-	else if (USART_Receive() = 0b00110000)
-	{
-		FSMode = 2; //FS
-	}
+	
+// 	else if (UART_Byte == 0b00101000)
+// 	{
+// 		FSMode = 1; //dump
+// 	}
+// 	else if (UART_Byte == 0b00110000)
+// 	{
+// 		FSMode = 2; //FS
+// 	}
 				
 }
 
@@ -333,19 +337,23 @@ int main(void)
 	MuxInit();
 	uint8_t UART_lastRecievedByte;
 	USART_init();
+	USART_interrupt_ENA();
 	
 	while(1){	
 		UART_lastRecievedByte = USART_Receive();
 	
-		if (FSMode == 1) {
+		if (UART_lastRecievedByte = 0b00101000) {
 			DumpAllData();
 			FSMode = 0;
 		}
-	
-		while (FSMode == 2) {	
+		if ( UART_lastRecievedByte = 0b00110000 )
+		{
+			while (FSMode == 2) {
 				FastScan();
 			}
 			//FastScan();
+		}
+		
 	
 
    }
