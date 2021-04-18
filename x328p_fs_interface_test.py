@@ -40,6 +40,7 @@ while True:
             print(np.array(currentGamestate.board))
         else:
             print("Fix initial state")
+            time.sleep(5)
 """"
 while True:
     checkStatus = interface.initial_error_check(currentGamestate)
