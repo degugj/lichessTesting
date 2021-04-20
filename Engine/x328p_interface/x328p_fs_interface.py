@@ -5,6 +5,14 @@ import numpy as np
 from datetime import datetime
 import time
 import serial
+import spidev
+spi = spidev.SpiDev()
+spi.open(bus, device)
+
+# Settings (for example)
+spi.max_speed_hz = 5000
+spi.mode = 0b01
+
 ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 letterToColumn = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5,'g': 6,'h': 7}  # To translate cell to posMap location
 columnToLetter = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
@@ -260,13 +268,13 @@ def initial_error_check(gs):
     samInitialState = receive_chess_state()
     if samInitialState == -1:
         print("Error in reading Sam State")
-        return -1
+        return [-1, None]
     # Check congruency
     if (compare_chess_states(newGs, samInitialState) != 0):
         print("Incongruent Gamestates. Correct physical state and retry")
-        return 5
+        return [5, ['a2']]
     print("Initial Gamestates Verified and Congruent")
-    return 0
+    return [0, None]
 
 # Receive message from 328P via UART
 """
@@ -283,10 +291,12 @@ def receive_chess_state():
     samState = []
     while True:
         # Serial receive 2 bytes from Sam
-        ser.flush()
-        rawRecByte0 = ser.read()
+        #ser.flush()
+        #rawRecByte0 = ser.read()
+        rawRecByte0 = ser.readbytes(1)
         # Maybe add a delay here
-        rawRecByte1 = ser.read()
+        #rawRecByte1 = ser.read()
+        rawRecByte1 = ser.readbytes(1)
         now = datetime.now()
         recByte0 = int.from_bytes(rawRecByte0, 'little')
         #print("Byte 0 Received:", format(recByte0, '#010b'))
@@ -321,7 +331,8 @@ def send_to_328p(data, messageType):
     #    data_left = ser.inWaiting()  # check for remaining byte
     #    received_data += ser.read(data_left)
     #    print("Sent Data: ",format(data, '#010b'))  # print received data
-    ser.write(data.to_bytes(1, 'little'))  # transmit data serially
+    #ser.write(data.to_bytes(1, 'little'))  # transmit data serially
+    spi.xfer(data.to_bytes(1, 'little'))
 
 def start_fast_scan(gs):
     newGs = np.array(gs.board)
@@ -459,16 +470,14 @@ def fast_scan_simulator():
             # Write message via i2c
             #bus.write_i2c_block_data(address, 0, recBytes)
             #print("Transmitting message:", format(recBytes,'#010b'))
-""""
+
+
 def test_sim():
-     numb = 1
-     print ("Enter 1 for ON or 0 for OFF")
-     while numb == 1:
-        ledstate = input(">>>>   ")
-        if ledstate == "1":
-             #bus.write_byte(address, 0x1) # switch it on
-        elif ledstate == "0":
-             #bus.write_byte(address, 0x0) # switch it on
-        else:
-             numb = 0
-"""
+     print("Starting SPI simulation")
+     while True:
+         time.sleep(2)
+         print("Transmitting 0xEA over SPI")
+         spi.xfer(0xEA)
+         time.sleep(2)
+         recData = spi.readbytes(1)
+         print("Received SPI data", bin(recData))
