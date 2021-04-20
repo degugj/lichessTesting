@@ -105,6 +105,13 @@ class _PopupKeyboard(Toplevel):
 							   width=self.keysize * 3,
 							   bg=self.keycolor,
 							   command=lambda k=k: self._attach_key_press(k)).grid(row=4,column=i)
+					elif k == 'Remove':
+						Button(self.row4,
+							   text=k,
+							   width=self.keysize,
+							   bg=self.keycolor,
+							   fg='red',
+							   command=lambda k=k: self._attach_key_press(k)).grid(row=4,column=i)
 					else:
 						Button(self.row4,
 							   text=k,
@@ -181,13 +188,16 @@ class KeyboardEntry(Frame):
 	def _call_popup(self):
 		self.kb = _PopupKeyboard(attach=self.entry,
 								 parent=self.parent,
-								 x=self.entry.winfo_rootx(),
-								 y=self.entry.winfo_rooty() + self.entry.winfo_reqheight(),
+								 x=int(self.parent.winfo_screenwidth()/2 - 480/2),
+								 y=int(self.parent.winfo_screenheight()/2),
 								 keysize=self.keysize,
 								 keycolor=self.keycolor)
 
 	def _destroy_popup(self):
 		self.kb._destroy_popup()
+
+	def get(self):
+		return self.entry.get()
 
 def test():  
 	root = Tk()

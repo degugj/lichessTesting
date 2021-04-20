@@ -70,7 +70,7 @@ class SigninPage(tk.Frame):
         """
 
         """ buttons """
-        loginButton = widgets.createButton(self, function=lambda: self.submit(controller=controller, username="degugBot"),
+        loginButton = widgets.createButton(self, function=lambda: self.submit(controller=controller, username="MagiChess_Bot"),
         text="Login as degugBot", bgcolor="seashell3")
         loginButton.pack(pady=4)
 
@@ -169,7 +169,7 @@ class ChallengePage(tk.Frame):
         header.pack(padx=10, pady=10)
 
         # name input
-        usernameEntry = keyboard.KeyboardEntry(self)
+        usernameEntry = keyboard.KeyboardEntry(self) 
         usernameEntry.pack(pady=10)
 
          # provide options for starting color

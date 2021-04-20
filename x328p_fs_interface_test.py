@@ -15,9 +15,9 @@ currentGamestate = gs()  # Instantiate test gamestate
 for indexR, row in enumerate(currentGamestate.board):
     for indexC, item in enumerate(row):
         currentGamestate.board[indexR][indexC] = '--'
-        if indexR == 6 and indexC == 0:
-            currentGamestate.board[indexR][indexC] = 'wP'
-        if indexR == 6 and indexC == 1:
+        if indexR == 5 and indexC == 4:
+            currentGamestate.board[indexR][indexC] = 'bP'
+        if indexR == 6 and indexC == 5:
             currentGamestate.board[indexR][indexC] = 'wP'
         #if indexR == 6 and indexC == 2:
         #    currentGamestate.board[indexR][indexC] = 'wP'
@@ -26,14 +26,21 @@ print(np.array(currentGamestate.board))
 
 #interface.get_column(currentGamestate, 'a')
 
-checkStatus = interface.initial_error_check(currentGamestate)
-if checkStatus == 0:
-    while True:
+
+
+while True:
+        checkStatus = interface.initial_error_check(currentGamestate)
+        if checkStatus == 0:
             move = interface.start_fast_scan(currentGamestate)
-            print("Move resolved from Sam's subsystem:", move)
+            print("\nMove resolved from Sam's subsystem:", move)
             if move == -1:
                 break
             currentGamestate.move_piece(move)
+            print("State after sensed physical move")
+            print(np.array(currentGamestate.board))
+        else:
+            print("Fix initial state")
+            time.sleep(5)
 """"
 while True:
     checkStatus = interface.initial_error_check(currentGamestate)
