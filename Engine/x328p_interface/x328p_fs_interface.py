@@ -1,17 +1,17 @@
-# Module and helper functions for interfacing with fast scanning 328P via I2C
-# Authors: Weishan Li, Jack DeGuglielmo
-# Date: 2020-11-01
+# Module and helper functions for interfacing with fast scanning 328P via I2C Authors: Weishan Li, Jack DeGuglielmo Date: 2020-11-01
 import numpy as np
 from datetime import datetime
 import time
 import serial
 import spidev
 spi = spidev.SpiDev()
+bus = 0
+device = 0
 spi.open(bus, device)
 
 # Settings (for example)
 spi.max_speed_hz = 5000
-spi.mode = 0b01
+spi.mode = 0b00
 
 ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 letterToColumn = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5,'g': 6,'h': 7}  # To translate cell to posMap location
@@ -264,7 +264,7 @@ def column_to_byte(column):
 def initial_error_check(gs):
     newGs = np.array(gs.board)
     print("Starting initial check...")
-    send_to_328p(0b00101000,"Dump All Sensor Data")
+    send_to_328p(0b00101000,"Initial Check Data")
     samInitialState = receive_chess_state()
     if samInitialState == -1:
         print("Error in reading Sam State")
@@ -293,31 +293,56 @@ def receive_chess_state():
         # Serial receive 2 bytes from Sam
         #ser.flush()
         #rawRecByte0 = ser.read()
-        rawRecByte0 = ser.readbytes(1)
+        transmitByte = 0b00110000
+        send_to_328p(transmitByte, "Start Fast Scanning")
+        time.sleep(0.03)
+        rawRecByte0 = spi.readbytes(1)
         # Maybe add a delay here
         #rawRecByte1 = ser.read()
-        rawRecByte1 = ser.readbytes(1)
+        #rawRecByte1 = spi.readbytes(1)
         now = datetime.now()
         recByte0 = int.from_bytes(rawRecByte0, 'little')
         #print("Byte 0 Received:", format(recByte0, '#010b'))
-        recByte1Mirror = int.from_bytes(rawRecByte1, 'little')
-        recByte1 = int('{:08b}'.format(recByte1Mirror)[::-1], 2)
-        #print("Byte 1 Received:", format(recByte1, '#010b'))
-        #recByte0 = 0b11110010
-        #recByte1 = 0b11000011
-        messageType = (recByte0 >> 3)
-        messageCol = recByte0 & 0b00000111
-        #messageCol = None
-        currentMessage = gamestateMessage(messageType, messageCol, recByte1)
-        currentMessage.timestamp = now
-        #print(currentMessage)
-        # Figure out message type
-        # messageTypeStr = message_types[messageType]
+        #recByte1Mirror = int.from_bytes(rawRecByte1, 'little')
+        #recByte1 = int('{:08b}'.format(recByte1Mirror)[::-1], 2)
+        if recByte0 != 0xFA:
+             #print("Byte 1 Received:", format(recByte1, '#010b'))
+             #recByte0 = 0b11110010
+             #recByte1 = 0b11000011
+             rawRecByte1 = spi.readbytes(1)
+             recByte1Mirror = int.from_bytes(rawRecByte1, 'little')
+             recByte1 = int.from_bytes(rawRecByte1, 'little')
+             messageType = (recByte0 >> 3)
+             messageCol = recByte0 & 0b00000111
+             #messageCol = None
+             currentMessage = gamestateMessage(messageType, messageCol, recByte1)
+             currentMessage.timestamp = now
+             print(currentMessage)
+             # Figure out message type
+             # messageTypeStr = message_types[messageType]
 
-        samState.append(currentMessage)
+             samState.append(currentMessage)
+             
+             for i in range(7):
+                  rawRecByte0 = spi.readbytes(1)
+                  # Maybe add a delay here
+                  #rawRecByte1 = ser.read()
+                  #rawRecByte1 = spi.readbytes(1)
+                  now = datetime.now()
+                  recByte0 = int.from_bytes(rawRecByte0, 'little')
+                  rawRecByte1 = spi.readbytes(1)
+                  #recByte1Mirror = int.from_bytes(rawRecByte1, 'little')
+                  recByte1 = int.from_bytes(rawRecByte1, 'little')
+                  messageType = (recByte0 >> 3)
+                  messageCol = recByte0 & 0b00000111
+                  #messageCol = None
+                  currentMessage = gamestateMessage(messageType, messageCol, recByte1)
+                  currentMessage.timestamp = now
+                  print(currentMessage)
 
-        if(len(samState) == 8):
-            return samState
+             return samState
+             #if(len(samState) == 8):
+             #    return samState
 
     return -1
 
@@ -338,9 +363,9 @@ def start_fast_scan(gs):
     newGs = np.array(gs.board)
     #print("newGs",newGs)
     # Serial write start message to Sam
-    transmission_byte0 = 0b00110000
-    transmission_byte1 = 0b00100111  # Second byte doesn't matter for start
-    send_to_328p(transmission_byte0, "Start Fast Scan")
+    transmission_byte0 = 0b00100111
+    #transmission_byte1 = 0b00110111  # Second byte doesn't matter for start
+    send_to_328p(transmission_byte0, "Dump All Sensor Data")
     # Transmit again
 
     isMoveNotFound = True
@@ -475,10 +500,11 @@ def fast_scan_simulator():
 def test_sim():
      print("Starting SPI simulation")
      while True:
-         #time.sleep(2)
-         #print("Transmitting 0xEA over SPI")
-         #spi.xfer(0xEA)
          time.sleep(2)
-         print("Waiting for transmission from 328...")
-         recData = spi.readbytes(1)
-         print("Received SPI data", hex(recData), bin(recData))
+         print("Transmitting 0xEA over SPI")
+         spi.writebytes([0xEA])
+         for i in range(5):
+              print("Waiting for transmission from 328...")
+              recData = spi.readbytes(1)
+              integerRecData = int.from_bytes(recData, 'little')
+              print("Received SPI data", hex(integerRecData), bin(integerRecData))
