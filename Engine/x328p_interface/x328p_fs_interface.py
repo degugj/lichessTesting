@@ -475,9 +475,10 @@ def fast_scan_simulator():
 def test_sim():
      print("Starting SPI simulation")
      while True:
+         #time.sleep(2)
+         #print("Transmitting 0xEA over SPI")
+         #spi.xfer(0xEA)
          time.sleep(2)
-         print("Transmitting 0xEA over SPI")
-         spi.xfer(0xEA)
-         time.sleep(2)
+         print("Waiting for transmission from 328...")
          recData = spi.readbytes(1)
-         print("Received SPI data", bin(recData))
+         print("Received SPI data", hex(recData), bin(recData))
