@@ -382,7 +382,7 @@ class GameState():
                 move = self.get_usermove()
 
                 if move == "invalid":
-                    return "invalid"
+                    return "ok"
                 else:
                     # make move on local gamestate board
                     self.move_piece(move)
