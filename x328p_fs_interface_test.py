@@ -52,6 +52,7 @@ while True:
         print("Move resolved from Sam's subsystem:", move)
         if move == -1:
             break
+        currentGamestate.move_piece(move)
     else:
         print("Retrying in 4 seconds..")
         time.sleep(4)
