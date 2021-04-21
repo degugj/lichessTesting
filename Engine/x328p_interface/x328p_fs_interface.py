@@ -356,7 +356,7 @@ def start_fast_scan(gs):
     isChangeMade = False
     while isMoveNotFound:
         while isChangeMade == False:
-            send_to_328p(0b00110000)
+            send_to_328p(0b00110000, 'Prompt Gamestate Status Message')
             stateAnswer = spi.readbytes(1)
             if int.from_bytes(stateAnswer, 'little') == 0xAF:
                 isChangeMade == True
