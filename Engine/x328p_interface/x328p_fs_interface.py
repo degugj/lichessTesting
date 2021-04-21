@@ -228,14 +228,26 @@ def compare_message_lists(stateA, stateB):
 def compare_chess_states(gs, messageArray):
     #print("GS: ", gs)
     #print("Sam's Message Array:", messageArray)
-    for message in messageArray:
-        column = get_column_byIndex(gs, message.col)
+    isCongruent = True
+    incongruentCells = []
+    for column in range(8):
+        gamestateRawColumn = get_column_byIndex(gs, column)
         #print(column)
         #print(column_to_byte(column))
-        if(column_to_byte(column) != messageArray[message.col].data):
-            return -1
-    #print("Verified Congruent Gamestates")
-    return 0
+        gamestateByte = column_to_byte(gamestateRawColumn)
+        messageByte = messageArray[column].data
+        for row in range(8):
+            isGsCellPresent = (gamestateByte >> row) & 1
+            isMessageCellPresent = (messageByte >> row) & 1
+            if isGsCellPresent != isMessageCellPresent:
+                isCongruent = False
+                incongruentCells.append((row, column))
+    if isCongruent:
+        # Congruent Gamestates
+        return (0, None)
+    else:
+        # Incongruent Gamestates, returning gamestate indecies of incongruent cells
+        return (5, incongruentCells)
 
 def return_message_dict(two_byte_message):
     # Talked to Wei about this
@@ -270,11 +282,8 @@ def initial_error_check(gs):
         print("Error in reading Sam State")
         return [-1, None]
     # Check congruency
-    if (compare_chess_states(newGs, samInitialState) != 0):
-        print("Incongruent Gamestates. Correct physical state and retry")
-        return [5, ['a2']]
-    print("Initial Gamestates Verified and Congruent")
-    return [0, None]
+    return compare_chess_states(newGs, samInitialState)
+
 
 # Receive message from 328P via UART
 """
