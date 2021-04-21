@@ -10,13 +10,16 @@ IMPORTS
 """
 import time
 
+import tkinter as tk
+from tkinter import messagebox
+
 from Engine import chessboard
 from Engine import audio
 
 from Engine.lichess import lichessInterface_new as interface
 
-#from Engine.mcu_interfaces import fastScan_interface as fastScan
-#from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
+from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
+from Engine.x328p_interface import x328p_fs_interface as fs_interface
 
 
 isSoundOn = False
@@ -39,7 +42,7 @@ class GameState():
             self.userColor = 'w'
         else:
             if not self.replay:
-                if self.gameQueue.get()["white"]["id"] == 'degugbot':
+                if self.gameQueue.get()["white"]["id"] == 'magichess_bot':
                     self.userColor = 'w'
                 else:
                     self.userColor = 'b'
@@ -118,7 +121,7 @@ class GameState():
         self.previousMovesEvent = None
 
         # cells need to be colored differently to indicate the starting and destination cell of moving pieces
-        self.coloredCells = [(-1, -1), (-1, -1)]
+        self.coloredCells = [(-1,-1),(-1,-1)]
 
         # message to be displayed for the user
         self.message = ""
@@ -167,6 +170,9 @@ class GameState():
         self.board[self.number_to_x[move[3]]][self.letter_to_y[move[2]]] = piece
         return
 
+    def reset_coloredcells(self):
+        self.coloredCells.clear()
+        self.coloredCells = [(-1,-1),(-1,-1)]
 
 # ---------------------------------------------------------------------------
 #   GAMESTATE MOVES AND CONDITIONS
@@ -190,6 +196,7 @@ class GameState():
         startpiece = self.get_piece_fromboard(move[0], move[1])
         destpiece = self.get_piece_fromboard(move[2], move[3])
         # get gamestate.board coordinates of the pieces
+        self.reset_coloredCells()
         self.coloredCells[0] = startpiece[1]
         self.coloredCells[1] = destpiece[1]
         # get actual piece (e.g 'wP', 'bP')
@@ -362,6 +369,8 @@ class GameState():
     """ handles user/opponent moves and updates gamestate """
     def update_gamestate(self):
 
+        # tk.Tk().wm_withdraw()
+        # tk.messagebox.askquestion('Move Resolution', 'Was this your intended move?')
         if self.replay:
             if self.replay_move():
                 return 'ok'
@@ -372,13 +381,14 @@ class GameState():
             if self.userMove:
                 move = self.get_usermove()
 
-                if move != "invalid":
+                if move == "invalid":
+                    return "invalid"
+                else:
                     # make move on local gamestate board
                     self.move_piece(move)
                     self.userMove = False
                     self.message = "Opponent's Turn..."
-
-                return "ok"
+                    return "ok"
 
             # opponent's move
             else:
@@ -406,34 +416,41 @@ class GameState():
     """ read local game state for user move """
     def get_usermove(self):
 
-        """
-        read local game state
-        """
-        move = input("User's turn - Enter Move: ")
+        # check initial game state
+        response = fs_interface.initial_error_check(self)
+        if check_response(self, "initialfs_check", response) == "ok":
+            # start fast scan and wait for user move
+            move = fs_interface.start_fast_scan(self)
+            if check_response(self, "readmove_check", move) == "ok":
 
-        # check for pawn move and promotion
-        try:
-            piece = self.board[self.number_to_x[move[1]]][self.letter_to_y[move[0]]]
-            if piece[1] == 'P' and (move[3] == '1' or move[3] == '8'):
-                while 1:
-                    # prompt user for promotion piece
-                    inputPiece = input("Promotion piece; bishop(b), knight(n), rook(r), queen(q): ")
-                    if inputPiece == 'b' or inputPiece == 'k' or inputPiece == 'r' or inputPiece == 'q':
-                        break
-                    self.message = "Invalid promotion piece argument"
-                # append promotion piece to move
-                move += inputPiece
-        except:
-            pass
+                # prompt user on move resolution
+                movecheckBox = messagebox.askyesno('Move Resolution', 'Was this your intended move?')
+                if movecheckBox == 'Yes':
+                    pass
+                else:
+                    return "invalid"
+                # check for pawn move and promotion
+                piece = self.board[self.number_to_x[move[1]]][self.letter_to_y[move[0]]]
+                if piece[1] == 'P' and (move[3] == '1' or move[3] == '8'):
+                    while 1:
+                        # prompt user for promotion piece
+                        inputPiece = input("Promotion piece; bishop(b), knight(n), rook(r), queen(q): ")
+                        if inputPiece == 'b' or inputPiece == 'k' or inputPiece == 'r' or inputPiece == 'q':
+                            break
+                        self.message = "Invalid promotion piece argument"
+                    # append promotion piece to move
+                    move += inputPiece
 
-        # send move to LiChess server
-        response = interface.make_move(move)
-        if response == 1:
-            return move
-        else:
-            self.message = response
-            # chessboard.display_alert(response)
-            return "invalid"
+                # send move to LiChess server
+                response = interface.make_move(move)
+                if response == 1:
+                    return move
+                else:
+                    self.message = response
+                    # chessboard.display_alert(response)
+                    return "invalid"
+
+        return "invalid"
 
 
     """ read the game stream """
@@ -521,3 +538,32 @@ class GameState():
             print(self.board[i])
 
         return ''
+
+""" check_responses: check for responses sent by 328ps
+    params: gamestate, rtype (type of response), response (response message)
+    return:
+"""
+def check_response(gamestate, rtype, response):
+    if rtype == "initialfs_check":
+        # error in communication between pi and 328p
+        if response[0] == -1:
+            gamestate.message = "Communication Error to Fast Scan 328p"
+            return 'invalid'
+        # initial check successful and congruent
+        elif response[0] == 0: return 'ok'
+        # initial check incongruent, fix squares that are highlighted
+        elif response[0] == 5:
+            incongruent_cells = response[1]
+            gamestate.message = "Incongruent cells: Check highlighted cells"
+            gamestate.coloredCells = incongruent_cells
+            return 'invalid'
+
+    elif rtype == "readmove_check":
+        if response == -1:
+            gamestate.message = "Error in move"
+        else:
+            return 'ok'
+
+    elif rtype == "gantrymove_check":
+        pass
+

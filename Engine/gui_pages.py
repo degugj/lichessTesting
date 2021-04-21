@@ -173,7 +173,7 @@ class ChallengePage(tk.Frame):
         usernameEntry.pack(pady=10)
 
          # provide options for starting color
-        userColor = tk.StringVar()
+        userColor = tk.StringVar(value="1")
         widgets.createRadioButton(self, "Random", userColor, "random").pack()
         widgets.createRadioButton(self, "White", userColor, "white").pack()
         widgets.createRadioButton(self, "Black", userColor, "black").pack()
@@ -187,7 +187,6 @@ class ChallengePage(tk.Frame):
         returnButton = widgets.createButton(self, function=lambda: controller.show_frame(MainMenuPage),
                                             text="Return to Main Menu", bgcolor="sky blue")
         returnButton.pack(pady=10)
-
 
     """ challenge user """
     def challenge(self, controller, userColor, username=""):

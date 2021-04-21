@@ -385,7 +385,7 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     if destNode.state != '. ':
         capturedPos = destNode.pos
         bufferPos = next_buffer_pos(gamestate, destNode.state)
-        if destNode.state[0] == 'b':
+        if destNode.state[0] == 'w':
             bufferPosMap = [(15 - (int(bufferPos[0]) * 2)), (int(bufferPos[1]) * 2) + 22]
         else:
             bufferPosMap = [(15-(int(bufferPos[0])*2)), int(bufferPos[1])*2]

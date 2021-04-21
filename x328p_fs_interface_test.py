@@ -27,10 +27,12 @@ print(np.array(currentGamestate.board))
 #interface.get_column(currentGamestate, 'a')
 
 
-
+"""
 while True:
         checkStatus = interface.initial_error_check(currentGamestate)
         if checkStatus == 0:
+            time.sleep(1)
+            print(np.array(currentGamestate.board))
             move = interface.start_fast_scan(currentGamestate)
             print("\nMove resolved from Sam's subsystem:", move)
             if move == -1:
@@ -40,19 +42,22 @@ while True:
             print(np.array(currentGamestate.board))
         else:
             print("Fix initial state")
-            time.sleep(5)
-""""
+            time.sleep(5)         
+"""
+
 while True:
     checkStatus = interface.initial_error_check(currentGamestate)
-    if checkStatus == 0:
+    if checkStatus[0] == 0:
         move = interface.start_fast_scan(currentGamestate)
         print("Move resolved from Sam's subsystem:", move)
         if move == -1:
             break
+        currentGamestate.move_piece(move)
     else:
         print("Retrying in 4 seconds..")
         time.sleep(4)
-"""
+
+#interface.test_sim()
     #print("Waiting 5s to retry initial check...")
     #time.sleep(5)
     #checkStatus2 = interface.initial_error_check(currentGamestate)

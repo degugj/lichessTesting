@@ -1,10 +1,18 @@
-# Module and helper functions for interfacing with fast scanning 328P via I2C
-# Authors: Weishan Li, Jack DeGuglielmo
-# Date: 2020-11-01
+# Module and helper functions for interfacing with fast scanning 328P via I2C Authors: Weishan Li, Jack DeGuglielmo Date: 2020-11-01
 import numpy as np
 from datetime import datetime
 import time
 import serial
+import spidev
+spi = spidev.SpiDev()
+bus = 0
+device = 0
+spi.open(bus, device)
+
+# Settings (for example)
+spi.max_speed_hz = 5000
+spi.mode = 0b00
+
 ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 letterToColumn = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5,'g': 6,'h': 7}  # To translate cell to posMap location
 columnToLetter = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
@@ -173,9 +181,9 @@ def resolve_chess_move_v3(gs, statePrev, stateNext):
     # print("Resolving Move...")
     # print("GS: ", gs)
     # print("Sam's Message Array:", messageArray)
-    if compare_message_lists(statePrev, stateNext):
-        print("Same state transmitted")
-        return 1
+    #if compare_message_lists(statePrev, stateNext):
+    #    print("Same state transmitted")
+    #    return 1
 
     cell = ""
 
@@ -214,20 +222,32 @@ def resolve_chess_move_v3(gs, statePrev, stateNext):
 def compare_message_lists(stateA, stateB):
     for i in range(8):
         if not stateA[i].equals(stateB[i]):
-            return False
-    return True
+            return (5, None)
+    return (0, None)
 
 def compare_chess_states(gs, messageArray):
     #print("GS: ", gs)
     #print("Sam's Message Array:", messageArray)
-    for message in messageArray:
-        column = get_column_byIndex(gs, message.col)
+    isCongruent = True
+    incongruentCells = []
+    for column in range(8):
+        gamestateRawColumn = get_column_byIndex(gs, column)
         #print(column)
         #print(column_to_byte(column))
-        if(column_to_byte(column) != messageArray[message.col].data):
-            return -1
-    #print("Verified Congruent Gamestates")
-    return 0
+        gamestateByte = column_to_byte(gamestateRawColumn)
+        messageByte = messageArray[column].data
+        for row in range(8):
+            isGsCellPresent = (gamestateByte >> row) & 1
+            isMessageCellPresent = (messageByte >> row) & 1
+            if isGsCellPresent != isMessageCellPresent:
+                isCongruent = False
+                incongruentCells.append((row, column))
+    if isCongruent:
+        # Congruent Gamestates
+        return (0, None)
+    else:
+        # Incongruent Gamestates, returning gamestate indecies of incongruent cells
+        return (5, incongruentCells)
 
 def return_message_dict(two_byte_message):
     # Talked to Wei about this
@@ -256,17 +276,14 @@ def column_to_byte(column):
 def initial_error_check(gs):
     newGs = np.array(gs.board)
     print("Starting initial check...")
-    send_to_328p(0b00101000,"Dump All Sensor Data")
+    #send_to_328p(0b00101000,"Initial Check Data")
     samInitialState = receive_chess_state()
     if samInitialState == -1:
         print("Error in reading Sam State")
-        return -1
+        return [-1, None]
     # Check congruency
-    if (compare_chess_states(newGs, samInitialState) != 0):
-        print("Incongruent Gamestates. Correct physical state and retry")
-        return 5
-    print("Initial Gamestates Verified and Congruent")
-    return 0
+    return compare_chess_states(newGs, samInitialState)
+
 
 # Receive message from 328P via UART
 """
@@ -279,37 +296,46 @@ def recv_from_328p(timeout):
 """
 
 def receive_chess_state():
-    #print("Waiting for Sam's Chess State...")
+    # print("Waiting for Sam's Chess State...")
     samState = []
-    while True:
+    for i in range(8):
         # Serial receive 2 bytes from Sam
-        ser.flush()
-        rawRecByte0 = ser.read()
+        # ser.flush()
+        # rawRecByte0 = ser.read()
+        send_to_328p(i, "Requesting Column "+ str(i))
+        rawRecByte0 = spi.readbytes(1)
+        #time.sleep(0.003)
         # Maybe add a delay here
-        rawRecByte1 = ser.read()
+        # rawRecByte1 = ser.read()
+
+        #rawRecByte1 = ser.readbytes(1)
         now = datetime.now()
-        recByte0 = int.from_bytes(rawRecByte0, 'little')
-        #print("Byte 0 Received:", format(recByte0, '#010b'))
-        recByte1Mirror = int.from_bytes(rawRecByte1, 'little')
-        recByte1 = int('{:08b}'.format(recByte1Mirror)[::-1], 2)
-        #print("Byte 1 Received:", format(recByte1, '#010b'))
-        #recByte0 = 0b11110010
-        #recByte1 = 0b11000011
-        messageType = (recByte0 >> 3)
-        messageCol = recByte0 & 0b00000111
-        #messageCol = None
-        currentMessage = gamestateMessage(messageType, messageCol, recByte1)
+        #recByte0 = int.from_bytes(rawRecByte0, 'little')
+        # print("Byte 0 Received:", format(recByte0, '#010b'))
+        recByte0Mirror = int.from_bytes(rawRecByte0, 'little')
+        recByte0 = int('{:08b}'.format(recByte0Mirror)[::-1], 2)
+        # print("Byte 1 Received:", format(recByte1, '#010b'))
+        # recByte0 = 0b11110010
+        # recByte1 = 0b11000011
+        #messageType = (recByte0 >> 3)
+        messageType = 0
+        #messageCol = recByte0 & 0b00000111
+        messageCol = i
+        currentMessage = gamestateMessage(messageType, messageCol, recByte0)
         currentMessage.timestamp = now
+        #time.sleep(0.03)
         #print(currentMessage)
         # Figure out message type
         # messageTypeStr = message_types[messageType]
 
         samState.append(currentMessage)
+    return samState
 
-        if(len(samState) == 8):
-            return samState
-
-    return -1
+def print_gamestate_list(messageArray):
+    for message in messageArray:
+        print()
+        print(message)
+        
 
 # Sends 328P a path via UART
 def send_to_328p(data, messageType):
@@ -321,15 +347,16 @@ def send_to_328p(data, messageType):
     #    data_left = ser.inWaiting()  # check for remaining byte
     #    received_data += ser.read(data_left)
     #    print("Sent Data: ",format(data, '#010b'))  # print received data
-    ser.write(data.to_bytes(1, 'little'))  # transmit data serially
+    #ser.write(data.to_bytes(1, 'little'))  # transmit data serially
+    spi.writebytes([data])
 
 def start_fast_scan(gs):
     newGs = np.array(gs.board)
     #print("newGs",newGs)
     # Serial write start message to Sam
-    transmission_byte0 = 0b00110000
-    transmission_byte1 = 0b00100111  # Second byte doesn't matter for start
-    send_to_328p(transmission_byte0, "Start Fast Scan")
+    #transmission_byte0 = 0b00100111
+    #transmission_byte1 = 0b00110111  # Second byte doesn't matter for start
+    #send_to_328p(transmission_byte0, "Dump All Sensor Data")
     # Transmit again
 
     isMoveNotFound = True
@@ -337,13 +364,28 @@ def start_fast_scan(gs):
     prevSamState = None
     startCell = None
     destCell = None
-    isOpponentLifted = False
+    isOpponentRemoved = False
+    isChangeMade = False
+    previousChangedState = None
     while isMoveNotFound:
+        while isChangeMade == False:
+            samState = receive_chess_state()
+            if startCell is None:
+                 response = compare_chess_states(newGs, samState)
+            else:
+                 response = compare_message_lists(prevSamState, samState)
+            if response[0] == 5:
+                 #previousChangedState = samState
+                 print_gamestate_list(samState)
+                 if startCell is not None:
+                     print("\nBefore breaking the previous sam state\n")
+                     print_gamestate_list(prevSamState)
+                 break
+        isChangeMade = False
         # First one is compared to local gs
-        samState = receive_chess_state()
         #print("startCell before entering if", startCell)
         if startCell is None or startCell == -1:  # Check this OR condition
-            if not isOpponentLifted:
+            if not isOpponentRemoved:
                 startCell = find_start_cell(newGs, samState)
             else:
                 startCell = resolve_chess_move_v3(newGs, prevSamState, samState)
@@ -352,31 +394,35 @@ def start_fast_scan(gs):
                 #newGs[5][4] = '--'
                 #samState2 = receive_chess_state()
                 startCell = -1
-                isOpponentLifted = True
+                isOpponentRemoved = True
             else:
                 print("Start Cell Resolved:",startCell)
         else:
             # Finesse for testing the move resolution
             # samState2[7].data = 0b11000101
-            destCell = resolve_chess_move_v2(newGs, samState, prevSamState)
+            destCell = resolve_chess_move_v3(newGs, samState, prevSamState)
             # unsure about a check here
-            #print("Dest Cell Resolved:", destCell)
+            print("Dest Cell Resolved:", destCell)
             if destCell != -1:
-                if startCell[0] != -1 and destCell[0] == startCell[0]: # User changed move
+                if destCell[0] == startCell[0]: # User changed move
                     print("User placed piece back. Continue making move.")
                     startCell = -1
                     destCell = -1
 
-                if startCell != -1 and destCell[0] != startCell[0]:
+                if destCell[0] != startCell[0]:
                     # Transmit Stop
-                    isMoveNotFound = False
-                    print("Destination Cell Resolved:", destCell)
-                    # Serial write stop message to Sam
-                    transmission_byte0 = 0b00111000
-                    send_to_328p(transmission_byte0, "Stop Fast Scan")
-                    print("Stop FS sent")
-                    return startCell[0] + destCell[0]
-                    #print(startCell[0] + destCell[0])
+                    if destCell[1][0] == gs.get_opponentcolor()[0] and not isOpponentRemoved: 
+                         destCell = -1
+                         isOpponentRemoved = True
+                    else:
+                         isMoveNotFound = True
+                         print("Destination Cell Resolved:", destCell)
+                         # Serial write stop message to Sam
+                         transmission_byte0 = 0b00111000
+                         send_to_328p(transmission_byte0, "Stop Fast Scan")
+                         print("Stop FS sent")
+                         return startCell[0] + destCell[0]
+                         #print(startCell[0] + destCell[0])
 
 
         prevSamState = samState.copy()
@@ -455,16 +501,16 @@ def fast_scan_simulator():
             # Write message via i2c
             #bus.write_i2c_block_data(address, 0, recBytes)
             #print("Transmitting message:", format(recBytes,'#010b'))
-""""
+
+
 def test_sim():
-     numb = 1
-     print ("Enter 1 for ON or 0 for OFF")
-     while numb == 1:
-        ledstate = input(">>>>   ")
-        if ledstate == "1":
-             #bus.write_byte(address, 0x1) # switch it on
-        elif ledstate == "0":
-             #bus.write_byte(address, 0x0) # switch it on
-        else:
-             numb = 0
-"""
+     print("Starting SPI simulation")
+     while True:
+         time.sleep(2)
+         print("Transmitting 0xEA over SPI")
+         spi.writebytes([0xEA])
+         for i in range(5):
+              print("Waiting for transmission from 328...")
+              recData = spi.readbytes(1)
+              integerRecData = int.from_bytes(recData, 'little')
+              print("Received SPI data", hex(integerRecData), bin(integerRecData))
