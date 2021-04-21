@@ -44,7 +44,7 @@ while True:
             print("Fix initial state")
             time.sleep(5)         
 """
-""""
+
 while True:
     checkStatus = interface.initial_error_check(currentGamestate)
     if checkStatus == 0:
@@ -55,8 +55,8 @@ while True:
     else:
         print("Retrying in 4 seconds..")
         time.sleep(4)
-"""
-interface.test_sim()
+
+#interface.test_sim()
     #print("Waiting 5s to retry initial check...")
     #time.sleep(5)
     #checkStatus2 = interface.initial_error_check(currentGamestate)
