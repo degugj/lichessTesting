@@ -7,7 +7,7 @@ from Engine.gameState import GameState as gs
 interface = importlib.import_module('.x328p_interface.x328p_gantry_interface', 'Engine')
 
 currentGamestate = gs()  # Instantiate test gamestate
-move = 'c2c4'
+move = 'h8a1'
 currentGamestate.wBuffer[0][0] = 'wP'
 currentGamestate.wBuffer[0][1] = 'wP'
 currentGamestate.wBuffer[1][0] = 'wP'

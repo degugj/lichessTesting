@@ -78,7 +78,7 @@ class Node:
 def next_buffer_pos(gamestate, piece):
     pieceColor = piece[0]
     # if captured piece is black
-    if pieceColor == 'w':
+    if pieceColor == 'b':
         # check if captured piece is pawn
         if piece[1] == 'P':
             for row in range(4):
@@ -91,7 +91,7 @@ def next_buffer_pos(gamestate, piece):
                 if gamestate.bBuffer[gamestate.bufferMap[piece[1]]][column] == '--':
                     return [gamestate.bufferMap[piece[1]], column]
     # if captured piece is white
-    elif pieceColor == 'b':
+    elif pieceColor == 'w':
         # check if captured piece is pawn, bishop, knight, rook, or queen and place into buffer accordingly
         if piece[1] == 'P':
             for row in range(4):
@@ -385,7 +385,7 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     if destNode.state != '. ':
         capturedPos = destNode.pos
         bufferPos = next_buffer_pos(gamestate, destNode.state)
-        if destNode.state[0] == 'b':
+        if destNode.state[0] == 'w':
             bufferPosMap = [(15 - (int(bufferPos[0]) * 2)), (int(bufferPos[1]) * 2) + 22]
         else:
             bufferPosMap = [(15-(int(bufferPos[0])*2)), int(bufferPos[1])*2]
