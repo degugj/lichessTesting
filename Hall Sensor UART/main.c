@@ -26,6 +26,14 @@
 #define Mux6 2
 #define Mux7 3
 
+//RFID SPI PORT B
+#define SCK_RF  5
+#define MISO_RF 4
+#define MOSI_RF 3
+#define SS_RF   2
+#define RST_RF  1
+
+
 
 uint8_t FSMode = 0;
 uint8_t MD0;
@@ -67,6 +75,18 @@ int USART_Receive(void){
 	/* Get and return received data from buffer */
 	return UDR0;
 	
+}
+
+void SPI_masterTxRx(uint8_t data)
+{
+	// transmit data
+	SPDR = data;
+
+	// Wait for reception complete
+	while(!(SPSR & (1 << SPIF)));
+
+	// return Data Register
+	//return SPDR;
 }
 
 void USART_init(void){
@@ -200,8 +220,9 @@ uint8_t GatherMuxDataD(uint8_t Mux)
 
 void SendData(uint8_t Byte1, uint8_t Byte2)
 {
-	USART_Transmit(Byte1);
-	USART_Transmit(Byte2);
+	SPI_masterTxRx(Byte2);
+	SPI_masterTxRx(Byte1);
+	
 }
 
 
@@ -239,14 +260,14 @@ void DumpAllData(void) {
 
 void FastScan(void) {
 	
-	LD0 = MD0;
-	LD1 = MD1;
-	LD2 = MD2;
-	LD3 = MD3;
-	LD4 = MD4;
-	LD5 = MD5;
-	LD6 = MD6;
-	LD7 = MD7;
+		LD0 = MD0;
+		LD1 = MD1;
+		LD2 = MD2;
+		LD3 = MD3;
+		LD4 = MD4;
+		LD5 = MD5;
+		LD6 = MD6;
+		LD7 = MD7;
 	
 		MD7 = GatherMuxDataC(0);
 		MD6 = GatherMuxDataC(1);
@@ -284,7 +305,9 @@ void FastScan(void) {
 			LD6 = MD6;
 			LD7 = MD7;
 		}		
-		
+		else{
+			SPI_masterTxRx(0xFA);
+		}
 	}
 
 
@@ -330,35 +353,112 @@ ISR(USART_RX_vect)
 				
 }
 
+void SPI_SlaveInit(void)
+{
+	/* Set MISO output, all others input */
+	DDRB = (1<<MISO_RF);
+	/* Enable SPI */
+	SPCR = (1<<SPE);
+}
+
+uint8_t SPI_SlaveReceive(void)
+{
+	/* Wait for reception complete */
+	while(!(SPSR & (1<<SPIF)))
+	;
+	/* Return Data Register */
+	return SPDR;
+}
+
+
 int main(void)
 {
 	FSMode = 0;
 	
+	SPI_SlaveInit();
 	MuxInit();
-	uint8_t UART_lastRecievedByte;
+	uint8_t SPI_RXData;
 	USART_init();
 	//USART_interrupt_ENA();
 	
 	while(1){	
-		UART_lastRecievedByte = USART_Receive();
 		
-		if (UART_lastRecievedByte == 0b00101000) {
-			DumpAllData();
+		SPI_RXData = SPI_SlaveReceive();
+		
+		switch (SPI_RXData)
+		{
+			case 0:			
+				MD0 = GatherMuxDataD(5);
+				SPI_masterTxRx(MD0);
+			break;
+			
+			case 1:
+				MD1 = GatherMuxDataD(4);
+				SPI_masterTxRx(MD1);
+			break;
+			
+			case 2:
+				MD2 = GatherMuxDataD(3);
+				SPI_masterTxRx(MD2);
+			break;
+			
+			case 3:
+				MD3 = GatherMuxDataD(2);
+				SPI_masterTxRx(MD3);
+			break;
+			
+			case 4:
+				MD4 = GatherMuxDataC(3);
+				SPI_masterTxRx(MD4);
+			break;
+			
+			case 5:
+				MD5 = GatherMuxDataC(2);
+				SPI_masterTxRx(MD5);
+			break;
+			
+			case 6:
+				MD6 = GatherMuxDataC(1);
+				SPI_masterTxRx(MD6);
+			break;
+			
+			case 7:
+				MD7 = GatherMuxDataC(0);	
+				SPI_masterTxRx(MD7);
+			break;
+			
+// 			case 48:
+// 				LD0 = MD0;
+// 				LD1 = MD1;
+// 				LD2 = MD2;
+// 				LD3 = MD3;
+// 				LD4 = MD4;
+// 				LD5 = MD5;
+// 				LD6 = MD6;
+// 				LD7 = MD7;
+// 				
+// 				MD7 = GatherMuxDataC(0);
+// 				MD6 = GatherMuxDataC(1);
+// 				MD5 = GatherMuxDataC(2);
+// 				MD4 = GatherMuxDataC(3);
+// 				MD3 = GatherMuxDataD(2);
+// 				MD2 = GatherMuxDataD(3);
+// 				MD1 = GatherMuxDataD(4);
+// 				MD0 = GatherMuxDataD(5);
+// 				
+// 				if((MD0 != LD0) | (MD1 != LD1)| (MD2 != LD2)| (MD3 != LD3)| (MD4 != LD4)| (MD5 != LD5)| (MD6 != LD6)| (MD7 != LD7)    ) 
+// 				{
+// 					SPI_masterTxRx(0xAF); //Changed	
+// 				}
+// 				
+// 				else {
+// 					SPI_masterTxRx(0xFA);
+// 				}
+// 				break;
+			
+			
 		}
 		
-		//UART_lastRecievedByte = USART_Receive();
-		
-		if (UART_lastRecievedByte == 0b00110000) {
-			while (1) {
-				FastScan();
-				// 				UART_lastRecievedByte = USART_Receive();
-				// 				if (UART_lastRecievedByte == 0b00111000) {
-				// 					break;
-				// 				}
-				
-			}
-			//FastScan();
-		}
 		
 	
 
