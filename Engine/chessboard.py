@@ -336,7 +336,7 @@ def color_cells(coloredCells, c):
         y = cell[1]
         if x != -1 and y != -1:
             color = pg.Color(c)
-            pg.draw.rect(screen, color, pg.Rect(y*cellSize + chessboardCoords[0], x*cellSize + chessboardCoords[1], cellSize, cellSize))
+            pg.draw.rect(screen, color, pg.Rect((7-y)*cellSize + chessboardCoords[0], x*cellSize + chessboardCoords[1], cellSize, cellSize))
 
 
 """ draw_buffers: draw the capture buffers on either side of the board
