@@ -359,7 +359,8 @@ def start_fast_scan(gs):
             send_to_328p(0b00110000, 'Prompt Gamestate Status Message')
             stateAnswer = spi.readbytes(1)
             if int.from_bytes(stateAnswer, 'little') == 0xAF:
-                isChangeMade == True
+                isChangeMade = True
+        isChangeMade = False
         # First one is compared to local gs
         samState = receive_chess_state()
         #print("startCell before entering if", startCell)
