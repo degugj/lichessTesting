@@ -173,7 +173,7 @@ class ChallengePage(tk.Frame):
         usernameEntry.pack(pady=10)
 
          # provide options for starting color
-        userColor = tk.StringVar()
+        userColor = tk.StringVar(value="1")
         widgets.createRadioButton(self, "Random", userColor, "random").pack()
         widgets.createRadioButton(self, "White", userColor, "white").pack()
         widgets.createRadioButton(self, "Black", userColor, "black").pack()

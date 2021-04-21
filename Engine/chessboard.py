@@ -316,14 +316,29 @@ def draw_board(screen, coloredCells):
     colors = [pg.Color("white"), pg.Color("dark grey")]
     for row in range(DIMENSIONS):
         for column in range(DIMENSIONS):
-            if row == startCell[0] and column == startCell[1] or row == destCell[0] and column == destCell[1]:
-                color = pg.Color("Khaki") 
-            else:
-                color = colors[(row+column) % 2]
+            # if row == startCell[0] and column == startCell[1] or row == destCell[0] and column == destCell[1]:
+            #     color = pg.Color("Khaki") 
+            color = colors[(row+column) % 2]
             # draw chess board; offsets used to center the board
             pg.draw.rect(screen, color, pg.Rect(column*cellSize + chessboardCoords[0], row*cellSize + chessboardCoords[1], cellSize, cellSize))
+            # highlight cells
+            color_cells(coloredCells, "Khaki")
 
     return
+
+
+""" color_cells: draw colored cells on the board
+    params: screen
+    return:
+"""
+def color_cells(coloredCells, c):
+    global screen
+    for cell in coloredCells:
+        x = cell[0]
+        y = cell[1]
+        if x != -1 and y != -1:
+            color = pg.Color(c)
+            pg.draw.rect(screen, color, pg.Rect(y*cellSize + chessboardCoords[0], x*cellSize + chessboardCoords[1], cellSize, cellSize))
 
 
 """ draw_buffers: draw the capture buffers on either side of the board
@@ -362,11 +377,11 @@ def draw_pieces(screen, gamestate):
             # draw white pieces
             whitePiece = gamestate.wBuffer[row][column]
             if whitePiece != "--":
-                screen.blit(images[whitePiece], (column*cellSize + bufferCoords[0], row*cellSize + chessboardCoords[1], cellSize, cellSize))
+                screen.blit(images[whitePiece], (column*cellSize + bufferCoords[1], row*cellSize + chessboardCoords[1], cellSize, cellSize))
             # draw black pieces
             blackPiece = gamestate.bBuffer[row][column]
             if blackPiece != "--":
-                screen.blit(images[blackPiece], (column*cellSize + bufferCoords[1], row*cellSize + chessboardCoords[1], cellSize, cellSize))
+                screen.blit(images[blackPiece], (column*cellSize + bufferCoords[0], row*cellSize + chessboardCoords[1], cellSize, cellSize))
 
     return
 

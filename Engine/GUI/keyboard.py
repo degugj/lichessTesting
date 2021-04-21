@@ -188,7 +188,7 @@ class KeyboardEntry(Frame):
 	def _call_popup(self):
 		self.kb = _PopupKeyboard(attach=self.entry,
 								 parent=self.parent,
-								 x=int(self.parent.winfo_screenwidth()/2 - 480/2),
+								 x=int(self.parent.winfo_screenwidth()/2 - 600/2),
 								 y=int(self.parent.winfo_screenheight()/2),
 								 keysize=self.keysize,
 								 keycolor=self.keycolor)
