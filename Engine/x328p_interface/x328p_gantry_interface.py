@@ -78,7 +78,7 @@ class Node:
 def next_buffer_pos(gamestate, piece):
     pieceColor = piece[0]
     # if captured piece is black
-    if pieceColor == 'b':
+    if pieceColor == 'w':
         # check if captured piece is pawn
         if piece[1] == 'P':
             for row in range(4):
@@ -91,7 +91,7 @@ def next_buffer_pos(gamestate, piece):
                 if gamestate.bBuffer[gamestate.bufferMap[piece[1]]][column] == '--':
                     return [gamestate.bufferMap[piece[1]], column]
     # if captured piece is white
-    elif pieceColor == 'w':
+    elif pieceColor == 'b':
         # check if captured piece is pawn, bishop, knight, rook, or queen and place into buffer accordingly
         if piece[1] == 'P':
             for row in range(4):

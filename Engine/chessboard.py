@@ -377,11 +377,11 @@ def draw_pieces(screen, gamestate):
             # draw white pieces
             whitePiece = gamestate.wBuffer[row][column]
             if whitePiece != "--":
-                screen.blit(images[whitePiece], (column*cellSize + bufferCoords[1], row*cellSize + chessboardCoords[1], cellSize, cellSize))
+                screen.blit(images[whitePiece], (column*cellSize + bufferCoords[0], row*cellSize + chessboardCoords[1], cellSize, cellSize))
             # draw black pieces
             blackPiece = gamestate.bBuffer[row][column]
             if blackPiece != "--":
-                screen.blit(images[blackPiece], (column*cellSize + bufferCoords[0], row*cellSize + chessboardCoords[1], cellSize, cellSize))
+                screen.blit(images[blackPiece], (column*cellSize + bufferCoords[1], row*cellSize + chessboardCoords[1], cellSize, cellSize))
 
     return
 
