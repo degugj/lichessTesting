@@ -241,7 +241,7 @@ def compare_chess_states(gs, messageArray):
             isMessageCellPresent = (messageByte >> row) & 1
             if isGsCellPresent != isMessageCellPresent:
                 isCongruent = False
-                incongruentCells.append((row, column))
+                incongruentCells.append((7 - row, column))
     if isCongruent:
         # Congruent Gamestates
         return (0, None)
