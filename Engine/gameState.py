@@ -41,7 +41,7 @@ class GameState():
             self.userColor = 'w'
         else:
             if not self.replay:
-                if self.gameQueue.get()["white"]["id"] == 'magichess_bot':
+                if self.gameQueue.get()["white"]["id"] == 'degugbot':
                     self.userColor = 'w'
                 else:
                     self.userColor = 'b'
@@ -195,7 +195,7 @@ class GameState():
         startpiece = self.get_piece_fromboard(move[0], move[1])
         destpiece = self.get_piece_fromboard(move[2], move[3])
         # get gamestate.board coordinates of the pieces
-        self.reset_coloredCells()
+        self.reset_coloredcells()
         self.coloredCells[0] = startpiece[1]
         self.coloredCells[1] = destpiece[1]
         # get actual piece (e.g 'wP', 'bP')
@@ -414,33 +414,37 @@ class GameState():
 
     """ read local game state for user move """
     def get_usermove(self):
-
-        # check initial game state
-        response = fs_interface.initial_error_check(self)
-        if check_response(self, "initialfs_check", response) == "ok":
+        #while(response != "ok"):
+             # check initial game state
+        r = fs_interface.initial_error_check(self)
+        print("Response:", r)
+        #response = check_response(self, "initialfs_check", r)
+        #time.sleep(2)
+        if check_response(self, "initialfs_check", r) == "ok":
             # start fast scan and wait for user move
+            print("make move")
             move = fs_interface.start_fast_scan(self)
             if check_response(self, "readmove_check", move) == "ok":
 
                 # prompt user on move resolution
-                movecheckBox = messagebox.askyesno('Move Resolution', 'Was this your intended move?')
-                if movecheckBox == 'Yes':
-                    pass
-                else:
-                    return "invalid"
+#                movecheckBox = messagebox.askyesno('Move Resolution', 'Was this your intended move?')
+                # if movecheckBox == 'Yes':
+                #    pass
+                #else:
+                #    return "invalid"
                 # check for pawn move and promotion
                 piece = self.board[self.number_to_x[move[1]]][self.letter_to_y[move[0]]]
                 if piece[1] == 'P' and (move[3] == '1' or move[3] == '8'):
-                    while 1:
-                        # prompt user for promotion piece
-                        inputPiece = input("Promotion piece; bishop(b), knight(n), rook(r), queen(q): ")
-                        if inputPiece == 'b' or inputPiece == 'k' or inputPiece == 'r' or inputPiece == 'q':
+                   while 1:
+                   # prompt user for promotion piece
+                       inputPiece = input("Promotion piece; bishop(b), knight(n), rook(r), queen(q): ")
+                       if inputPiece == 'b' or inputPiece == 'k' or inputPiece == 'r' or inputPiece == 'q':
                             break
-                        self.message = "Invalid promotion piece argument"
-                    # append promotion piece to move
-                    move += inputPiece
+                       self.message = "Invalid promotion piece argument"
+                       # append promotion piece to move
+                       move += inputPiece
 
-                # send move to LiChess server
+                     # send move to LiChess server
                 response = interface.make_move(move)
                 if response == 1:
                     return move
@@ -560,6 +564,7 @@ def check_response(gamestate, rtype, response):
     elif rtype == "readmove_check":
         if response == -1:
             gamestate.message = "Error in move"
+            return 'invalid'
         else:
             return 'ok'
 
