@@ -291,12 +291,14 @@ def receive_chess_state():
     samState = []
     send_to_328p(0b00110000, "Start FS Message Sent")
     dumpByte = spi.readbytes(1)
+    print("Dup byte:",bin(dumpByte),str(int(dumpByte)))
     for i in range(8):
         # Serial receive 2 bytes from Sam
         # ser.flush()
         # rawRecByte0 = ser.read()
         send_to_328p(i, "Requesting Column "+ str(i))
         rawRecByte0 = spi.readbytes(1)
+        time.sleep(0.03)
         # Maybe add a delay here
         # rawRecByte1 = ser.read()
 
