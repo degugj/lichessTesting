@@ -356,7 +356,7 @@ def start_fast_scan(gs):
         while isChangeMade == False:
             send_to_328p(0b00110000)
             stateAnswer = spi.readbytes(1)
-            if int.from_bytes(stateAnswer, 'little') == 0xAF
+            if int.from_bytes(stateAnswer, 'little') == 0xAF:
                 isChangeMade == True
         # First one is compared to local gs
         samState = receive_chess_state()
