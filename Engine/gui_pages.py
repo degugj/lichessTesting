@@ -188,7 +188,6 @@ class ChallengePage(tk.Frame):
                                             text="Return to Main Menu", bgcolor="sky blue")
         returnButton.pack(pady=10)
 
-
     """ challenge user """
     def challenge(self, controller, userColor, username=""):
 
