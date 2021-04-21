@@ -316,7 +316,7 @@ def receive_chess_state():
         currentMessage = gamestateMessage(messageType, messageCol, recByte0)
         currentMessage.timestamp = now
         #time.sleep(0.03)
-        # print(currentMessage)
+        print(currentMessage)
         # Figure out message type
         # messageTypeStr = message_types[messageType]
 

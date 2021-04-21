@@ -21,8 +21,8 @@ for indexR, row in enumerate(currentGamestate.board):
             currentGamestate.board[indexR][indexC] = 'wP'
         #if indexR == 6 and indexC == 2:
         #    currentGamestate.board[indexR][indexC] = 'wP'
-#print("Initial State:")
-#print(np.array(currentGamestate.board))
+print("Initial State:")
+print(np.array(currentGamestate.board))
 
 #interface.get_column(currentGamestate, 'a')
 
