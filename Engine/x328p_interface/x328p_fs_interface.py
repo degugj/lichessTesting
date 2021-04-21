@@ -289,7 +289,7 @@ def recv_from_328p(timeout):
 def receive_chess_state():
     # print("Waiting for Sam's Chess State...")
     samState = []
-    send_to_328p(0b00110000)
+    send_to_328p(0b00110000, "Start FS Message Sent")
     dumpByte = spi.readbytes(1)
     for i in range(8):
         # Serial receive 2 bytes from Sam
