@@ -264,7 +264,7 @@ def column_to_byte(column):
 def initial_error_check(gs):
     newGs = np.array(gs.board)
     print("Starting initial check...")
-    send_to_328p(0b00101000,"Initial Check Data")
+    #send_to_328p(0b00101000,"Initial Check Data")
     samInitialState = receive_chess_state()
     if samInitialState == -1:
         print("Error in reading Sam State")
@@ -287,64 +287,41 @@ def recv_from_328p(timeout):
 """
 
 def receive_chess_state():
-    #print("Waiting for Sam's Chess State...")
+    # print("Waiting for Sam's Chess State...")
     samState = []
-    while True:
+    send_to_328p(0b00110000)
+    dumpByte = spi.readbytes(1)
+    for i in range(8):
         # Serial receive 2 bytes from Sam
-        #ser.flush()
-        #rawRecByte0 = ser.read()
-        transmitByte = 0b00110000
-        send_to_328p(transmitByte, "Start Fast Scanning")
-        time.sleep(0.03)
+        # ser.flush()
+        # rawRecByte0 = ser.read()
+        send_to_328p(i, "Requesting Column "+ str(i))
         rawRecByte0 = spi.readbytes(1)
         # Maybe add a delay here
-        #rawRecByte1 = ser.read()
-        #rawRecByte1 = spi.readbytes(1)
+        # rawRecByte1 = ser.read()
+
+        #rawRecByte1 = ser.readbytes(1)
         now = datetime.now()
         recByte0 = int.from_bytes(rawRecByte0, 'little')
-        #print("Byte 0 Received:", format(recByte0, '#010b'))
+        # print("Byte 0 Received:", format(recByte0, '#010b'))
         #recByte1Mirror = int.from_bytes(rawRecByte1, 'little')
         #recByte1 = int('{:08b}'.format(recByte1Mirror)[::-1], 2)
-        if recByte0 != 0xFA:
-             #print("Byte 1 Received:", format(recByte1, '#010b'))
-             #recByte0 = 0b11110010
-             #recByte1 = 0b11000011
-             rawRecByte1 = spi.readbytes(1)
-             recByte1Mirror = int.from_bytes(rawRecByte1, 'little')
-             recByte1 = int.from_bytes(rawRecByte1, 'little')
-             messageType = (recByte0 >> 3)
-             messageCol = recByte0 & 0b00000111
-             #messageCol = None
-             currentMessage = gamestateMessage(messageType, messageCol, recByte1)
-             currentMessage.timestamp = now
-             print(currentMessage)
-             # Figure out message type
-             # messageTypeStr = message_types[messageType]
+        # print("Byte 1 Received:", format(recByte1, '#010b'))
+        # recByte0 = 0b11110010
+        # recByte1 = 0b11000011
+        #messageType = (recByte0 >> 3)
+        messageType = 0
+        #messageCol = recByte0 & 0b00000111
+        messageCol = i
+        currentMessage = gamestateMessage(messageType, messageCol, recByte0)
+        currentMessage.timestamp = now
+        #time.sleep(0.03)
+        # print(currentMessage)
+        # Figure out message type
+        # messageTypeStr = message_types[messageType]
 
-             samState.append(currentMessage)
-             
-             for i in range(7):
-                  rawRecByte0 = spi.readbytes(1)
-                  # Maybe add a delay here
-                  #rawRecByte1 = ser.read()
-                  #rawRecByte1 = spi.readbytes(1)
-                  now = datetime.now()
-                  recByte0 = int.from_bytes(rawRecByte0, 'little')
-                  rawRecByte1 = spi.readbytes(1)
-                  #recByte1Mirror = int.from_bytes(rawRecByte1, 'little')
-                  recByte1 = int.from_bytes(rawRecByte1, 'little')
-                  messageType = (recByte0 >> 3)
-                  messageCol = recByte0 & 0b00000111
-                  #messageCol = None
-                  currentMessage = gamestateMessage(messageType, messageCol, recByte1)
-                  currentMessage.timestamp = now
-                  print(currentMessage)
-
-             return samState
-             #if(len(samState) == 8):
-             #    return samState
-
-    return -1
+        samState.append(currentMessage)
+    return samState
 
 # Sends 328P a path via UART
 def send_to_328p(data, messageType):
@@ -357,15 +334,15 @@ def send_to_328p(data, messageType):
     #    received_data += ser.read(data_left)
     #    print("Sent Data: ",format(data, '#010b'))  # print received data
     #ser.write(data.to_bytes(1, 'little'))  # transmit data serially
-    spi.xfer(data.to_bytes(1, 'little'))
+    spi.writebytes([data.to_bytes(1, 'little')])
 
 def start_fast_scan(gs):
     newGs = np.array(gs.board)
     #print("newGs",newGs)
     # Serial write start message to Sam
-    transmission_byte0 = 0b00100111
+    #transmission_byte0 = 0b00100111
     #transmission_byte1 = 0b00110111  # Second byte doesn't matter for start
-    send_to_328p(transmission_byte0, "Dump All Sensor Data")
+    #send_to_328p(transmission_byte0, "Dump All Sensor Data")
     # Transmit again
 
     isMoveNotFound = True
@@ -374,7 +351,13 @@ def start_fast_scan(gs):
     startCell = None
     destCell = None
     isOpponentRemoved = False
+    isChangeMade = False
     while isMoveNotFound:
+        while isChangeMade == False:
+            send_to_328p(0b00110000)
+            stateAnswer = spi.readbytes(1)
+            if int.from_bytes(stateAnswer, 'little') == 0xAF
+                isChangeMade == True
         # First one is compared to local gs
         samState = receive_chess_state()
         #print("startCell before entering if", startCell)
