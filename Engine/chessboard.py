@@ -310,8 +310,6 @@ def draw_gamestate(screen, gamestate):
     return:
 """
 def draw_board(screen, coloredCells):
-    startCell = coloredCells[0]
-    destCell = coloredCells[1]
     # alternate board cell colors
     colors = [pg.Color("white"), pg.Color("dark grey")]
     for row in range(DIMENSIONS):
