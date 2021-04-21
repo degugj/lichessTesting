@@ -23,7 +23,7 @@ from Engine.x328p_interface import x328p_fs_interface as fs_interface
 
 
 isSoundOn = False
-wGantry = False
+wGantry = True
 
 """
 -------------------------------
