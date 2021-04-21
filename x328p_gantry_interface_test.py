@@ -20,5 +20,5 @@ currentGamestate.bBuffer[1][0] = 'bP'
 currentGamestate.bBuffer[1][1] = 'bP'
 currentGamestate.bBuffer[2][0] = 'bP'
 
-#interface.make_physical_move(currentGamestate, move)
-interface.transmit_uart_sim()
+interface.make_physical_move(currentGamestate, move)
+#interface.transmit_uart_sim()

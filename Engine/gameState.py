@@ -244,22 +244,6 @@ class GameState():
             if piece[1] == 'P':
                 for row in range(4):
                     for column in range(2):
-                        if self.bBuffer[row][column] == '--':
-                            self.bBuffer[row][column] = piece
-                            return
-            # all pieces other than pawn; bishop, knight, rook, queen
-            else:
-                for column in range(2):
-                    if self.bBuffer[self.bufferMap[piece[1]]][column] == '--':
-                        self.bBuffer[self.bufferMap[piece[1]]][column] = piece
-                        return
-
-        # if captured piece is white
-        elif pieceColor == 'w':
-            # check if captured piece is pawn, bishop, knight, rook, or queen and place into buffer accordingly
-            if piece[1] == 'P':
-                for row in range(4):
-                    for column in range(2):
                         if self.wBuffer[row][column] == '--':
                             self.wBuffer[row][column] = piece
                             return
@@ -268,6 +252,22 @@ class GameState():
                 for column in range(2):
                     if self.wBuffer[self.bufferMap[piece[1]]][column] == '--':
                         self.wBuffer[self.bufferMap[piece[1]]][column] = piece
+                        return
+
+        # if captured piece is white
+        elif pieceColor == 'w':
+            # check if captured piece is pawn, bishop, knight, rook, or queen and place into buffer accordingly
+            if piece[1] == 'P':
+                for row in range(4):
+                    for column in range(2):
+                        if self.bBuffer[row][column] == '--':
+                            self.bBuffer[row][column] = piece
+                            return
+            # all pieces other than pawn; bishop, knight, rook, queen
+            else:
+                for column in range(2):
+                    if self.bBuffer[self.bufferMap[piece[1]]][column] == '--':
+                        self.bBuffer[self.bufferMap[piece[1]]][column] = piece
                         return
         return
 
