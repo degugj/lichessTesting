@@ -291,7 +291,7 @@ def receive_chess_state():
     samState = []
     send_to_328p(0b00110000, "Start FS Message Sent")
     dumpByte = spi.readbytes(1)
-    print("Dup byte:",bin(dumpByte),str(int(dumpByte)))
+    print("Dup byte:",bin(int.from_bytes(dumpByte)),str(int.from_bytes(dumpByte, 'little')))
     for i in range(8):
         # Serial receive 2 bytes from Sam
         # ser.flush()
