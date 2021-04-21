@@ -334,7 +334,7 @@ def send_to_328p(data, messageType):
     #    received_data += ser.read(data_left)
     #    print("Sent Data: ",format(data, '#010b'))  # print received data
     #ser.write(data.to_bytes(1, 'little'))  # transmit data serially
-    spi.writebytes([data.to_bytes(1, 'little')])
+    spi.writebytes([data])
 
 def start_fast_scan(gs):
     newGs = np.array(gs.board)
