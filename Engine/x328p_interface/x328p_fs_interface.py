@@ -181,9 +181,9 @@ def resolve_chess_move_v3(gs, statePrev, stateNext):
     # print("Resolving Move...")
     # print("GS: ", gs)
     # print("Sam's Message Array:", messageArray)
-    if compare_message_lists(statePrev, stateNext):
-        print("Same state transmitted")
-        return 1
+    #if compare_message_lists(statePrev, stateNext):
+    #    print("Same state transmitted")
+    #    return 1
 
     cell = ""
 
@@ -222,8 +222,8 @@ def resolve_chess_move_v3(gs, statePrev, stateNext):
 def compare_message_lists(stateA, stateB):
     for i in range(8):
         if not stateA[i].equals(stateB[i]):
-            return False
-    return True
+            return (5, None)
+    return (0, None)
 
 def compare_chess_states(gs, messageArray):
     #print("GS: ", gs)
@@ -298,9 +298,6 @@ def recv_from_328p(timeout):
 def receive_chess_state():
     # print("Waiting for Sam's Chess State...")
     samState = []
-    send_to_328p(0b00110000, "Start FS Message Sent")
-    dumpByte = spi.readbytes(1)
-    print("Dup byte:",bin(int.from_bytes(dumpByte,'little')),str(int.from_bytes(dumpByte, 'little')))
     for i in range(8):
         # Serial receive 2 bytes from Sam
         # ser.flush()
@@ -327,12 +324,18 @@ def receive_chess_state():
         currentMessage = gamestateMessage(messageType, messageCol, recByte0)
         currentMessage.timestamp = now
         #time.sleep(0.03)
-        print(currentMessage)
+        #print(currentMessage)
         # Figure out message type
         # messageTypeStr = message_types[messageType]
 
         samState.append(currentMessage)
     return samState
+
+def print_gamestate_list(messageArray):
+    for message in messageArray:
+        print()
+        print(message)
+        
 
 # Sends 328P a path via UART
 def send_to_328p(data, messageType):
@@ -363,15 +366,23 @@ def start_fast_scan(gs):
     destCell = None
     isOpponentRemoved = False
     isChangeMade = False
+    previousChangedState = None
     while isMoveNotFound:
         while isChangeMade == False:
-            send_to_328p(0b00110000, 'Prompt Gamestate Status Message')
-            stateAnswer = spi.readbytes(1)
-            if int.from_bytes(stateAnswer, 'little') == 0xAF:
-                isChangeMade = True
+            samState = receive_chess_state()
+            if startCell is None:
+                 response = compare_chess_states(newGs, samState)
+            else:
+                 response = compare_message_lists(prevSamState, samState)
+            if response[0] == 5:
+                 #previousChangedState = samState
+                 print_gamestate_list(samState)
+                 if startCell is not None:
+                     print("\nBefore breaking the previous sam state\n")
+                     print_gamestate_list(prevSamState)
+                 break
         isChangeMade = False
         # First one is compared to local gs
-        samState = receive_chess_state()
         #print("startCell before entering if", startCell)
         if startCell is None or startCell == -1:  # Check this OR condition
             if not isOpponentRemoved:
