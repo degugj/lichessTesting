@@ -47,7 +47,7 @@ while True:
 
 while True:
     checkStatus = interface.initial_error_check(currentGamestate)
-    if checkStatus == 0:
+    if checkStatus[0] == 0:
         move = interface.start_fast_scan(currentGamestate)
         print("Move resolved from Sam's subsystem:", move)
         if move == -1:

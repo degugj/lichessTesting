@@ -298,7 +298,7 @@ def receive_chess_state():
         # rawRecByte0 = ser.read()
         send_to_328p(i, "Requesting Column "+ str(i))
         rawRecByte0 = spi.readbytes(1)
-        time.sleep(0.03)
+        #time.sleep(0.003)
         # Maybe add a delay here
         # rawRecByte1 = ser.read()
 
