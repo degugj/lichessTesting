@@ -404,12 +404,12 @@ def start_fast_scan(gs):
             # unsure about a check here
             print("Dest Cell Resolved:", destCell)
             if destCell != -1:
-                if destCell[0] == startCell[0]: # User changed move
+                if destCell != -1 and destCell[0] == startCell[0]: # User changed move
                     print("User placed piece back. Continue making move.")
                     startCell = -1
                     destCell = -1
 
-                if destCell[0] != startCell[0]:
+                if destCell != -1 and destCell[0] != startCell[0]:
                     # Transmit Stop
                     if destCell[1][0] == gs.get_opponentcolor()[0] and not isOpponentRemoved: 
                          destCell = -1
