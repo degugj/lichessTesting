@@ -14,7 +14,7 @@ Electrical and Computer Senior Design Project
 Team 10
 
 
-## Usage in markdown
+## Dependencies
 
 <!-- AUTO-GENERATED-CONTENT:START (DEPENDENCYTABLE) -->
 | **Dependency** | **Description** | **Version** | **License** | **Type** |
