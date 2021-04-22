@@ -1,7 +1,7 @@
 
 Magichess
 ============
-Magichess is an autonomous, internet connected smart chessboard that interfaces with the the lichess API (lichess.org/api).
+Magichess is an autonomous, internet connected smart chessboard that interfaces with the the [lichess API](lichess.org/api).
 
 **Contributors:**
   * Weishan Li CompE '21
@@ -21,7 +21,7 @@ Team 10
 | -------------- | --------------- | ----------- | ----------- | -------- |
  | [pygame](https://github.com/pygame/pygame) | Find a file by walking up parent directories | N/A | GNU LGPL version 2.1 | N/A | 
  | [numpy](https://github.com/numpy/numpy) | N/A | N/A | N/A | N/A | 
- | [markdown-magic@^0.1.17](https://npmjs.org/package/markdown-magic) | Automatically update markdown files with content from external sources | 0.1.17 | MIT | dev | 
- | [prettier@^1.4.4](https://github.com/prettier/prettier) | Prettier is an opinionated JavaScript formatter | 1.4.4 | MIT | dev | 
+ | [tkinter](https://github.com/python/cpython/tree/3.9/Lib/tkinter) | N/A | N/A | GPL | N/A | 
+ | [Python](https://github.com/python/) | N/A | 3.8.8 | GPL | N/A | 
 <!-- AUTO-GENERATED-CONTENT:END -->
 
