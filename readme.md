@@ -1,4 +1,4 @@
-An h1 header
+Magichess
 ============
 
 Paragraphs are separated by a blank line.
