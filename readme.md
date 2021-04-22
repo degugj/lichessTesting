@@ -19,7 +19,7 @@ Team 10
 <!-- AUTO-GENERATED-CONTENT:START (DEPENDENCYTABLE) -->
 | **Dependency** | **Description** | **Version** | **License** | **Type** |
 | -------------- | --------------- | ----------- | ----------- | -------- |
- | [pygame](https://github.com/pygame/pygame) | Find a file by walking up parent directories | N/A | GNU LGPL version 2.1 | N/A | 
+ | [pygame](https://github.com/pygame/pygame) | Open source software for illustrating game state. | 1.9.6 | GNU LGPL version 2.1 | N/A | 
  | [numpy](https://github.com/numpy/numpy) | N/A | N/A | N/A | N/A | 
  | [tkinter](https://github.com/python/cpython/tree/3.9/Lib/tkinter) | N/A | N/A | GPL | N/A | 
  | [Python](https://github.com/python/) | N/A | 3.8.8 | GPL | N/A | 
