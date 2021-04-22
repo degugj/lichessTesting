@@ -46,7 +46,8 @@ class Node:
             if map[self.pos[0] - 1][self.pos[1]].state == '. ' and map[self.pos[0]][self.pos[1] - 1].state == '. ':
                 succs.append((child, 'sw'))
 
-        if y + 1 <= 24:
+        if y + 1 <= 23:
+            print("self.pos 0 and 1",self.pos[0], self.pos[1])
             child = map[self.pos[0]][self.pos[1]+1]
             succs.append((child, 'n'))
 
@@ -54,7 +55,7 @@ class Node:
             child = map[self.pos[0]+1][self.pos[1]]
             succs.append((child, 'e'))
 
-        if x + 1 <= 16 and y + 1 <= 24:
+        if x + 1 <= 16 and y + 1 <= 25:
             child = map[self.pos[0]+1][self.pos[1]+1]
             if map[self.pos[0]+1][self.pos[1]].state == '. ' and map[self.pos[0]][self.pos[1]+1].state == '. ':
                 print(map[self.pos[0]+1][self.pos[1]].state)
@@ -65,7 +66,7 @@ class Node:
             if map[self.pos[0]+1][self.pos[1]].state == '. ' and map[self.pos[0]][self.pos[1]-1].state == '. ':
                 succs.append((child, 'nw'))
 
-        if x - 1 >= 0 and y + 1 <= 26:
+        if x - 1 >= 0 and y + 1 <= 25:
             child = map[self.pos[0]-1][self.pos[1]+1]
             if map[self.pos[0] - 1][self.pos[1]].state == '. ' and map[self.pos[0]][self.pos[1] + 1].state == '. ':
                 succs.append((child, 'se'))
