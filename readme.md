@@ -1,7 +1,7 @@
 
 Magichess
 ============
-Magichess is an autonomous, internet connected smart chessboard that interfaces with the the lichess API (lichess.org/api).
+Magichess is an autonomous, internet connected smart chessboard that interfaces with the the [lichess API](https://lichess.org/api).
 
 **Contributors:**
   * Weishan Li CompE '21
@@ -19,9 +19,9 @@ Team 10
 <!-- AUTO-GENERATED-CONTENT:START (DEPENDENCYTABLE) -->
 | **Dependency** | **Description** | **Version** | **License** | **Type** |
 | -------------- | --------------- | ----------- | ----------- | -------- |
- | [pygame](https://github.com/pygame/pygame) | Find a file by walking up parent directories | 2.1.0 | MIT | production | 
- | [semver@^5.3.0](https://github.com/npm/node-semver) | The semantic version parser used by npm. | 5.3.0 | ISC | production | 
- | [markdown-magic@^0.1.17](https://npmjs.org/package/markdown-magic) | Automatically update markdown files with content from external sources | 0.1.17 | MIT | dev | 
- | [prettier@^1.4.4](https://github.com/prettier/prettier) | Prettier is an opinionated JavaScript formatter | 1.4.4 | MIT | dev | 
+ | [pygame](https://github.com/pygame/pygame) | Open source software for illustrating game state. | 1.9.6 | GNU LGPL version 2.1 | N/A | 
+ | [numpy](https://github.com/numpy/numpy) | N/A | N/A | N/A | N/A | 
+ | [tkinter](https://github.com/python/cpython/tree/3.9/Lib/tkinter) | N/A | N/A | GPL | N/A | 
+ | [Python](https://github.com/python/) | N/A | 3.8.8 | GPL | N/A | 
 <!-- AUTO-GENERATED-CONTENT:END -->
 
