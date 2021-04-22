@@ -46,7 +46,7 @@ class Node:
             if map[self.pos[0] - 1][self.pos[1]].state == '. ' and map[self.pos[0]][self.pos[1] - 1].state == '. ':
                 succs.append((child, 'sw'))
 
-        if y + 1 <= 26:
+        if y + 1 <= 25:
             child = map[self.pos[0]][self.pos[1]+1]
             succs.append((child, 'n'))
 
