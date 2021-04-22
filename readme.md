@@ -1,7 +1,7 @@
 
 Magichess
 ============
-Magichess is an autonomous, internet connected smart chessboard that interfaces with the the [lichess API](lichess.org/api).
+Magichess is an autonomous, internet connected smart chessboard that interfaces with the the [lichess API](https://lichess.org/api).
 
 **Contributors:**
   * Weishan Li CompE '21
