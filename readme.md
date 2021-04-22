@@ -1,7 +1,17 @@
+
 Magichess
 ============
+Magichess is an autonomous, internet connected smart chessboard that interfaces with the the lichess API (lichess.org/api).
 
-Paragraphs are separated by a blank line.
+**Contributors:**
+  * Weishan Li CompE '21
+  * Sai Thuta Kyaw EE '21
+  * Samantha Klein EE '21
+  * Jack DeGuglielmo CompE '21
+
+University of Massachusetts Amherst '21
+Electrical and Computer Senior Design Project
+Team 10
 
 2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists
 look like:
