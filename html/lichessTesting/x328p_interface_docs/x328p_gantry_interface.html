@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>x328p_interface.x328p_gantry_interface API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>x328p_interface.x328p_gantry_interface</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Module and helper functions for interfacing with Atmega328p via Pi UART
+# Authors: Weishan Li, Jack DeGuglielmo
+# Date: 2020-11-01
+
+import math
+import heapq
+#import serial
+import time
+import sys
+letterToColumn = {&#39;a&#39;:5, &#39;b&#39;:7,&#39;c&#39;:9,&#39;d&#39;:11,&#39;e&#39;:13,&#39;f&#39;:15,&#39;g&#39;:17,&#39;h&#39;:19}  # To translate cell to posMap location
+pieceToBuffer = {&#39;wP&#39;:[15,0], &#39;bP&#39;: [15, 24], &#39;bP&#39;: [15, 22]}
+# easy translation from number to row ((number * 2) + 1)
+#ser = serial.Serial(&#34;/dev/ttyS0&#34;, 9600)  # Open port with baud rate
+
+# self.letter_to_x = {&#39;a&#39;:0, &#39;b&#39;:1, &#39;c&#39;:2, &#39;d&#39;:3, &#39;e&#39;:4, &#39;f&#39;:5, &#39;g&#39;:6, &#39;h&#39;:7}
+# self.number_to_y = {&#39;1&#39;:7, &#39;2&#39;:6, &#39;3&#39;:5, &#39;4&#39;:4, &#39;5&#39;:3, &#39;6&#39;:2, &#39;7&#39;:1, &#39;8&#39;:0}
+message_types = {&#39;XADDRESS&#39;:0b00111111, &#39;YADDRESS&#39;:0b01011111, &#39;RFID&#39;:0b01111111, &#39;EM&#39;:0b10011111, &#39;GO&#39;:0b10111111, &#39;ARRIVED&#39;:0b11011111,&#39;ELSE&#39;:11111111, &#39;BUSY&#39;:11100101}
+
+currentGantryPos=[0,0]
+
+class Node:
+    def __init__(self, state=&#39;. &#39;, parent=None, pos=[0, 0]):
+        self.state = state      # Value
+        self.parent = parent    # parent node
+        self.heuristic = math.inf
+        self.pos = pos
+        self.cost = 0
+        self.isGoal = 0
+        self.costCreated = 0
+
+    def successors(self, map):
+        succs = []
+        x = self.pos[0]
+        y = self.pos[1]
+
+        if y-1 &gt;= 0:
+            child = map[self.pos[0]][self.pos[1]-1]
+            succs.append((child, &#39;s&#39;))
+
+        if x - 1 &gt;= 0:
+            child = map[self.pos[0]-1][self.pos[1]]
+            succs.append((child, &#39;w&#39;))
+
+        if y - 1 &gt;= 0 and x - 1 &gt;= 0:
+            child = map[self.pos[0]-1][self.pos[1]-1]
+            if map[self.pos[0] - 1][self.pos[1]].state == &#39;. &#39; and map[self.pos[0]][self.pos[1] - 1].state == &#39;. &#39;:
+                succs.append((child, &#39;sw&#39;))
+
+        if y + 1 &lt;= 26:
+            child = map[self.pos[0]][self.pos[1]+1]
+            succs.append((child, &#39;n&#39;))
+
+        if x + 1 &lt;= 16:
+            child = map[self.pos[0]+1][self.pos[1]]
+            succs.append((child, &#39;e&#39;))
+
+        if x + 1 &lt;= 16 and y + 1 &lt;= 26:
+            child = map[self.pos[0]+1][self.pos[1]+1]
+            if map[self.pos[0]+1][self.pos[1]].state == &#39;. &#39; and map[self.pos[0]][self.pos[1]+1].state == &#39;. &#39;:
+                print(map[self.pos[0]+1][self.pos[1]].state)
+                succs.append((child, &#39;ne&#39;))
+
+        if x + 1 &lt;= 16 and y - 1 &gt;= 0:
+            child = map[self.pos[0]+1][self.pos[1]-1]
+            if map[self.pos[0]+1][self.pos[1]].state == &#39;. &#39; and map[self.pos[0]][self.pos[1]-1].state == &#39;. &#39;:
+                succs.append((child, &#39;nw&#39;))
+
+        if x - 1 &gt;= 0 and y + 1 &lt;= 26:
+            child = map[self.pos[0]-1][self.pos[1]+1]
+            if map[self.pos[0] - 1][self.pos[1]].state == &#39;. &#39; and map[self.pos[0]][self.pos[1] + 1].state == &#39;. &#39;:
+                succs.append((child, &#39;se&#39;))
+
+        return succs
+
+    def __str__(self):
+        return self.state
+
+def next_buffer_pos(gamestate, piece):
+    pieceColor = piece[0]
+    # if captured piece is black
+    if pieceColor == &#39;w&#39;:
+        # check if captured piece is pawn
+        if piece[1] == &#39;P&#39;:
+            for row in range(4):
+                for column in range(2):
+                    if gamestate.bBuffer[row][column] == &#39;--&#39;:
+                        return [row, column]
+        # all pieces other than pawn; bishop, knight, rook, queen
+        else:
+            for column in range(2):
+                if gamestate.bBuffer[gamestate.bufferMap[piece[1]]][column] == &#39;--&#39;:
+                    return [gamestate.bufferMap[piece[1]], column]
+    # if captured piece is white
+    elif pieceColor == &#39;b&#39;:
+        # check if captured piece is pawn, bishop, knight, rook, or queen and place into buffer accordingly
+        if piece[1] == &#39;P&#39;:
+            for row in range(4):
+                for column in range(2):
+                    if gamestate.wBuffer[row][column] == &#39;--&#39;:
+                        return [row, column]
+        # all pieces other than pawn; bishop, knight, rook, queen
+        else:
+            for column in range(2):
+                if gamestate.wBuffer[gamestate.bufferMap[piece[1]]][column] == &#39;--&#39;:
+                    return [gamestate.bufferMap[piece[1]], column]
+
+# Translates an 8x8 gamestate to a 24x24 piece position map
+def gamestate_to_position_map(gamestate):
+    posMap = [[Node() for _ in range(25)] for _ in range(17)]
+    for i in range(len(posMap)):
+        for j in range(len(posMap[i])):
+            posMap[i][j].pos = [i, j]
+    # TODO add buffer translations
+    for i in range(8):
+        for j in range(8):
+            posI = (i*2)+1
+            posJ = (j*2)+1
+            # print(gamestate.board[i][j])
+            if(gamestate.board[i][j] != &#34;--&#34;):
+                node = posMap[16 - posI][posJ+4]
+                node.state = gamestate.board[i][j]
+                node.pos = [16 - posI, posJ+4]
+            else:
+                posMap[posI][posJ + 5].state = &#39;. &#39;
+    for i in range(len(gamestate.wBuffer)):
+        for p in range(len(gamestate.wBuffer[i])):
+            #print(gamestate.wBuffer[i][p])
+            if gamestate.wBuffer[i][p] != &#39;--&#39;:
+                posMap[(15-(i*2))][p*2].state = gamestate.wBuffer[i][p]
+
+    for i in range(len(gamestate.bBuffer)):
+        for p in range(len(gamestate.bBuffer[i])):
+            #print(gamestate.wBuffer[i][p])
+            if gamestate.bBuffer[i][p] != &#39;--&#39;:
+                posMap[(15-(i*2))][(p*2)+22].state = gamestate.bBuffer[i][p]
+    return posMap
+
+
+# Creates a heuristic map of weights equal to the distance from the destination position
+def create_heuristic_map(posMap, endPos):
+    for i in range(len(posMap)):
+        for j in range(len(posMap[i])):
+            if posMap[i][j].state == &#39;. &#39;:
+                straightLineDist = math.sqrt(math.pow(endPos[0]-i,2) + math.pow(endPos[1]-j, 2))
+                posMap[i][j].heuristic = straightLineDist
+            else:
+                posMap[i][j].heuristic = math.inf
+
+
+    posMap[endPos[0]][endPos[1]].isGoal = 1
+    return posMap
+
+# Straightline path compression for gantry optimization
+def sl_compression(solution):
+    compressed_path = []
+    compressed_path.append(solution[0])
+    for i in range(1,len(solution)-1):
+        if solution[i][1] == solution[i+1][1]:
+            pass
+        else:
+            compressed_path.append(solution[i])
+    compressed_path.append(solution[len(solution)-1])
+    return compressed_path
+
+# Returns the Astar path of
+def greedy(heurMap, startNode):
+    solution = []
+    frontier = []
+    explored = set()
+
+    frontier.append((startNode, &#39;&#39;))
+    frontierCount = 1
+    expandCount = 0
+
+    if startNode.isGoal:
+        return solution
+    while len(frontier) != 0:
+        node = heapq.heappop(frontier)
+        solution.append(node)
+        if node[0].isGoal:
+            return solution
+
+        explored.add(node)
+        succ = node[0].successors(heurMap)
+        expandCount += 1
+        if expandCount &gt;= 100000:
+            print(&#34;Search halted&#34;)
+            return -1
+        bestNode = (Node(), &#39;&#39;)
+        for n in succ:
+            succNode = n[0]
+            if succNode.heuristic != math.inf and n not in explored:
+                if bestNode[0].heuristic &gt; succNode.heuristic:
+                    bestNode = n
+            else:
+                pass
+            if succNode.isGoal == 1:
+                solution.append(n)
+                return solution
+        frontier.append(bestNode)
+
+    print(&#34;no solution&#34;)
+    # print(&#34;path cost: N/A since no solution was found&#34;)
+    print(&#34;frontier: &#34; + str(frontierCount))
+    print(&#34;expandCount: &#34; + str(expandCount))
+    return -1
+
+# Returns an 8-bit address message
+def message_encode(value, type):
+    justValue = 0b11100000 | int(value)  # Populate hot bits in message type bits
+    message = justValue&amp; message_types[type]
+    print(&#34;\nEncoded&#34;, type, &#34;message:&#34;, format(message, &#39;#010b&#39;))
+    return message
+
+
+
+# 328P UART conversation for controlling EM
+def transmit_path(path):
+    # ADD X (path[0])
+    node = path[0][0]
+    global currentGantryPos
+    currentGantryPos = node.pos
+    #print(&#34;XADD Message: &#34;,format(message_encode(node.pos[1],&#34;XADDRESS&#34;), &#39;#010b&#39;))
+    send_to_328p(message_encode(node.pos[1],&#34;XADDRESS&#34;))
+    # ADD Y
+    #print(&#34;YADD Message: &#34;,format(message_encode(node.pos[0],&#34;YADDRESS&#34;), &#39;#010b&#39;))
+    send_to_328p(message_encode(node.pos[0],&#34;YADDRESS&#34;))
+    # GO
+    #print(&#34;GO Message: &#34;,format(message_encode(0b11111,&#34;GO&#34;), &#39;#010b&#39;))
+    send_to_328p(message_encode(0b11111,&#34;GO&#34;))
+    # Wait for ARRIVED
+    #print(&#34;Wait for ARRIVED and gantry position (Mocking with sleep for now)&#34;)
+    resp = recv_from_328p(&#34;ARRIVED&#34;, 10)
+    if resp == -1:
+        return -1
+    # Request RFID
+    #print(&#34;RFID Req: &#34;,format(message_encode(0b11010,&#34;RFID&#34;), &#39;#010b&#39;))
+    #send_to_328p(message_encode(0b11010,&#34;RFID&#34;))
+    # Check RFID, compare to my state
+    #print(&#34;Recieve and confirm RFID (Mocking with sleep for now)&#34;)
+    print(&#34;Skip RFID wait for now...&#34;)
+    #recv_from_328p(&#34;RFID&#34;, 10)
+    # EM ON
+    #print(&#34;EM Message: &#34;,format(message_encode(0b11111,&#34;EM&#34;), &#39;#010b&#39;))
+    send_to_328p(message_encode(0b11111,&#34;EM&#34;))
+    #print(&#34;Wait for EM ON message (Mocking with sleep for now)&#34;)
+    #recv_from_328p(&#34;EM&#34;, 10)
+
+    # Loop path[1] and on:
+    time.sleep(.5)
+    for i in path[1:len(path)]:
+        node = i[0]
+        currentGantryPos = node.pos
+        #print(&#34;XADD Message: &#34;, format(message_encode(node.pos[1], &#34;XADDRESS&#34;), &#39;#010b&#39;))
+        send_to_328p(message_encode(node.pos[1], &#34;XADDRESS&#34;))
+        time.sleep(.03)
+        #print(&#34;YADD Message: &#34;, format(message_encode(node.pos[0], &#34;YADDRESS&#34;), &#39;#010b&#39;))
+        send_to_328p(message_encode(node.pos[0], &#34;YADDRESS&#34;))
+        time.sleep(.03)
+        #print(&#34;GO Message: &#34;, format(message_encode(node.pos[0], &#34;GO&#34;), &#39;#010b&#39;))
+        send_to_328p(message_encode(node.pos[0], &#34;GO&#34;))
+        #print(&#34;Wait for ARRIVED and gantry position (Mocking with sleep for now)&#34;)
+        recv_from_328p(&#34;ARRIVED&#34;, 10)
+        #time.sleep(1)
+    # EM OFF
+    #print(&#34;EM Message: &#34;,format(message_encode(0b00000,&#34;EM&#34;), &#39;#010b&#39;))
+    send_to_328p(message_encode(0b00000,&#34;EM&#34;))
+    # Wait for EM OFF?
+    #recv_from_328p(&#34;EM&#34;, 10)
+    time.sleep(.5)
+
+    return
+
+
+def find_message_type(message):
+    for key in message_types:
+        if (message&amp;0b11100000) == (message_types[key]&amp;0b11100000):
+            return key
+    return &#34;Unknown&#34;
+
+
+# Receive message from 328P via UART
+def recv_from_328p(messageType, timeout):
+    print(&#34;\nWaiting for message:&#34;, messageType)
+
+    while True:
+        ser.flush()
+        #time.sleep(0.03)
+        x = ser.read()
+        intMessage = int.from_bytes(x, &#39;little&#39;)
+        recType = find_message_type(intMessage)
+        print(recType, &#34;message recieved&#34;, format(intMessage, &#39;#010b&#39;))
+        if recType == &#34;BUSY&#34;:
+            print(&#34;Gantry is busy. Waiting for next message&#34;)
+            #recv_from_328p(messageType)
+
+        if recType != messageType:
+            print(&#34;WARNING: Recieved message:&#34;,recType,&#34;; expected:&#34;,messageType)
+        if messageType == &#34;RFID&#34;:
+            print(&#34;Do nothing...&#34;)
+            return
+        elif messageType == &#34;ARRIVED&#34;:
+            xTrue = recv_from_328p(&#34;XADDRESS&#34;, 10)
+            yTrue = recv_from_328p(&#34;YADDRESS&#34;, 10)
+            if xTrue or yTrue == -1:
+                print(&#34;Exiting, current address is not verified&#34;) # This could be where we try to move it back or call a scan
+                return 0
+            # Verify addresses
+            return
+        elif messageType == &#34;XADDRESS&#34;:
+            expectedX_Addr = currentGantryPos[1]
+            recX_Addr = (intMessage&amp;0b00011111)
+            if expectedX_Addr != recX_Addr:
+                print(&#34;ERROR: Received x address:&#34;,recX_Addr,&#34;expected x address:&#34;,expectedX_Addr)
+                return
+            else:
+                print(&#34;Confirmed x address ({})&#34;.format(recX_Addr))
+                return
+        elif messageType == &#34;YADDRESS&#34;:
+            expectedY_Addr = currentGantryPos[0]
+            recY_Addr = (intMessage&amp;0b00011111)
+            if expectedY_Addr != recY_Addr:
+                print(&#34;ERROR: Received y address:&#34;,recY_Addr,&#34;expected y address:&#34;,expectedY_Addr)
+                return
+            else:
+                print(&#34;Confirmed y address ({})&#34;.format(recY_Addr))
+                return
+        elif messageType == &#34;EM&#34;:
+            print(&#34;EM confirmed&#34;)
+            return
+        else:
+            print(&#34;Received unsupported message type:&#34;,recType,&#34;expected:&#34;,messageType)
+            time.sleep(.3)
+
+    return -1 # timeout or error
+
+
+
+# Sends 328P a path via UART
+def send_to_328p(data):
+    ser.flush()
+    print(&#34;Message sent (&#34; + hex(data)+&#34;)&#34;,&#34;(Header:&#34;, (data&amp;0b11100000),&#34;Payload:&#34;,(data&amp;0b00011111),&#39;)&#39;)
+    ser.write(data.to_bytes(1, &#39;little&#39;))  # transmit data serially
+
+    return 0
+
+def print_posMap(map, path=None):
+    if (path != None):
+        for i in range(len(path)):
+            solNode = path[i][0]
+            map[solNode.pos[0]][solNode.pos[1]].state = u&#34;\u26AA&#34;
+    print(&#34;\033[1m\tWhite \t\t\t\t\t\t\tBoard \t\t\t\t\t\tBlack&#34;)
+    for i in range(16, -1, -1):
+        for j in range(4):
+            print(map[i][j], end=&#39; &#39;)
+        print(&#34;\t&#34;, end = &#39;&#39;)
+        for x in range(17):
+            print(map[i][4 + x], end=&#39; &#39;)
+        print(&#34;\t&#34;, end = &#39;&#39;)
+        for j in range(4):
+            print(map[i][21 + j], end=&#39; &#39;)
+        print(&#34;\t&#34;)
+
+
+
+# External function used to interface with GUI and game execution. Takes current gamestate and string move (ie &#39;e4e5&#39;)
+def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
+    # TODO Extract and interpret move as start and end pos
+    posMap = gamestate_to_position_map(gamestate)  # convert 8x8 to position map
+
+    startPos = [0,0]
+    endPos = [0, 0]
+    if move is not None:
+        startPos[0] = (int(move[1]) * 2) - 1
+        startPos[1] = letterToColumn[move[0]]
+
+        endPos[0] = (int(move[3:len(move)]) * 2) - 1
+        endPos[1] = letterToColumn[move[2]]
+    else:
+        startPos = startOverride
+        endPos = destOveride
+
+    destNode = posMap[endPos[0]][endPos[1]]
+
+    if destNode.state != &#39;. &#39;:
+        capturedPos = destNode.pos
+        bufferPos = next_buffer_pos(gamestate, destNode.state)
+        if destNode.state[0] == &#39;w&#39;:
+            bufferPosMap = [(15 - (int(bufferPos[0]) * 2)), (int(bufferPos[1]) * 2) + 22]
+        else:
+            bufferPosMap = [(15-(int(bufferPos[0])*2)), int(bufferPos[1])*2]
+        make_physical_move(gamestate, None, capturedPos, bufferPosMap)
+
+    heurMap = create_heuristic_map(posMap, endPos)
+
+    solution = greedy(heurMap, heurMap[startPos[0]][startPos[1]])
+    print(&#34;\nBefore Straightline Path Compression: &#34;)
+    print_posMap(heurMap, solution)
+    #resp = transmit_path(sl_compression(solution))
+
+    #if resp == -1:
+    #    make_physical_move(gamestate, move, startOverride, destOveride)
+
+    return 0
+
+def transmit_uart_sim():
+    while True:
+        time.sleep(.03)
+        send_to_328p(0x91)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="x328p_interface.x328p_gantry_interface.create_heuristic_map"><code class="name flex">
+<span>def <span class="ident">create_heuristic_map</span></span>(<span>posMap, endPos)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_heuristic_map(posMap, endPos):
+    for i in range(len(posMap)):
+        for j in range(len(posMap[i])):
+            if posMap[i][j].state == &#39;. &#39;:
+                straightLineDist = math.sqrt(math.pow(endPos[0]-i,2) + math.pow(endPos[1]-j, 2))
+                posMap[i][j].heuristic = straightLineDist
+            else:
+                posMap[i][j].heuristic = math.inf
+
+
+    posMap[endPos[0]][endPos[1]].isGoal = 1
+    return posMap</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_gantry_interface.find_message_type"><code class="name flex">
+<span>def <span class="ident">find_message_type</span></span>(<span>message)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_message_type(message):
+    for key in message_types:
+        if (message&amp;0b11100000) == (message_types[key]&amp;0b11100000):
+            return key
+    return &#34;Unknown&#34;</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_gantry_interface.gamestate_to_position_map"><code class="name flex">
+<span>def <span class="ident">gamestate_to_position_map</span></span>(<span>gamestate)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def gamestate_to_position_map(gamestate):
+    posMap = [[Node() for _ in range(25)] for _ in range(17)]
+    for i in range(len(posMap)):
+        for j in range(len(posMap[i])):
+            posMap[i][j].pos = [i, j]
+    # TODO add buffer translations
+    for i in range(8):
+        for j in range(8):
+            posI = (i*2)+1
+            posJ = (j*2)+1
+            # print(gamestate.board[i][j])
+            if(gamestate.board[i][j] != &#34;--&#34;):
+                node = posMap[16 - posI][posJ+4]
+                node.state = gamestate.board[i][j]
+                node.pos = [16 - posI, posJ+4]
+            else:
+                posMap[posI][posJ + 5].state = &#39;. &#39;
+    for i in range(len(gamestate.wBuffer)):
+        for p in range(len(gamestate.wBuffer[i])):
+            #print(gamestate.wBuffer[i][p])
+            if gamestate.wBuffer[i][p] != &#39;--&#39;:
+                posMap[(15-(i*2))][p*2].state = gamestate.wBuffer[i][p]
+
+    for i in range(len(gamestate.bBuffer)):
+        for p in range(len(gamestate.bBuffer[i])):
+            #print(gamestate.wBuffer[i][p])
+            if gamestate.bBuffer[i][p] != &#39;--&#39;:
+                posMap[(15-(i*2))][(p*2)+22].state = gamestate.bBuffer[i][p]
+    return posMap</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_gantry_interface.greedy"><code class="name flex">
+<span>def <span class="ident">greedy</span></span>(<span>heurMap, startNode)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def greedy(heurMap, startNode):
+    solution = []
+    frontier = []
+    explored = set()
+
+    frontier.append((startNode, &#39;&#39;))
+    frontierCount = 1
+    expandCount = 0
+
+    if startNode.isGoal:
+        return solution
+    while len(frontier) != 0:
+        node = heapq.heappop(frontier)
+        solution.append(node)
+        if node[0].isGoal:
+            return solution
+
+        explored.add(node)
+        succ = node[0].successors(heurMap)
+        expandCount += 1
+        if expandCount &gt;= 100000:
+            print(&#34;Search halted&#34;)
+            return -1
+        bestNode = (Node(), &#39;&#39;)
+        for n in succ:
+            succNode = n[0]
+            if succNode.heuristic != math.inf and n not in explored:
+                if bestNode[0].heuristic &gt; succNode.heuristic:
+                    bestNode = n
+            else:
+                pass
+            if succNode.isGoal == 1:
+                solution.append(n)
+                return solution
+        frontier.append(bestNode)
+
+    print(&#34;no solution&#34;)
+    # print(&#34;path cost: N/A since no solution was found&#34;)
+    print(&#34;frontier: &#34; + str(frontierCount))
+    print(&#34;expandCount: &#34; + str(expandCount))
+    return -1</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_gantry_interface.make_physical_move"><code class="name flex">
+<span>def <span class="ident">make_physical_move</span></span>(<span>gamestate, move, startOverride=None, destOveride=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
+    # TODO Extract and interpret move as start and end pos
+    posMap = gamestate_to_position_map(gamestate)  # convert 8x8 to position map
+
+    startPos = [0,0]
+    endPos = [0, 0]
+    if move is not None:
+        startPos[0] = (int(move[1]) * 2) - 1
+        startPos[1] = letterToColumn[move[0]]
+
+        endPos[0] = (int(move[3:len(move)]) * 2) - 1
+        endPos[1] = letterToColumn[move[2]]
+    else:
+        startPos = startOverride
+        endPos = destOveride
+
+    destNode = posMap[endPos[0]][endPos[1]]
+
+    if destNode.state != &#39;. &#39;:
+        capturedPos = destNode.pos
+        bufferPos = next_buffer_pos(gamestate, destNode.state)
+        if destNode.state[0] == &#39;w&#39;:
+            bufferPosMap = [(15 - (int(bufferPos[0]) * 2)), (int(bufferPos[1]) * 2) + 22]
+        else:
+            bufferPosMap = [(15-(int(bufferPos[0])*2)), int(bufferPos[1])*2]
+        make_physical_move(gamestate, None, capturedPos, bufferPosMap)
+
+    heurMap = create_heuristic_map(posMap, endPos)
+
+    solution = greedy(heurMap, heurMap[startPos[0]][startPos[1]])
+    print(&#34;\nBefore Straightline Path Compression: &#34;)
+    print_posMap(heurMap, solution)
+    #resp = transmit_path(sl_compression(solution))
+
+    #if resp == -1:
+    #    make_physical_move(gamestate, move, startOverride, destOveride)
+
+    return 0</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_gantry_interface.message_encode"><code class="name flex">
+<span>def <span class="ident">message_encode</span></span>(<span>value, type)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def message_encode(value, type):
+    justValue = 0b11100000 | int(value)  # Populate hot bits in message type bits
+    message = justValue&amp; message_types[type]
+    print(&#34;\nEncoded&#34;, type, &#34;message:&#34;, format(message, &#39;#010b&#39;))
+    return message</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_gantry_interface.next_buffer_pos"><code class="name flex">
+<span>def <span class="ident">next_buffer_pos</span></span>(<span>gamestate, piece)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def next_buffer_pos(gamestate, piece):
+    pieceColor = piece[0]
+    # if captured piece is black
+    if pieceColor == &#39;w&#39;:
+        # check if captured piece is pawn
+        if piece[1] == &#39;P&#39;:
+            for row in range(4):
+                for column in range(2):
+                    if gamestate.bBuffer[row][column] == &#39;--&#39;:
+                        return [row, column]
+        # all pieces other than pawn; bishop, knight, rook, queen
+        else:
+            for column in range(2):
+                if gamestate.bBuffer[gamestate.bufferMap[piece[1]]][column] == &#39;--&#39;:
+                    return [gamestate.bufferMap[piece[1]], column]
+    # if captured piece is white
+    elif pieceColor == &#39;b&#39;:
+        # check if captured piece is pawn, bishop, knight, rook, or queen and place into buffer accordingly
+        if piece[1] == &#39;P&#39;:
+            for row in range(4):
+                for column in range(2):
+                    if gamestate.wBuffer[row][column] == &#39;--&#39;:
+                        return [row, column]
+        # all pieces other than pawn; bishop, knight, rook, queen
+        else:
+            for column in range(2):
+                if gamestate.wBuffer[gamestate.bufferMap[piece[1]]][column] == &#39;--&#39;:
+                    return [gamestate.bufferMap[piece[1]], column]</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_gantry_interface.print_posMap"><code class="name flex">
+<span>def <span class="ident">print_posMap</span></span>(<span>map, path=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print_posMap(map, path=None):
+    if (path != None):
+        for i in range(len(path)):
+            solNode = path[i][0]
+            map[solNode.pos[0]][solNode.pos[1]].state = u&#34;\u26AA&#34;
+    print(&#34;\033[1m\tWhite \t\t\t\t\t\t\tBoard \t\t\t\t\t\tBlack&#34;)
+    for i in range(16, -1, -1):
+        for j in range(4):
+            print(map[i][j], end=&#39; &#39;)
+        print(&#34;\t&#34;, end = &#39;&#39;)
+        for x in range(17):
+            print(map[i][4 + x], end=&#39; &#39;)
+        print(&#34;\t&#34;, end = &#39;&#39;)
+        for j in range(4):
+            print(map[i][21 + j], end=&#39; &#39;)
+        print(&#34;\t&#34;)</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_gantry_interface.recv_from_328p"><code class="name flex">
+<span>def <span class="ident">recv_from_328p</span></span>(<span>messageType, timeout)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def recv_from_328p(messageType, timeout):
+    print(&#34;\nWaiting for message:&#34;, messageType)
+
+    while True:
+        ser.flush()
+        #time.sleep(0.03)
+        x = ser.read()
+        intMessage = int.from_bytes(x, &#39;little&#39;)
+        recType = find_message_type(intMessage)
+        print(recType, &#34;message recieved&#34;, format(intMessage, &#39;#010b&#39;))
+        if recType == &#34;BUSY&#34;:
+            print(&#34;Gantry is busy. Waiting for next message&#34;)
+            #recv_from_328p(messageType)
+
+        if recType != messageType:
+            print(&#34;WARNING: Recieved message:&#34;,recType,&#34;; expected:&#34;,messageType)
+        if messageType == &#34;RFID&#34;:
+            print(&#34;Do nothing...&#34;)
+            return
+        elif messageType == &#34;ARRIVED&#34;:
+            xTrue = recv_from_328p(&#34;XADDRESS&#34;, 10)
+            yTrue = recv_from_328p(&#34;YADDRESS&#34;, 10)
+            if xTrue or yTrue == -1:
+                print(&#34;Exiting, current address is not verified&#34;) # This could be where we try to move it back or call a scan
+                return 0
+            # Verify addresses
+            return
+        elif messageType == &#34;XADDRESS&#34;:
+            expectedX_Addr = currentGantryPos[1]
+            recX_Addr = (intMessage&amp;0b00011111)
+            if expectedX_Addr != recX_Addr:
+                print(&#34;ERROR: Received x address:&#34;,recX_Addr,&#34;expected x address:&#34;,expectedX_Addr)
+                return
+            else:
+                print(&#34;Confirmed x address ({})&#34;.format(recX_Addr))
+                return
+        elif messageType == &#34;YADDRESS&#34;:
+            expectedY_Addr = currentGantryPos[0]
+            recY_Addr = (intMessage&amp;0b00011111)
+            if expectedY_Addr != recY_Addr:
+                print(&#34;ERROR: Received y address:&#34;,recY_Addr,&#34;expected y address:&#34;,expectedY_Addr)
+                return
+            else:
+                print(&#34;Confirmed y address ({})&#34;.format(recY_Addr))
+                return
+        elif messageType == &#34;EM&#34;:
+            print(&#34;EM confirmed&#34;)
+            return
+        else:
+            print(&#34;Received unsupported message type:&#34;,recType,&#34;expected:&#34;,messageType)
+            time.sleep(.3)
+
+    return -1 # timeout or error</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_gantry_interface.send_to_328p"><code class="name flex">
+<span>def <span class="ident">send_to_328p</span></span>(<span>data)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def send_to_328p(data):
+    ser.flush()
+    print(&#34;Message sent (&#34; + hex(data)+&#34;)&#34;,&#34;(Header:&#34;, (data&amp;0b11100000),&#34;Payload:&#34;,(data&amp;0b00011111),&#39;)&#39;)
+    ser.write(data.to_bytes(1, &#39;little&#39;))  # transmit data serially
+
+    return 0</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_gantry_interface.sl_compression"><code class="name flex">
+<span>def <span class="ident">sl_compression</span></span>(<span>solution)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sl_compression(solution):
+    compressed_path = []
+    compressed_path.append(solution[0])
+    for i in range(1,len(solution)-1):
+        if solution[i][1] == solution[i+1][1]:
+            pass
+        else:
+            compressed_path.append(solution[i])
+    compressed_path.append(solution[len(solution)-1])
+    return compressed_path</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_gantry_interface.transmit_path"><code class="name flex">
+<span>def <span class="ident">transmit_path</span></span>(<span>path)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transmit_path(path):
+    # ADD X (path[0])
+    node = path[0][0]
+    global currentGantryPos
+    currentGantryPos = node.pos
+    #print(&#34;XADD Message: &#34;,format(message_encode(node.pos[1],&#34;XADDRESS&#34;), &#39;#010b&#39;))
+    send_to_328p(message_encode(node.pos[1],&#34;XADDRESS&#34;))
+    # ADD Y
+    #print(&#34;YADD Message: &#34;,format(message_encode(node.pos[0],&#34;YADDRESS&#34;), &#39;#010b&#39;))
+    send_to_328p(message_encode(node.pos[0],&#34;YADDRESS&#34;))
+    # GO
+    #print(&#34;GO Message: &#34;,format(message_encode(0b11111,&#34;GO&#34;), &#39;#010b&#39;))
+    send_to_328p(message_encode(0b11111,&#34;GO&#34;))
+    # Wait for ARRIVED
+    #print(&#34;Wait for ARRIVED and gantry position (Mocking with sleep for now)&#34;)
+    resp = recv_from_328p(&#34;ARRIVED&#34;, 10)
+    if resp == -1:
+        return -1
+    # Request RFID
+    #print(&#34;RFID Req: &#34;,format(message_encode(0b11010,&#34;RFID&#34;), &#39;#010b&#39;))
+    #send_to_328p(message_encode(0b11010,&#34;RFID&#34;))
+    # Check RFID, compare to my state
+    #print(&#34;Recieve and confirm RFID (Mocking with sleep for now)&#34;)
+    print(&#34;Skip RFID wait for now...&#34;)
+    #recv_from_328p(&#34;RFID&#34;, 10)
+    # EM ON
+    #print(&#34;EM Message: &#34;,format(message_encode(0b11111,&#34;EM&#34;), &#39;#010b&#39;))
+    send_to_328p(message_encode(0b11111,&#34;EM&#34;))
+    #print(&#34;Wait for EM ON message (Mocking with sleep for now)&#34;)
+    #recv_from_328p(&#34;EM&#34;, 10)
+
+    # Loop path[1] and on:
+    time.sleep(.5)
+    for i in path[1:len(path)]:
+        node = i[0]
+        currentGantryPos = node.pos
+        #print(&#34;XADD Message: &#34;, format(message_encode(node.pos[1], &#34;XADDRESS&#34;), &#39;#010b&#39;))
+        send_to_328p(message_encode(node.pos[1], &#34;XADDRESS&#34;))
+        time.sleep(.03)
+        #print(&#34;YADD Message: &#34;, format(message_encode(node.pos[0], &#34;YADDRESS&#34;), &#39;#010b&#39;))
+        send_to_328p(message_encode(node.pos[0], &#34;YADDRESS&#34;))
+        time.sleep(.03)
+        #print(&#34;GO Message: &#34;, format(message_encode(node.pos[0], &#34;GO&#34;), &#39;#010b&#39;))
+        send_to_328p(message_encode(node.pos[0], &#34;GO&#34;))
+        #print(&#34;Wait for ARRIVED and gantry position (Mocking with sleep for now)&#34;)
+        recv_from_328p(&#34;ARRIVED&#34;, 10)
+        #time.sleep(1)
+    # EM OFF
+    #print(&#34;EM Message: &#34;,format(message_encode(0b00000,&#34;EM&#34;), &#39;#010b&#39;))
+    send_to_328p(message_encode(0b00000,&#34;EM&#34;))
+    # Wait for EM OFF?
+    #recv_from_328p(&#34;EM&#34;, 10)
+    time.sleep(.5)
+
+    return</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_gantry_interface.transmit_uart_sim"><code class="name flex">
+<span>def <span class="ident">transmit_uart_sim</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transmit_uart_sim():
+    while True:
+        time.sleep(.03)
+        send_to_328p(0x91)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="x328p_interface.x328p_gantry_interface.Node"><code class="flex name class">
+<span>class <span class="ident">Node</span></span>
+<span>(</span><span>state='. ', parent=None, pos=[0, 0])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Node:
+    def __init__(self, state=&#39;. &#39;, parent=None, pos=[0, 0]):
+        self.state = state      # Value
+        self.parent = parent    # parent node
+        self.heuristic = math.inf
+        self.pos = pos
+        self.cost = 0
+        self.isGoal = 0
+        self.costCreated = 0
+
+    def successors(self, map):
+        succs = []
+        x = self.pos[0]
+        y = self.pos[1]
+
+        if y-1 &gt;= 0:
+            child = map[self.pos[0]][self.pos[1]-1]
+            succs.append((child, &#39;s&#39;))
+
+        if x - 1 &gt;= 0:
+            child = map[self.pos[0]-1][self.pos[1]]
+            succs.append((child, &#39;w&#39;))
+
+        if y - 1 &gt;= 0 and x - 1 &gt;= 0:
+            child = map[self.pos[0]-1][self.pos[1]-1]
+            if map[self.pos[0] - 1][self.pos[1]].state == &#39;. &#39; and map[self.pos[0]][self.pos[1] - 1].state == &#39;. &#39;:
+                succs.append((child, &#39;sw&#39;))
+
+        if y + 1 &lt;= 26:
+            child = map[self.pos[0]][self.pos[1]+1]
+            succs.append((child, &#39;n&#39;))
+
+        if x + 1 &lt;= 16:
+            child = map[self.pos[0]+1][self.pos[1]]
+            succs.append((child, &#39;e&#39;))
+
+        if x + 1 &lt;= 16 and y + 1 &lt;= 26:
+            child = map[self.pos[0]+1][self.pos[1]+1]
+            if map[self.pos[0]+1][self.pos[1]].state == &#39;. &#39; and map[self.pos[0]][self.pos[1]+1].state == &#39;. &#39;:
+                print(map[self.pos[0]+1][self.pos[1]].state)
+                succs.append((child, &#39;ne&#39;))
+
+        if x + 1 &lt;= 16 and y - 1 &gt;= 0:
+            child = map[self.pos[0]+1][self.pos[1]-1]
+            if map[self.pos[0]+1][self.pos[1]].state == &#39;. &#39; and map[self.pos[0]][self.pos[1]-1].state == &#39;. &#39;:
+                succs.append((child, &#39;nw&#39;))
+
+        if x - 1 &gt;= 0 and y + 1 &lt;= 26:
+            child = map[self.pos[0]-1][self.pos[1]+1]
+            if map[self.pos[0] - 1][self.pos[1]].state == &#39;. &#39; and map[self.pos[0]][self.pos[1] + 1].state == &#39;. &#39;:
+                succs.append((child, &#39;se&#39;))
+
+        return succs
+
+    def __str__(self):
+        return self.state</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="x328p_interface.x328p_gantry_interface.Node.successors"><code class="name flex">
+<span>def <span class="ident">successors</span></span>(<span>self, map)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def successors(self, map):
+    succs = []
+    x = self.pos[0]
+    y = self.pos[1]
+
+    if y-1 &gt;= 0:
+        child = map[self.pos[0]][self.pos[1]-1]
+        succs.append((child, &#39;s&#39;))
+
+    if x - 1 &gt;= 0:
+        child = map[self.pos[0]-1][self.pos[1]]
+        succs.append((child, &#39;w&#39;))
+
+    if y - 1 &gt;= 0 and x - 1 &gt;= 0:
+        child = map[self.pos[0]-1][self.pos[1]-1]
+        if map[self.pos[0] - 1][self.pos[1]].state == &#39;. &#39; and map[self.pos[0]][self.pos[1] - 1].state == &#39;. &#39;:
+            succs.append((child, &#39;sw&#39;))
+
+    if y + 1 &lt;= 26:
+        child = map[self.pos[0]][self.pos[1]+1]
+        succs.append((child, &#39;n&#39;))
+
+    if x + 1 &lt;= 16:
+        child = map[self.pos[0]+1][self.pos[1]]
+        succs.append((child, &#39;e&#39;))
+
+    if x + 1 &lt;= 16 and y + 1 &lt;= 26:
+        child = map[self.pos[0]+1][self.pos[1]+1]
+        if map[self.pos[0]+1][self.pos[1]].state == &#39;. &#39; and map[self.pos[0]][self.pos[1]+1].state == &#39;. &#39;:
+            print(map[self.pos[0]+1][self.pos[1]].state)
+            succs.append((child, &#39;ne&#39;))
+
+    if x + 1 &lt;= 16 and y - 1 &gt;= 0:
+        child = map[self.pos[0]+1][self.pos[1]-1]
+        if map[self.pos[0]+1][self.pos[1]].state == &#39;. &#39; and map[self.pos[0]][self.pos[1]-1].state == &#39;. &#39;:
+            succs.append((child, &#39;nw&#39;))
+
+    if x - 1 &gt;= 0 and y + 1 &lt;= 26:
+        child = map[self.pos[0]-1][self.pos[1]+1]
+        if map[self.pos[0] - 1][self.pos[1]].state == &#39;. &#39; and map[self.pos[0]][self.pos[1] + 1].state == &#39;. &#39;:
+            succs.append((child, &#39;se&#39;))
+
+    return succs</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="x328p_interface" href="index.html">x328p_interface</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="x328p_interface.x328p_gantry_interface.create_heuristic_map" href="#x328p_interface.x328p_gantry_interface.create_heuristic_map">create_heuristic_map</a></code></li>
+<li><code><a title="x328p_interface.x328p_gantry_interface.find_message_type" href="#x328p_interface.x328p_gantry_interface.find_message_type">find_message_type</a></code></li>
+<li><code><a title="x328p_interface.x328p_gantry_interface.gamestate_to_position_map" href="#x328p_interface.x328p_gantry_interface.gamestate_to_position_map">gamestate_to_position_map</a></code></li>
+<li><code><a title="x328p_interface.x328p_gantry_interface.greedy" href="#x328p_interface.x328p_gantry_interface.greedy">greedy</a></code></li>
+<li><code><a title="x328p_interface.x328p_gantry_interface.make_physical_move" href="#x328p_interface.x328p_gantry_interface.make_physical_move">make_physical_move</a></code></li>
+<li><code><a title="x328p_interface.x328p_gantry_interface.message_encode" href="#x328p_interface.x328p_gantry_interface.message_encode">message_encode</a></code></li>
+<li><code><a title="x328p_interface.x328p_gantry_interface.next_buffer_pos" href="#x328p_interface.x328p_gantry_interface.next_buffer_pos">next_buffer_pos</a></code></li>
+<li><code><a title="x328p_interface.x328p_gantry_interface.print_posMap" href="#x328p_interface.x328p_gantry_interface.print_posMap">print_posMap</a></code></li>
+<li><code><a title="x328p_interface.x328p_gantry_interface.recv_from_328p" href="#x328p_interface.x328p_gantry_interface.recv_from_328p">recv_from_328p</a></code></li>
+<li><code><a title="x328p_interface.x328p_gantry_interface.send_to_328p" href="#x328p_interface.x328p_gantry_interface.send_to_328p">send_to_328p</a></code></li>
+<li><code><a title="x328p_interface.x328p_gantry_interface.sl_compression" href="#x328p_interface.x328p_gantry_interface.sl_compression">sl_compression</a></code></li>
+<li><code><a title="x328p_interface.x328p_gantry_interface.transmit_path" href="#x328p_interface.x328p_gantry_interface.transmit_path">transmit_path</a></code></li>
+<li><code><a title="x328p_interface.x328p_gantry_interface.transmit_uart_sim" href="#x328p_interface.x328p_gantry_interface.transmit_uart_sim">transmit_uart_sim</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="x328p_interface.x328p_gantry_interface.Node" href="#x328p_interface.x328p_gantry_interface.Node">Node</a></code></h4>
+<ul class="">
+<li><code><a title="x328p_interface.x328p_gantry_interface.Node.successors" href="#x328p_interface.x328p_gantry_interface.Node.successors">successors</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
