@@ -418,21 +418,22 @@ class GameState():
 
     """ read local game state for user move """
     def get_usermove(self):
-        #while(response != "ok"):
-             # check initial game state
+
+        # initial congruency state check
         r = fs_interface.initial_error_check(self)
         print("Response:", r)
-        #response = check_response(self, "initialfs_check", r)
-        #time.sleep(2)
+
         if check_response(self, "initialfs_check", r) == "ok":
-            # tell user their move
+            # congruency test passed
             gamestate.message = "Congruent States: User Move"
             chessboard.display_alert(gamestate.message)
+
             # color no cells if last iteration was incongruent
             if self.prev_incongruent:
                 chessboard.color_cells(self.nocolorCells, "Khaki")
                 self.prev_incongruent = 0
             print("make move")
+            
             # start fast scan and wait for user move
             move = fs_interface.start_fast_scan(self)
             if check_response(self, "readmove_check", move) == "ok":
