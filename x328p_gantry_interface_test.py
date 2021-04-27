@@ -9,10 +9,10 @@ interface = importlib.import_module('.x328p_interface.x328p_gantry_interface', '
 
 currentGamestate = gs()  # Instantiate test gamestate
 # move = 'h8a1'
-currentGamestate.bBuffer[0][0] = 'wP'
-currentGamestate.bBuffer[0][1] = 'wP'
-# currentGamestate.bBuffer[1][0] = 'wP'
-# currentGamestate.bBuffer[1][1] = 'wP'
+currentGamestate.wBuffer[0][0] = 'wP'
+# currentGamestate.wBuffer[0][1] = 'wP'
+# currentGamestate.wBuffer[1][0] = 'wP'
+# currentGamestate.wBuffer[1][1] = 'wP'
 # currentGamestate.bBuffer[2][0] = 'wP'
 
 # gameRecord = ['d4e5','e4d5','f4f5','g3f4']
