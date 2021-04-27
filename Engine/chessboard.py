@@ -331,12 +331,16 @@ def draw_board(screen, coloredCells):
 """
 def color_cells(coloredCells, c):
     global screen
+    # for every cell in coloredCells array
     for cell in coloredCells:
         x = cell[0]
         y = cell[1]
+        # if there are cells that need to be highlighted
         if x != -1 and y != -1:
             color = pg.Color(c)
             pg.draw.rect(screen, color, pg.Rect(y*cellSize + chessboardCoords[0], x*cellSize + chessboardCoords[1], cellSize, cellSize))
+    # update display
+    pg.display.flip()
 
 
 """ draw_buffers: draw the capture buffers on either side of the board

@@ -18,8 +18,8 @@ from Engine import audio
 
 from Engine.lichess import lichessInterface_new as interface
 
-from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
-from Engine.x328p_interface import x328p_fs_interface as fs_interface
+# from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
+# from Engine.x328p_interface import x328p_fs_interface as fs_interface
 
 
 isSoundOn = False
@@ -120,11 +120,14 @@ class GameState():
         # keeps track of previous opponents move; used during get_opponentturn
         self.previousMovesEvent = None
 
+        self.nocoloredCells = [(-1,-1),(-1,-1)]
         # cells need to be colored differently to indicate the starting and destination cell of moving pieces
-        self.coloredCells = [(-1,-1),(-1,-1)]
+        self.coloredCells = self.nocoloredCells
 
         # message to be displayed for the user
         self.message = ""
+
+        self.prev_incongruent = -1
 
         # indicates if game is over
         self.gameOver = False
@@ -415,15 +418,23 @@ class GameState():
 
     """ read local game state for user move """
     def get_usermove(self):
-        #while(response != "ok"):
-             # check initial game state
+
+        # initial congruency state check
         r = fs_interface.initial_error_check(self)
         print("Response:", r)
-        #response = check_response(self, "initialfs_check", r)
-        #time.sleep(2)
+
         if check_response(self, "initialfs_check", r) == "ok":
-            # start fast scan and wait for user move
+            # congruency test passed
+            gamestate.message = "Congruent States: User Move"
+            chessboard.display_alert(gamestate.message)
+
+            # color no cells if last iteration was incongruent
+            if self.prev_incongruent:
+                chessboard.color_cells(self.nocolorCells, "Khaki")
+                self.prev_incongruent = 0
             print("make move")
+            
+            # start fast scan and wait for user move
             move = fs_interface.start_fast_scan(self)
             if check_response(self, "readmove_check", move) == "ok":
 
@@ -560,6 +571,7 @@ def check_response(gamestate, rtype, response):
             incongruent_cells = response[1]
             gamestate.message = "Incongruent cells: Check highlighted cells"
             gamestate.coloredCells = incongruent_cells
+            gamestate.prev_incongruent = 1
             return 'invalid'
 
     elif rtype == "readmove_check":
