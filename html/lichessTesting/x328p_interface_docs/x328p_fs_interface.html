@@ -1,0 +1,1319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>x328p_interface.x328p_fs_interface API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>x328p_interface.x328p_fs_interface</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Module and helper functions for interfacing with fast scanning 328P via I2C Authors: Weishan Li, Jack DeGuglielmo Date: 2020-11-01
+import numpy as np
+from datetime import datetime
+import time
+#import serial
+#import spidev
+#spi = spidev.SpiDev()
+bus = 0
+device = 0
+#spi.open(bus, device)
+
+# Settings (for example)
+#spi.max_speed_hz = 5000
+#spi.mode = 0b00
+
+#ser = serial.Serial(&#34;/dev/ttyS0&#34;, 9600)  # Open port with baud rate
+letterToColumn = {&#39;a&#39;: 0, &#39;b&#39;: 1, &#39;c&#39;: 2, &#39;d&#39;: 3, &#39;e&#39;: 4, &#39;f&#39;: 5,&#39;g&#39;: 6,&#39;h&#39;: 7}  # To translate cell to posMap location
+columnToLetter = {0: &#39;a&#39;, 1: &#39;b&#39;, 2: &#39;c&#39;, 3: &#39;d&#39;, 4: &#39;e&#39;, 5: &#39;f&#39;, 6: &#39;g&#39;, 7: &#39;h&#39;}
+message_types = {0b00000 : &#39;N/A&#39;, 0b00001: &#39;Piece Picked Up&#39;, 0b00010: &#39;Piece Put Down&#39;, 0b01011: &#39;Invalid I2C Command&#39;}
+# I2C channel 1 is connected to the GPIO pins
+channel = 1
+#  MCP4725 defaults to address 0x60
+address = 0x03
+# Register addresses (with &#34;normal mode&#34; power-down bits)
+#reg_write_dac = 0x40
+# Initialize I2C (SMBus)
+#bus = SMBus(channel)
+import math
+
+class gamestateMessage():
+    def __init__(self, typ, col, data):
+        self.typ = typ
+        self.col = col
+        self.data = data
+        self.timestamp = None
+        self.chessCell = None
+
+    def __str__(self):
+        time = self.timestamp.strftime(&#34;%H:%M:%S&#34;)
+        line1 = &#34;Fast Scan Message ID: &#34; + str(id(self)) + &#34; at time:&#34; + time
+        line2 = &#34;- Type: &#34;+ format(self.typ, &#39;#010b&#39;) + &#34; | Column: &#34; + str(self.col) +&#34; (&#34; + columnToLetter[self.col] + &#34;) | Data: &#34; + format(self.data, &#34;#010b&#34;)+ &#34; -\n&#34;
+        return (line1+&#39;\n&#39;+line2)
+
+    def equals(self, nextMessage):
+        if self.typ == nextMessage.typ and self.data == nextMessage.data and self.col == nextMessage.col:
+            return True
+        return False
+
+    # return chess cell indicated by col integer
+    &#34;&#34;&#34;
+    def return_chess_cell(self):
+        #print(&#34;Column: &#34;, columnToLetter[self.col])
+        charColumn = columnToLetter[self.col]
+        #print(bin(self.data))
+        if self.data != 0:
+            print(&#34;Get row from data: &#34;, int(math.log(self.data,2)+1))
+            chessRow = int(math.log(self.data,2)+1)
+        cell = columnToLetter[self.col] + str(chessRow)
+        print(&#34;Cell:&#34;,cell)
+        return cell
+    &#34;&#34;&#34;
+def resolve_chess_move(gs, messageArray):
+    #print(&#34;Resolving Move...&#34;)
+    #print(&#34;GS: &#34;, gs)
+    #print(&#34;Sam&#39;s Message Array:&#34;, messageArray)
+    start_found = False
+    dest_found = False
+
+    start_pos = &#34;&#34;
+    dest_pos = &#34;&#34;
+
+    # loop through each column
+    for c in range(len(gs)):
+        # convert column to byte form to compare with fast scan byte (i.e 0b11000011)
+        column = column_to_byte(get_column_byIndex(gs, c))
+        #print(&#34;column:&#34;,column)
+        fs_column = messageArray[c].data
+        #print(&#34;fs_column:&#34;,bin(fs_column))
+        # loop through each cell of column
+        for i in range(len(gs)):
+            # bit shift to find value of current cell
+            cell = (column &gt;&gt; i) &amp; 1
+            cell_fs = (fs_column &gt;&gt; i) &amp; 1
+
+            # check for start location; once found, turn bool off
+            if cell_fs == 0 and cell == 1 and not start_found: 
+                start_cell_letter = columnToLetter[c]    
+                start_cell_number = i+1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                start_pos = start_cell_letter + str(start_cell_number)
+                start_found = True
+            
+            # check for destination location; once found, turn bool off
+            if cell_fs == 1 and cell == 0 and not dest_found:
+                dest_cell_letter = columnToLetter[c]
+                dest_cell_number = i+1
+
+                # convert to chess coordinates and concatenate (i.e b4)
+                dest_pos = dest_cell_letter + str(dest_cell_number)
+                dest_found = True
+    return start_pos + dest_pos
+
+
+def find_start_cell(gs, messageArray):
+    start_pos = &#34;&#34;
+
+    # loop through each column
+    for c in range(len(gs)):
+        # convert column to byte form to compare with fast scan byte (i.e 0b11000011)
+        column = column_to_byte(get_column_byIndex(gs, c))
+        # print(&#34;init column:&#34;, bin(column))
+        # print(&#34;column:&#34;,column)
+        fs_column = messageArray[c].data
+        # print(&#34;fs_column:&#34;,bin(fs_column))
+        # loop through each cell of column
+        for i in range(len(gs)):
+            # bit shift to find value of current cell
+            # print(&#34;Evaluating:&#34;, gs[7-i][c])
+            cell = (column &gt;&gt; i) &amp; 1
+            cell_fs = (fs_column &gt;&gt; i) &amp; 1
+
+            # check for start location; once found, turn bool off
+            if cell_fs == 0 and cell == 1:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                start_pos = start_cell_letter + str(start_cell_number)
+                # print(&#34;Column before:&#34;, gs[c-1])
+                # print(&#34;Column after:&#34;, gs[c + 1])
+                # print(&#34;GS[c]:&#34;,gs[c])
+                # print(&#34;cell at:&#34;,gs[c+1][7-i])
+                # print(&#34;cell before:&#34;, gs[c+1][6 - i])
+                # print(&#34;cell after:&#34;, gs[c+1][8 - i])
+
+                return [start_pos, gs[7-i][c]]
+
+    return -1
+
+def resolve_chess_move_v2(gs, statePrev, stateNext):
+    # print(&#34;Resolving Move...&#34;)
+    # print(&#34;GS: &#34;, gs)
+    # print(&#34;Sam&#39;s Message Array:&#34;, messageArray)
+    if compare_message_lists(statePrev, stateNext):
+        print(&#34;Same state transmitted&#34;)
+        return 1
+
+    cell = &#34;&#34;
+
+    # loop through each column
+    for c in range(8):
+        fs_columnPrev = statePrev[c].data
+        fs_columnNext = stateNext[c].data
+        # print(&#34;fs_column:&#34;,bin(fs_column))
+        # loop through each cell of column
+        for i in range(8):
+            # bit shift to find value of current cell
+            cellBitPrev = (fs_columnPrev &gt;&gt; i) &amp; 1
+            cellBitNext = (fs_columnNext &gt;&gt; i) &amp; 1
+
+            # check for start location; once found, turn bool off
+            if cellBitPrev == 0 and cellBitNext == 1:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                cell = start_cell_letter + str(start_cell_number)
+                return [cell, gs[c][7-i]]
+
+            elif cellBitPrev == 1 and cellBitNext == 0:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                cell = start_cell_letter + str(start_cell_number)
+                return [cell, gs[c][7-i]]
+    return -1
+
+def resolve_chess_move_v3(gs, statePrev, stateNext):
+    # print(&#34;Resolving Move...&#34;)
+    # print(&#34;GS: &#34;, gs)
+    # print(&#34;Sam&#39;s Message Array:&#34;, messageArray)
+    #if compare_message_lists(statePrev, stateNext):
+    #    print(&#34;Same state transmitted&#34;)
+    #    return 1
+
+    cell = &#34;&#34;
+
+    # loop through each column
+    for c in range(8):
+        fs_columnPrev = statePrev[c].data
+        fs_columnNext = stateNext[c].data
+        # print(&#34;fs_column:&#34;,bin(fs_column))
+        # loop through each cell of column
+        for i in range(8):
+            # bit shift to find value of current cell
+            cellBitPrev = (fs_columnPrev &gt;&gt; i) &amp; 1
+            cellBitNext = (fs_columnNext &gt;&gt; i) &amp; 1
+
+            # check for start location; once found, turn bool off
+            if cellBitPrev == 0 and cellBitNext == 1:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                cell = start_cell_letter + str(start_cell_number)
+                #print(gs[7-i])
+                return [cell, gs[7-i][c]]
+
+            elif cellBitPrev == 1 and cellBitNext == 0:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                cell = start_cell_letter + str(start_cell_number)
+                return [cell, gs[7-i][c]]
+    return -1
+
+
+
+def compare_message_lists(stateA, stateB):
+    for i in range(8):
+        if not stateA[i].equals(stateB[i]):
+            return (5, None)
+    return (0, None)
+
+def compare_chess_states(gs, messageArray):
+    #print(&#34;GS: &#34;, gs)
+    #print(&#34;Sam&#39;s Message Array:&#34;, messageArray)
+    isCongruent = True
+    incongruentCells = []
+    for column in range(8):
+        gamestateRawColumn = get_column_byIndex(gs, column)
+        #print(column)
+        #print(column_to_byte(column))
+        gamestateByte = column_to_byte(gamestateRawColumn)
+        messageByte = messageArray[column].data
+        for row in range(8):
+            isGsCellPresent = (gamestateByte &gt;&gt; row) &amp; 1
+            isMessageCellPresent = (messageByte &gt;&gt; row) &amp; 1
+            if isGsCellPresent != isMessageCellPresent:
+                isCongruent = False
+                incongruentCells.append((7 - row, column))
+    if isCongruent:
+        # Congruent Gamestates
+        return (0, None)
+    else:
+        # Incongruent Gamestates, returning gamestate indecies of incongruent cells
+        return (5, incongruentCells)
+
+def return_message_dict(two_byte_message):
+    # Talked to Wei about this
+    dict = {}
+    return dict
+
+def get_column_byChar(gsNP, columnChar):
+    return gsNP[:,letterToColumn[columnChar]]
+
+def get_column_byIndex(gsNP, ind):
+    return gsNP[:,ind]
+
+def column_to_byte(column):
+    columnInt = 0b00000000
+    for piece in column:
+        #print(piece)
+        if piece != &#39;--&#39;:
+            columnInt = columnInt &lt;&lt; 1
+            columnInt = columnInt | 1
+        else:
+            columnInt = columnInt &lt;&lt; 1
+            columnInt = columnInt | 0b00000000
+    #print(bin(columnInt))
+    return columnInt
+
+def initial_error_check(gs):
+    newGs = np.array(gs.board)
+    print(&#34;Starting initial check...&#34;)
+    #send_to_328p(0b00101000,&#34;Initial Check Data&#34;)
+    samInitialState = receive_chess_state()
+    if samInitialState == -1:
+        print(&#34;Error in reading Sam State&#34;)
+        return [-1, None]
+    # Check congruency
+    return compare_chess_states(newGs, samInitialState)
+
+
+# Receive message from 328P via UART
+&#34;&#34;&#34;
+def recv_from_328p(timeout):
+    print(&#34;\nWaiting for message:&#34;)
+    while True:
+        ser.flush()
+        # time.sleep(0.03)
+        x = ser.read()
+&#34;&#34;&#34;
+
+def receive_chess_state():
+    # print(&#34;Waiting for Sam&#39;s Chess State...&#34;)
+    samState = []
+    for i in range(8):
+        # Serial receive 2 bytes from Sam
+        # ser.flush()
+        # rawRecByte0 = ser.read()
+        send_to_328p(i, &#34;Requesting Column &#34;+ str(i))
+        rawRecByte0 = spi.readbytes(1)
+        #time.sleep(0.003)
+        # Maybe add a delay here
+        # rawRecByte1 = ser.read()
+
+        #rawRecByte1 = ser.readbytes(1)
+        now = datetime.now()
+        #recByte0 = int.from_bytes(rawRecByte0, &#39;little&#39;)
+        # print(&#34;Byte 0 Received:&#34;, format(recByte0, &#39;#010b&#39;))
+        recByte0Mirror = int.from_bytes(rawRecByte0, &#39;little&#39;)
+        recByte0 = int(&#39;{:08b}&#39;.format(recByte0Mirror)[::-1], 2)
+        # print(&#34;Byte 1 Received:&#34;, format(recByte1, &#39;#010b&#39;))
+        # recByte0 = 0b11110010
+        # recByte1 = 0b11000011
+        #messageType = (recByte0 &gt;&gt; 3)
+        messageType = 0
+        #messageCol = recByte0 &amp; 0b00000111
+        messageCol = i
+        currentMessage = gamestateMessage(messageType, messageCol, recByte0)
+        currentMessage.timestamp = now
+        #time.sleep(0.03)
+        #print(currentMessage)
+        # Figure out message type
+        # messageTypeStr = message_types[messageType]
+
+        samState.append(currentMessage)
+    return samState
+
+def print_gamestate_list(messageArray):
+    for message in messageArray:
+        print()
+        print(message)
+        
+
+# Sends 328P a path via UART
+def send_to_328p(data, messageType):
+    ser.flush()
+    #print(messageType, &#34;message sent (&#34; + hex(data)+&#34;)&#34;, format(data,&#39;#010b&#39;))
+    #while True:
+    #    received_data = ser.read()  # read serial port
+    #    time.sleep(0.03)
+    #    data_left = ser.inWaiting()  # check for remaining byte
+    #    received_data += ser.read(data_left)
+    #    print(&#34;Sent Data: &#34;,format(data, &#39;#010b&#39;))  # print received data
+    #ser.write(data.to_bytes(1, &#39;little&#39;))  # transmit data serially
+    spi.writebytes([data])
+
+def start_fast_scan(gs):
+    newGs = np.array(gs.board)
+    #print(&#34;newGs&#34;,newGs)
+    # Serial write start message to Sam
+    #transmission_byte0 = 0b00100111
+    #transmission_byte1 = 0b00110111  # Second byte doesn&#39;t matter for start
+    #send_to_328p(transmission_byte0, &#34;Dump All Sensor Data&#34;)
+    # Transmit again
+
+    isMoveNotFound = True
+    samState = None
+    prevSamState = None
+    startCell = None
+    destCell = None
+    isOpponentRemoved = False
+    isChangeMade = False
+    previousChangedState = None
+    while isMoveNotFound:
+        while isChangeMade == False:
+            samState = receive_chess_state()
+            if startCell is None:
+                 response = compare_chess_states(newGs, samState)
+            else:
+                 response = compare_message_lists(prevSamState, samState)
+            if response[0] == 5:
+                 #previousChangedState = samState
+                 print_gamestate_list(samState)
+                 if startCell is not None:
+                     print(&#34;\nBefore breaking the previous sam state\n&#34;)
+                     print_gamestate_list(prevSamState)
+                 break
+        isChangeMade = False
+        # First one is compared to local gs
+        #print(&#34;startCell before entering if&#34;, startCell)
+        if startCell is None or startCell == -1:  # Check this OR condition
+            if not isOpponentRemoved:
+                startCell = find_start_cell(newGs, samState)
+            else:
+                startCell = resolve_chess_move_v3(newGs, prevSamState, samState)
+            if startCell != -1 and startCell[1][0] != gs.userColor:
+                print(&#34;User has lifted opponent&#39;s piece. Start Cell has not been resolved.&#34;, startCell)
+                #newGs[5][4] = &#39;--&#39;
+                #samState2 = receive_chess_state()
+                startCell = -1
+                isOpponentRemoved = True
+            else:
+                print(&#34;Start Cell Resolved:&#34;,startCell)
+        else:
+            # Finesse for testing the move resolution
+            # samState2[7].data = 0b11000101
+            destCell = resolve_chess_move_v3(newGs, samState, prevSamState)
+            # unsure about a check here
+            print(&#34;Dest Cell Resolved:&#34;, destCell)
+            if destCell != -1:
+                if destCell != -1 and destCell[0] == startCell[0]: # User changed move
+                    print(&#34;User placed piece back. Continue making move.&#34;)
+                    startCell = -1
+                    destCell = -1
+
+                if destCell != -1 and destCell[0] != startCell[0]:
+                    # Transmit Stop
+                    if destCell[1][0] == gs.get_opponentcolor()[0] and not isOpponentRemoved: 
+                         destCell = -1
+                         isOpponentRemoved = True
+                    else:
+                         isMoveNotFound = True
+                         print(&#34;Destination Cell Resolved:&#34;, destCell)
+                         # Serial write stop message to Sam
+                         transmission_byte0 = 0b00111000
+                         send_to_328p(transmission_byte0, &#34;Stop Fast Scan&#34;)
+                         print(&#34;Stop FS sent&#34;)
+                         return startCell[0] + destCell[0]
+                         #print(startCell[0] + destCell[0])
+
+
+        prevSamState = samState.copy()
+    return -1
+
+
+    #move = resolve_chess_move(newGs, samState)
+    #print(&#34;Resolved Move:&#34;, move)
+
+
+    # Step 1: Transmit start message to sam
+
+    # Sam waits for completion of move (aka piece placed down or button)
+    # Step 2: Sam transmits current state (column by column).
+    # Wait for 8 messages. Store in array
+
+    # Step 3: Loop through objects. Resolve physical user move.
+    # Should make function to compare 8 messages to current (use for error checking later)
+
+
+
+    # Jack generates message from Sam
+    #print(get_column(newGs, &#39;a&#39;))
+
+    # return move
+    return 0
+
+
+def stop_fast_scan():
+    return 0
+
+def print_message_info(two_byte_message):
+    return 0
+
+def return_message_type(typeInt):
+    #print(&#34;Received data:&#34;, byteMessage, &#39;(&#39; + format(byteMessage, &#39;#010b&#39;) + &#39;)&#39;)
+    return &#39;Unknown&#39;
+
+
+def fast_scan_simulator_uart():
+
+    print(&#34;-- Fast Scanning Simulation Started --&#34;)
+    while True:
+
+        print(&#34;Waiting for first transmitted byte...&#34;)
+        #recByte = bus.read_byte(address)
+        # = int.from_bytes(x, &#39;little&#39;)
+
+        #print(&#34;Recveived Byte:&#34;, recByte, &#39;(&#39; + format(integerRecByte, &#39;#010b&#39;) + &#39;)&#39;)
+        time.sleep(.03)
+
+
+def fast_scan_simulator():
+    #https://raspberry-projects.com/pi/programming-in-python/i2c-programming-in-python/using-the-i2c-interface-2
+    #https://pypi.org/project/smbus2/
+    print(&#34;-- Fast Scanning Simulation Started --&#34;)
+    while True:
+            # Read 3 bytes of data via i2c
+            #startMessageB1 = 0x30
+            #startMessageB2 = 0xFF
+            #startMessage = [startMessageB1, startMessageB2]
+            #bus.write_byte(address, startMessageB1)
+            #bus.write_byte(address, startMessageB2)
+            #print(&#34;Transmitting Bytes:&#34;,startMessageB1)
+            #time.sleep(.3)
+            print(&#34;Waiting for first transmitted byte...&#34;)
+            recByte = bus.read_byte(address)
+            integerRecByte = int.from_bytes(x, &#39;little&#39;)
+            
+            #recBytes = bus.read_i2c_block_data(address, 0, 2)
+            #return_message_type(recBytes)
+            #print(&#34;Received Message Type:&#34;+return_message_type(recBytes))
+            print(&#34;Recveived Byte:&#34;, recByte, &#39;(&#39; + format(integerRecByte, &#39;#010b&#39;) + &#39;)&#39;)
+            time.sleep(.03)
+
+            # Write message via i2c
+            #bus.write_i2c_block_data(address, 0, recBytes)
+            #print(&#34;Transmitting message:&#34;, format(recBytes,&#39;#010b&#39;))
+
+
+def test_sim():
+     print(&#34;Starting SPI simulation&#34;)
+     while True:
+         time.sleep(2)
+         print(&#34;Transmitting 0xEA over SPI&#34;)
+         spi.writebytes([0xEA])
+         for i in range(5):
+              print(&#34;Waiting for transmission from 328...&#34;)
+              recData = spi.readbytes(1)
+              integerRecData = int.from_bytes(recData, &#39;little&#39;)
+              print(&#34;Received SPI data&#34;, hex(integerRecData), bin(integerRecData))</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="x328p_interface.x328p_fs_interface.column_to_byte"><code class="name flex">
+<span>def <span class="ident">column_to_byte</span></span>(<span>column)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def column_to_byte(column):
+    columnInt = 0b00000000
+    for piece in column:
+        #print(piece)
+        if piece != &#39;--&#39;:
+            columnInt = columnInt &lt;&lt; 1
+            columnInt = columnInt | 1
+        else:
+            columnInt = columnInt &lt;&lt; 1
+            columnInt = columnInt | 0b00000000
+    #print(bin(columnInt))
+    return columnInt</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.compare_chess_states"><code class="name flex">
+<span>def <span class="ident">compare_chess_states</span></span>(<span>gs, messageArray)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compare_chess_states(gs, messageArray):
+    #print(&#34;GS: &#34;, gs)
+    #print(&#34;Sam&#39;s Message Array:&#34;, messageArray)
+    isCongruent = True
+    incongruentCells = []
+    for column in range(8):
+        gamestateRawColumn = get_column_byIndex(gs, column)
+        #print(column)
+        #print(column_to_byte(column))
+        gamestateByte = column_to_byte(gamestateRawColumn)
+        messageByte = messageArray[column].data
+        for row in range(8):
+            isGsCellPresent = (gamestateByte &gt;&gt; row) &amp; 1
+            isMessageCellPresent = (messageByte &gt;&gt; row) &amp; 1
+            if isGsCellPresent != isMessageCellPresent:
+                isCongruent = False
+                incongruentCells.append((7 - row, column))
+    if isCongruent:
+        # Congruent Gamestates
+        return (0, None)
+    else:
+        # Incongruent Gamestates, returning gamestate indecies of incongruent cells
+        return (5, incongruentCells)</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.compare_message_lists"><code class="name flex">
+<span>def <span class="ident">compare_message_lists</span></span>(<span>stateA, stateB)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compare_message_lists(stateA, stateB):
+    for i in range(8):
+        if not stateA[i].equals(stateB[i]):
+            return (5, None)
+    return (0, None)</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.fast_scan_simulator"><code class="name flex">
+<span>def <span class="ident">fast_scan_simulator</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fast_scan_simulator():
+    #https://raspberry-projects.com/pi/programming-in-python/i2c-programming-in-python/using-the-i2c-interface-2
+    #https://pypi.org/project/smbus2/
+    print(&#34;-- Fast Scanning Simulation Started --&#34;)
+    while True:
+            # Read 3 bytes of data via i2c
+            #startMessageB1 = 0x30
+            #startMessageB2 = 0xFF
+            #startMessage = [startMessageB1, startMessageB2]
+            #bus.write_byte(address, startMessageB1)
+            #bus.write_byte(address, startMessageB2)
+            #print(&#34;Transmitting Bytes:&#34;,startMessageB1)
+            #time.sleep(.3)
+            print(&#34;Waiting for first transmitted byte...&#34;)
+            recByte = bus.read_byte(address)
+            integerRecByte = int.from_bytes(x, &#39;little&#39;)
+            
+            #recBytes = bus.read_i2c_block_data(address, 0, 2)
+            #return_message_type(recBytes)
+            #print(&#34;Received Message Type:&#34;+return_message_type(recBytes))
+            print(&#34;Recveived Byte:&#34;, recByte, &#39;(&#39; + format(integerRecByte, &#39;#010b&#39;) + &#39;)&#39;)
+            time.sleep(.03)</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.fast_scan_simulator_uart"><code class="name flex">
+<span>def <span class="ident">fast_scan_simulator_uart</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fast_scan_simulator_uart():
+
+    print(&#34;-- Fast Scanning Simulation Started --&#34;)
+    while True:
+
+        print(&#34;Waiting for first transmitted byte...&#34;)
+        #recByte = bus.read_byte(address)
+        # = int.from_bytes(x, &#39;little&#39;)
+
+        #print(&#34;Recveived Byte:&#34;, recByte, &#39;(&#39; + format(integerRecByte, &#39;#010b&#39;) + &#39;)&#39;)
+        time.sleep(.03)</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.find_start_cell"><code class="name flex">
+<span>def <span class="ident">find_start_cell</span></span>(<span>gs, messageArray)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_start_cell(gs, messageArray):
+    start_pos = &#34;&#34;
+
+    # loop through each column
+    for c in range(len(gs)):
+        # convert column to byte form to compare with fast scan byte (i.e 0b11000011)
+        column = column_to_byte(get_column_byIndex(gs, c))
+        # print(&#34;init column:&#34;, bin(column))
+        # print(&#34;column:&#34;,column)
+        fs_column = messageArray[c].data
+        # print(&#34;fs_column:&#34;,bin(fs_column))
+        # loop through each cell of column
+        for i in range(len(gs)):
+            # bit shift to find value of current cell
+            # print(&#34;Evaluating:&#34;, gs[7-i][c])
+            cell = (column &gt;&gt; i) &amp; 1
+            cell_fs = (fs_column &gt;&gt; i) &amp; 1
+
+            # check for start location; once found, turn bool off
+            if cell_fs == 0 and cell == 1:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                start_pos = start_cell_letter + str(start_cell_number)
+                # print(&#34;Column before:&#34;, gs[c-1])
+                # print(&#34;Column after:&#34;, gs[c + 1])
+                # print(&#34;GS[c]:&#34;,gs[c])
+                # print(&#34;cell at:&#34;,gs[c+1][7-i])
+                # print(&#34;cell before:&#34;, gs[c+1][6 - i])
+                # print(&#34;cell after:&#34;, gs[c+1][8 - i])
+
+                return [start_pos, gs[7-i][c]]
+
+    return -1</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.get_column_byChar"><code class="name flex">
+<span>def <span class="ident">get_column_byChar</span></span>(<span>gsNP, columnChar)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_column_byChar(gsNP, columnChar):
+    return gsNP[:,letterToColumn[columnChar]]</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.get_column_byIndex"><code class="name flex">
+<span>def <span class="ident">get_column_byIndex</span></span>(<span>gsNP, ind)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_column_byIndex(gsNP, ind):
+    return gsNP[:,ind]</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.initial_error_check"><code class="name flex">
+<span>def <span class="ident">initial_error_check</span></span>(<span>gs)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initial_error_check(gs):
+    newGs = np.array(gs.board)
+    print(&#34;Starting initial check...&#34;)
+    #send_to_328p(0b00101000,&#34;Initial Check Data&#34;)
+    samInitialState = receive_chess_state()
+    if samInitialState == -1:
+        print(&#34;Error in reading Sam State&#34;)
+        return [-1, None]
+    # Check congruency
+    return compare_chess_states(newGs, samInitialState)</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.print_gamestate_list"><code class="name flex">
+<span>def <span class="ident">print_gamestate_list</span></span>(<span>messageArray)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print_gamestate_list(messageArray):
+    for message in messageArray:
+        print()
+        print(message)</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.print_message_info"><code class="name flex">
+<span>def <span class="ident">print_message_info</span></span>(<span>two_byte_message)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print_message_info(two_byte_message):
+    return 0</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.receive_chess_state"><code class="name flex">
+<span>def <span class="ident">receive_chess_state</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def receive_chess_state():
+    # print(&#34;Waiting for Sam&#39;s Chess State...&#34;)
+    samState = []
+    for i in range(8):
+        # Serial receive 2 bytes from Sam
+        # ser.flush()
+        # rawRecByte0 = ser.read()
+        send_to_328p(i, &#34;Requesting Column &#34;+ str(i))
+        rawRecByte0 = spi.readbytes(1)
+        #time.sleep(0.003)
+        # Maybe add a delay here
+        # rawRecByte1 = ser.read()
+
+        #rawRecByte1 = ser.readbytes(1)
+        now = datetime.now()
+        #recByte0 = int.from_bytes(rawRecByte0, &#39;little&#39;)
+        # print(&#34;Byte 0 Received:&#34;, format(recByte0, &#39;#010b&#39;))
+        recByte0Mirror = int.from_bytes(rawRecByte0, &#39;little&#39;)
+        recByte0 = int(&#39;{:08b}&#39;.format(recByte0Mirror)[::-1], 2)
+        # print(&#34;Byte 1 Received:&#34;, format(recByte1, &#39;#010b&#39;))
+        # recByte0 = 0b11110010
+        # recByte1 = 0b11000011
+        #messageType = (recByte0 &gt;&gt; 3)
+        messageType = 0
+        #messageCol = recByte0 &amp; 0b00000111
+        messageCol = i
+        currentMessage = gamestateMessage(messageType, messageCol, recByte0)
+        currentMessage.timestamp = now
+        #time.sleep(0.03)
+        #print(currentMessage)
+        # Figure out message type
+        # messageTypeStr = message_types[messageType]
+
+        samState.append(currentMessage)
+    return samState</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.resolve_chess_move"><code class="name flex">
+<span>def <span class="ident">resolve_chess_move</span></span>(<span>gs, messageArray)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resolve_chess_move(gs, messageArray):
+    #print(&#34;Resolving Move...&#34;)
+    #print(&#34;GS: &#34;, gs)
+    #print(&#34;Sam&#39;s Message Array:&#34;, messageArray)
+    start_found = False
+    dest_found = False
+
+    start_pos = &#34;&#34;
+    dest_pos = &#34;&#34;
+
+    # loop through each column
+    for c in range(len(gs)):
+        # convert column to byte form to compare with fast scan byte (i.e 0b11000011)
+        column = column_to_byte(get_column_byIndex(gs, c))
+        #print(&#34;column:&#34;,column)
+        fs_column = messageArray[c].data
+        #print(&#34;fs_column:&#34;,bin(fs_column))
+        # loop through each cell of column
+        for i in range(len(gs)):
+            # bit shift to find value of current cell
+            cell = (column &gt;&gt; i) &amp; 1
+            cell_fs = (fs_column &gt;&gt; i) &amp; 1
+
+            # check for start location; once found, turn bool off
+            if cell_fs == 0 and cell == 1 and not start_found: 
+                start_cell_letter = columnToLetter[c]    
+                start_cell_number = i+1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                start_pos = start_cell_letter + str(start_cell_number)
+                start_found = True
+            
+            # check for destination location; once found, turn bool off
+            if cell_fs == 1 and cell == 0 and not dest_found:
+                dest_cell_letter = columnToLetter[c]
+                dest_cell_number = i+1
+
+                # convert to chess coordinates and concatenate (i.e b4)
+                dest_pos = dest_cell_letter + str(dest_cell_number)
+                dest_found = True
+    return start_pos + dest_pos</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.resolve_chess_move_v2"><code class="name flex">
+<span>def <span class="ident">resolve_chess_move_v2</span></span>(<span>gs, statePrev, stateNext)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resolve_chess_move_v2(gs, statePrev, stateNext):
+    # print(&#34;Resolving Move...&#34;)
+    # print(&#34;GS: &#34;, gs)
+    # print(&#34;Sam&#39;s Message Array:&#34;, messageArray)
+    if compare_message_lists(statePrev, stateNext):
+        print(&#34;Same state transmitted&#34;)
+        return 1
+
+    cell = &#34;&#34;
+
+    # loop through each column
+    for c in range(8):
+        fs_columnPrev = statePrev[c].data
+        fs_columnNext = stateNext[c].data
+        # print(&#34;fs_column:&#34;,bin(fs_column))
+        # loop through each cell of column
+        for i in range(8):
+            # bit shift to find value of current cell
+            cellBitPrev = (fs_columnPrev &gt;&gt; i) &amp; 1
+            cellBitNext = (fs_columnNext &gt;&gt; i) &amp; 1
+
+            # check for start location; once found, turn bool off
+            if cellBitPrev == 0 and cellBitNext == 1:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                cell = start_cell_letter + str(start_cell_number)
+                return [cell, gs[c][7-i]]
+
+            elif cellBitPrev == 1 and cellBitNext == 0:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                cell = start_cell_letter + str(start_cell_number)
+                return [cell, gs[c][7-i]]
+    return -1</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.resolve_chess_move_v3"><code class="name flex">
+<span>def <span class="ident">resolve_chess_move_v3</span></span>(<span>gs, statePrev, stateNext)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resolve_chess_move_v3(gs, statePrev, stateNext):
+    # print(&#34;Resolving Move...&#34;)
+    # print(&#34;GS: &#34;, gs)
+    # print(&#34;Sam&#39;s Message Array:&#34;, messageArray)
+    #if compare_message_lists(statePrev, stateNext):
+    #    print(&#34;Same state transmitted&#34;)
+    #    return 1
+
+    cell = &#34;&#34;
+
+    # loop through each column
+    for c in range(8):
+        fs_columnPrev = statePrev[c].data
+        fs_columnNext = stateNext[c].data
+        # print(&#34;fs_column:&#34;,bin(fs_column))
+        # loop through each cell of column
+        for i in range(8):
+            # bit shift to find value of current cell
+            cellBitPrev = (fs_columnPrev &gt;&gt; i) &amp; 1
+            cellBitNext = (fs_columnNext &gt;&gt; i) &amp; 1
+
+            # check for start location; once found, turn bool off
+            if cellBitPrev == 0 and cellBitNext == 1:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                cell = start_cell_letter + str(start_cell_number)
+                #print(gs[7-i])
+                return [cell, gs[7-i][c]]
+
+            elif cellBitPrev == 1 and cellBitNext == 0:
+                start_cell_letter = columnToLetter[c]
+                start_cell_number = i + 1
+
+                # convert to chess coordinates and concatenate (i.e a2)
+                cell = start_cell_letter + str(start_cell_number)
+                return [cell, gs[7-i][c]]
+    return -1</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.return_message_dict"><code class="name flex">
+<span>def <span class="ident">return_message_dict</span></span>(<span>two_byte_message)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def return_message_dict(two_byte_message):
+    # Talked to Wei about this
+    dict = {}
+    return dict</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.return_message_type"><code class="name flex">
+<span>def <span class="ident">return_message_type</span></span>(<span>typeInt)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def return_message_type(typeInt):
+    #print(&#34;Received data:&#34;, byteMessage, &#39;(&#39; + format(byteMessage, &#39;#010b&#39;) + &#39;)&#39;)
+    return &#39;Unknown&#39;</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.send_to_328p"><code class="name flex">
+<span>def <span class="ident">send_to_328p</span></span>(<span>data, messageType)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def send_to_328p(data, messageType):
+    ser.flush()
+    #print(messageType, &#34;message sent (&#34; + hex(data)+&#34;)&#34;, format(data,&#39;#010b&#39;))
+    #while True:
+    #    received_data = ser.read()  # read serial port
+    #    time.sleep(0.03)
+    #    data_left = ser.inWaiting()  # check for remaining byte
+    #    received_data += ser.read(data_left)
+    #    print(&#34;Sent Data: &#34;,format(data, &#39;#010b&#39;))  # print received data
+    #ser.write(data.to_bytes(1, &#39;little&#39;))  # transmit data serially
+    spi.writebytes([data])</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.start_fast_scan"><code class="name flex">
+<span>def <span class="ident">start_fast_scan</span></span>(<span>gs)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def start_fast_scan(gs):
+    newGs = np.array(gs.board)
+    #print(&#34;newGs&#34;,newGs)
+    # Serial write start message to Sam
+    #transmission_byte0 = 0b00100111
+    #transmission_byte1 = 0b00110111  # Second byte doesn&#39;t matter for start
+    #send_to_328p(transmission_byte0, &#34;Dump All Sensor Data&#34;)
+    # Transmit again
+
+    isMoveNotFound = True
+    samState = None
+    prevSamState = None
+    startCell = None
+    destCell = None
+    isOpponentRemoved = False
+    isChangeMade = False
+    previousChangedState = None
+    while isMoveNotFound:
+        while isChangeMade == False:
+            samState = receive_chess_state()
+            if startCell is None:
+                 response = compare_chess_states(newGs, samState)
+            else:
+                 response = compare_message_lists(prevSamState, samState)
+            if response[0] == 5:
+                 #previousChangedState = samState
+                 print_gamestate_list(samState)
+                 if startCell is not None:
+                     print(&#34;\nBefore breaking the previous sam state\n&#34;)
+                     print_gamestate_list(prevSamState)
+                 break
+        isChangeMade = False
+        # First one is compared to local gs
+        #print(&#34;startCell before entering if&#34;, startCell)
+        if startCell is None or startCell == -1:  # Check this OR condition
+            if not isOpponentRemoved:
+                startCell = find_start_cell(newGs, samState)
+            else:
+                startCell = resolve_chess_move_v3(newGs, prevSamState, samState)
+            if startCell != -1 and startCell[1][0] != gs.userColor:
+                print(&#34;User has lifted opponent&#39;s piece. Start Cell has not been resolved.&#34;, startCell)
+                #newGs[5][4] = &#39;--&#39;
+                #samState2 = receive_chess_state()
+                startCell = -1
+                isOpponentRemoved = True
+            else:
+                print(&#34;Start Cell Resolved:&#34;,startCell)
+        else:
+            # Finesse for testing the move resolution
+            # samState2[7].data = 0b11000101
+            destCell = resolve_chess_move_v3(newGs, samState, prevSamState)
+            # unsure about a check here
+            print(&#34;Dest Cell Resolved:&#34;, destCell)
+            if destCell != -1:
+                if destCell != -1 and destCell[0] == startCell[0]: # User changed move
+                    print(&#34;User placed piece back. Continue making move.&#34;)
+                    startCell = -1
+                    destCell = -1
+
+                if destCell != -1 and destCell[0] != startCell[0]:
+                    # Transmit Stop
+                    if destCell[1][0] == gs.get_opponentcolor()[0] and not isOpponentRemoved: 
+                         destCell = -1
+                         isOpponentRemoved = True
+                    else:
+                         isMoveNotFound = True
+                         print(&#34;Destination Cell Resolved:&#34;, destCell)
+                         # Serial write stop message to Sam
+                         transmission_byte0 = 0b00111000
+                         send_to_328p(transmission_byte0, &#34;Stop Fast Scan&#34;)
+                         print(&#34;Stop FS sent&#34;)
+                         return startCell[0] + destCell[0]
+                         #print(startCell[0] + destCell[0])
+
+
+        prevSamState = samState.copy()
+    return -1
+
+
+    #move = resolve_chess_move(newGs, samState)
+    #print(&#34;Resolved Move:&#34;, move)
+
+
+    # Step 1: Transmit start message to sam
+
+    # Sam waits for completion of move (aka piece placed down or button)
+    # Step 2: Sam transmits current state (column by column).
+    # Wait for 8 messages. Store in array
+
+    # Step 3: Loop through objects. Resolve physical user move.
+    # Should make function to compare 8 messages to current (use for error checking later)
+
+
+
+    # Jack generates message from Sam
+    #print(get_column(newGs, &#39;a&#39;))
+
+    # return move
+    return 0</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.stop_fast_scan"><code class="name flex">
+<span>def <span class="ident">stop_fast_scan</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stop_fast_scan():
+    return 0</code></pre>
+</details>
+</dd>
+<dt id="x328p_interface.x328p_fs_interface.test_sim"><code class="name flex">
+<span>def <span class="ident">test_sim</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_sim():
+     print(&#34;Starting SPI simulation&#34;)
+     while True:
+         time.sleep(2)
+         print(&#34;Transmitting 0xEA over SPI&#34;)
+         spi.writebytes([0xEA])
+         for i in range(5):
+              print(&#34;Waiting for transmission from 328...&#34;)
+              recData = spi.readbytes(1)
+              integerRecData = int.from_bytes(recData, &#39;little&#39;)
+              print(&#34;Received SPI data&#34;, hex(integerRecData), bin(integerRecData))</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="x328p_interface.x328p_fs_interface.gamestateMessage"><code class="flex name class">
+<span>class <span class="ident">gamestateMessage</span></span>
+<span>(</span><span>typ, col, data)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class gamestateMessage():
+    def __init__(self, typ, col, data):
+        self.typ = typ
+        self.col = col
+        self.data = data
+        self.timestamp = None
+        self.chessCell = None
+
+    def __str__(self):
+        time = self.timestamp.strftime(&#34;%H:%M:%S&#34;)
+        line1 = &#34;Fast Scan Message ID: &#34; + str(id(self)) + &#34; at time:&#34; + time
+        line2 = &#34;- Type: &#34;+ format(self.typ, &#39;#010b&#39;) + &#34; | Column: &#34; + str(self.col) +&#34; (&#34; + columnToLetter[self.col] + &#34;) | Data: &#34; + format(self.data, &#34;#010b&#34;)+ &#34; -\n&#34;
+        return (line1+&#39;\n&#39;+line2)
+
+    def equals(self, nextMessage):
+        if self.typ == nextMessage.typ and self.data == nextMessage.data and self.col == nextMessage.col:
+            return True
+        return False
+
+    # return chess cell indicated by col integer
+    &#34;&#34;&#34;
+    def return_chess_cell(self):
+        #print(&#34;Column: &#34;, columnToLetter[self.col])
+        charColumn = columnToLetter[self.col]
+        #print(bin(self.data))
+        if self.data != 0:
+            print(&#34;Get row from data: &#34;, int(math.log(self.data,2)+1))
+            chessRow = int(math.log(self.data,2)+1)
+        cell = columnToLetter[self.col] + str(chessRow)
+        print(&#34;Cell:&#34;,cell)
+        return cell
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="x328p_interface.x328p_fs_interface.gamestateMessage.equals"><code class="name flex">
+<span>def <span class="ident">equals</span></span>(<span>self, nextMessage)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def equals(self, nextMessage):
+    if self.typ == nextMessage.typ and self.data == nextMessage.data and self.col == nextMessage.col:
+        return True
+    return False</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="x328p_interface" href="index.html">x328p_interface</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="x328p_interface.x328p_fs_interface.column_to_byte" href="#x328p_interface.x328p_fs_interface.column_to_byte">column_to_byte</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.compare_chess_states" href="#x328p_interface.x328p_fs_interface.compare_chess_states">compare_chess_states</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.compare_message_lists" href="#x328p_interface.x328p_fs_interface.compare_message_lists">compare_message_lists</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.fast_scan_simulator" href="#x328p_interface.x328p_fs_interface.fast_scan_simulator">fast_scan_simulator</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.fast_scan_simulator_uart" href="#x328p_interface.x328p_fs_interface.fast_scan_simulator_uart">fast_scan_simulator_uart</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.find_start_cell" href="#x328p_interface.x328p_fs_interface.find_start_cell">find_start_cell</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.get_column_byChar" href="#x328p_interface.x328p_fs_interface.get_column_byChar">get_column_byChar</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.get_column_byIndex" href="#x328p_interface.x328p_fs_interface.get_column_byIndex">get_column_byIndex</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.initial_error_check" href="#x328p_interface.x328p_fs_interface.initial_error_check">initial_error_check</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.print_gamestate_list" href="#x328p_interface.x328p_fs_interface.print_gamestate_list">print_gamestate_list</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.print_message_info" href="#x328p_interface.x328p_fs_interface.print_message_info">print_message_info</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.receive_chess_state" href="#x328p_interface.x328p_fs_interface.receive_chess_state">receive_chess_state</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.resolve_chess_move" href="#x328p_interface.x328p_fs_interface.resolve_chess_move">resolve_chess_move</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.resolve_chess_move_v2" href="#x328p_interface.x328p_fs_interface.resolve_chess_move_v2">resolve_chess_move_v2</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.resolve_chess_move_v3" href="#x328p_interface.x328p_fs_interface.resolve_chess_move_v3">resolve_chess_move_v3</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.return_message_dict" href="#x328p_interface.x328p_fs_interface.return_message_dict">return_message_dict</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.return_message_type" href="#x328p_interface.x328p_fs_interface.return_message_type">return_message_type</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.send_to_328p" href="#x328p_interface.x328p_fs_interface.send_to_328p">send_to_328p</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.start_fast_scan" href="#x328p_interface.x328p_fs_interface.start_fast_scan">start_fast_scan</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.stop_fast_scan" href="#x328p_interface.x328p_fs_interface.stop_fast_scan">stop_fast_scan</a></code></li>
+<li><code><a title="x328p_interface.x328p_fs_interface.test_sim" href="#x328p_interface.x328p_fs_interface.test_sim">test_sim</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="x328p_interface.x328p_fs_interface.gamestateMessage" href="#x328p_interface.x328p_fs_interface.gamestateMessage">gamestateMessage</a></code></h4>
+<ul class="">
+<li><code><a title="x328p_interface.x328p_fs_interface.gamestateMessage.equals" href="#x328p_interface.x328p_fs_interface.gamestateMessage.equals">equals</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
