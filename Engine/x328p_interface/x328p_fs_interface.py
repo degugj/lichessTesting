@@ -278,6 +278,7 @@ def initial_error_check(gs):
     print("Starting initial check...")
     #send_to_328p(0b00101000,"Initial Check Data")
     samInitialState = receive_chess_state()
+    print_gamestate_list(samInitialState)
     if samInitialState == -1:
         print("Error in reading Sam State")
         return [-1, None]
