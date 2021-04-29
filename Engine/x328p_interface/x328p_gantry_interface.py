@@ -4,13 +4,13 @@
 
 import math
 import heapq
-import serial
+#import serial
 # import time
 import sys
 letterToColumn = {'a':5, 'b':7,'c':9,'d':11,'e':13,'f':15,'g':17,'h':19}  # To translate cell to posMap location
 pieceToBuffer = {'wP':[15,0], 'bP': [15, 24], 'bP': [15, 22]}
 # easy translation from number to row ((number * 2) + 1)
-ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
+#ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 
 # self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
 # self.number_to_y = {'1':7, '2':6, '3':5, '4':4, '5':3, '6':2, '7':1, '8':0}
@@ -46,7 +46,7 @@ class Node:
             if map[self.pos[0] - 1][self.pos[1]].state == '. ' and map[self.pos[0]][self.pos[1] - 1].state == '. ':
                 succs.append((child, 'sw'))
 
-        if y + 1 <= 26:
+        if y + 1 <= 24:
             child = map[self.pos[0]][self.pos[1]+1]
             succs.append((child, 'n'))
 
@@ -54,7 +54,7 @@ class Node:
             child = map[self.pos[0]+1][self.pos[1]]
             succs.append((child, 'e'))
 
-        if x + 1 <= 16 and y + 1 <= 26:
+        if x + 1 <= 16 and y + 1 <= 24:
             child = map[self.pos[0]+1][self.pos[1]+1]
             if map[self.pos[0]+1][self.pos[1]].state == '. ' and map[self.pos[0]][self.pos[1]+1].state == '. ':
                 print(map[self.pos[0]+1][self.pos[1]].state)
@@ -65,7 +65,7 @@ class Node:
             if map[self.pos[0]+1][self.pos[1]].state == '. ' and map[self.pos[0]][self.pos[1]-1].state == '. ':
                 succs.append((child, 'nw'))
 
-        if x - 1 >= 0 and y + 1 <= 26:
+        if x - 1 >= 0 and y + 1 <= 24:
             child = map[self.pos[0]-1][self.pos[1]+1]
             if map[self.pos[0] - 1][self.pos[1]].state == '. ' and map[self.pos[0]][self.pos[1] + 1].state == '. ':
                 succs.append((child, 'se'))
@@ -361,6 +361,39 @@ def print_posMap(map, path=None):
             print(map[i][21 + j], end=' ')
         print("\t")
 
+def make_physical_state_congruent(gs, nextGs):
+    posMapA = gamestate_to_position_map(gs)
+    posMapB = gamestate_to_position_map(nextGs)
+    print_posMap(posMapA)
+    print_posMap(posMapB)
+    takenFrom = []
+    for posB_row in posMapB:
+        for posB in posB_row:
+            if posB.state != '. ':
+                #print(posB.state)
+                if posMapA[posB.pos[0]][posB.pos[1]].state == posB.state:   # Already in correct pos
+                    #print("Pass")
+                    pass
+                else:
+                    foundReplacement = False
+                    for posA_row in posMapA:
+                        for posA in posA_row:
+                            #print("Checking state, pos", posA.state,posA.pos)
+                            if posA.state == posB.state and posA not in takenFrom and posA.state != posMapB[posA.pos[0]][posA.pos[1]]:
+                                #print("posA:", posA.pos)
+                                takenFrom.append(posB)
+                                #print("Start:", posA.pos)
+                                #print("Dest:", posB.pos)
+                                make_physical_move(gs, None, startOverride=posA.pos, destOveride=posB.pos)
+                                foundReplacement = True
+                                break;
+                        if foundReplacement:
+                            posMapA[posB.pos[0]][posB.pos[1]] = posB.state
+                            posMapA[posA.pos[0]][posA.pos[1]].state = ". "
+                            print_posMap(posMapA)
+                            break;
+
+    return 0 # Should be congruent
 
 
 # External function used to interface with GUI and game execution. Takes current gamestate and string move (ie 'e4e5')
@@ -396,7 +429,7 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     solution = greedy(heurMap, heurMap[startPos[0]][startPos[1]])
     print("\nBefore Straightline Path Compression: ")
     print_posMap(heurMap, solution)
-    resp = transmit_path(sl_compression(solution))
+    #resp = transmit_path(sl_compression(solution))
 
     #if resp == -1:
     #    make_physical_move(gamestate, move, startOverride, destOveride)
