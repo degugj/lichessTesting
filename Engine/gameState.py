@@ -18,8 +18,8 @@ from Engine import audio
 
 from Engine.lichess import lichessInterface_new as interface
 
-# from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
-# from Engine.x328p_interface import x328p_fs_interface as fs_interface
+from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
+from Engine.x328p_interface import x328p_fs_interface as fs_interface
 
 
 isSoundOn = False
@@ -42,7 +42,7 @@ class GameState():
             self.userColor = 'w'
         else:
             if not self.replay:
-                if self.gameQueue.get()["white"]["id"] == 'degugbot':
+                if self.gameQueue.get()["white"]["id"] == 'magichess_bot':
                     self.userColor = 'w'
                 else:
                     self.userColor = 'b'
@@ -425,12 +425,12 @@ class GameState():
 
         if check_response(self, "initialfs_check", r) == "ok":
             # congruency test passed
-            gamestate.message = "Congruent States: User Move"
-            chessboard.display_alert(gamestate.message)
+            self.message = "Congruent States: User Move"
+            chessboard.display_alert(self.message)
 
             # color no cells if last iteration was incongruent
             if self.prev_incongruent:
-                chessboard.color_cells(self.nocolorCells, "Khaki")
+                chessboard.color_cells(self.nocoloredCells, "Khaki")
                 self.prev_incongruent = 0
             print("make move")
             
