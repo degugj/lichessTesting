@@ -269,6 +269,8 @@ def transmit_path(path):
     #recv_from_328p("EM", 10)
     time.sleep(.5)
 
+    #Add if for topple king
+
     return
 
 
@@ -361,6 +363,8 @@ def print_posMap(map, path=None):
             print(map[i][21 + j], end=' ')
         print("\t")
 
+
+
 def make_physical_state_congruent(gs, nextGs):
     posMapA = gamestate_to_position_map(gs)
     posMapB = gamestate_to_position_map(nextGs)
@@ -379,16 +383,16 @@ def make_physical_state_congruent(gs, nextGs):
                     for posA_row in posMapA:
                         for posA in posA_row:
                             #print("Checking state, pos", posA.state,posA.pos)
-                            if posA.state == posB.state and posA not in takenFrom and posA.state != posMapB[posA.pos[0]][posA.pos[1]]:
+                            if posA.state == posB.state and posA.pos not in takenFrom and posA.state != posMapB[posA.pos[0]][posA.pos[1]].state:
                                 #print("posA:", posA.pos)
-                                takenFrom.append(posB)
+                                takenFrom.append(posB.pos)
                                 #print("Start:", posA.pos)
                                 #print("Dest:", posB.pos)
                                 make_physical_move(gs, None, startOverride=posA.pos, destOveride=posB.pos)
                                 foundReplacement = True
                                 break;
                         if foundReplacement:
-                            posMapA[posB.pos[0]][posB.pos[1]] = posB.state
+                            posMapA[posB.pos[0]][posB.pos[1]].state = posB.state
                             posMapA[posA.pos[0]][posA.pos[1]].state = ". "
                             print_posMap(posMapA)
                             break;
