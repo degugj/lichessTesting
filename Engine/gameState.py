@@ -229,18 +229,10 @@ class GameState():
             # check for promotion
             if moveLength == 5:
                 startpiece = self.promotion(startpiece, move)
-<<<<<<< HEAD
-        
-        # increment number of turns that have occurred
-        self.turn += 1
-        
-=======
-
 
         # increment number of turns that have occurred
         self.turn += 1
 
->>>>>>> eb33763ac39ed664a1c28ff7e07c4226ca8cd8ea
         # move piece to destination
         self.replace_piece_onboard(move, startpiece)
 
