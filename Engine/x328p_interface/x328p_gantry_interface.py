@@ -5,6 +5,7 @@
 import math
 import heapq
 import serial
+import numpy
 import time
 import sys
 letterToColumn = {'a':5, 'b':7,'c':9,'d':11,'e':13,'f':15,'g':17,'h':19}  # To translate cell to posMap location
@@ -73,7 +74,7 @@ class Node:
         return succs
 
     def __str__(self):
-        return str(self.heuristic)
+        return self.state
 
 def next_buffer_pos(gamestate, piece):
     pieceColor = piece[0]
@@ -399,7 +400,15 @@ def make_physical_state_congruent(gs, nextGs):
 
     return 0 # Should be congruent
 
-def topple_king(kingPos):
+def topple_king(gs, king):
+    posMap = gamestate_to_position_map(gs)
+    kingPos = [0,0]
+    for row in posMap:
+        for node in row:
+            if node.state == king:
+                print("Found king position")
+                kingPos = node.pos
+
     kingPos[0] = (int(kingPos[1]) * 2) - 1
     kingPos[1] = letterToColumn[kingPos[0]]
     send_to_328p(message_encode(kingPos[1], "XADDRESS"))
