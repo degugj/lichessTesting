@@ -238,13 +238,13 @@ def transmit_path(path):
     #send_to_328p(message_encode(0b11010,"RFID"))
     # Check RFID, compare to my state
     #print("Recieve and confirm RFID (Mocking with sleep for now)")
-    print("Skip RFID wait for now...")
+    #print("Skip RFID wait for now...")
     #recv_from_328p("RFID", 10)
     # EM ON
     #print("EM Message: ",format(message_encode(0b11111,"EM"), '#010b'))
     send_to_328p(message_encode(0b11111,"EM"))
     #print("Wait for EM ON message (Mocking with sleep for now)")
-    #recv_from_328p("EM", 10)
+    recv_from_328p("EM", 10)
 
     # Loop path[1] and on:
     time.sleep(.5)
@@ -266,7 +266,7 @@ def transmit_path(path):
     #print("EM Message: ",format(message_encode(0b00000,"EM"), '#010b'))
     send_to_328p(message_encode(0b00000,"EM"))
     # Wait for EM OFF?
-    #recv_from_328p("EM", 10)
+    recv_from_328p("EM", 10)
     time.sleep(.5)
 
     #Add if for topple king
