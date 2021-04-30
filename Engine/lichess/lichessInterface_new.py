@@ -8,7 +8,7 @@ import requests, time, json, os
 #import settings
 
 from Engine.lichess import settings
-from Engine import chessboard
+from Engine import chessboard, gui_pages as pages
 
 """
 -------------------------------
@@ -161,7 +161,7 @@ return:
 """
 def get_all_games():
 	games = []
-	r = requests.get('https://lichess.org/api/games/user/{username}'.format(username='degugBot'), params={'max': 25},
+	r = requests.get('https://lichess.org/api/games/user/{username}'.format(username=pages.app_username), params={'max': 25},
 					 headers={'Accept': 'application/x-ndjson', 'Authorization': 'Bearer {}'.format(api_key)})
 	lines = r.iter_lines()
 	for line in lines:

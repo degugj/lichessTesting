@@ -19,8 +19,8 @@ from Engine import audio
 
 from Engine.lichess import lichessInterface_new as interface
 
-from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
-from Engine.x328p_interface import x328p_fs_interface as fs_interface
+# from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
+# from Engine.x328p_interface import x328p_fs_interface as fs_interface
 
 
 isSoundOn = False
@@ -190,9 +190,9 @@ class GameState():
     def move_piece(self, move, castling = False):
 
         # return: '1' = ok, '0' = wrong scan, '-1' = hardware error
-        if wGantry:
-            if not self.userMove or self.replay:
-                gantry_interface.make_physical_move(self, move)
+        # if wGantry:
+        #     if not self.userMove or self.replay:
+        #         gantry_interface.make_physical_move(self, move)
 
         # length of move string (normally 4, pawn promotion 5)
         moveLength = len(move)
@@ -528,6 +528,8 @@ class GameState():
                         # check if the move caused mate
                         if event["status"] == "mate":
                             self.gameOver = True
+                            # send topple king message to gantry
+                            # topple_king(self.board, event['winner'])
                             return ('mate', event['winner'], move)
                         else:
                             return move
@@ -540,7 +542,7 @@ class GameState():
     def replay_move(self):
         try:
             move = self.moveset[self.turn]
-            time.sleep(3)
+            time.sleep(2)
             self.move_piece(move)
             return 1
         except IndexError:
@@ -603,3 +605,26 @@ def check_response(gamestate, rtype, response):
 def fastscan_process():
     move = fs_interface.start_fast_scan()
     fastscanQueue.put_nowait(move)
+
+
+""" topple_king: send toppple king message to gantry
+    params: board, winner
+    return:
+"""
+def topple_king(board, winner):
+    # find the losing king
+    if winner == "white":
+        king = "bK"
+    else:
+        king = "wK"
+
+    for row in board:
+        for col in row:
+            cell = board[row][col]
+            if cell == king:
+                coords = (row, col)
+                # send the coordinates of losing king to gantry
+                gantry_interface.topple_king(coords)
+                return
+
+    return

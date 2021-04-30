@@ -28,6 +28,8 @@ terminated = False
 
 eventstream_pid = None
 gamestream_pid = None
+
+app_username = "MagiChess_Bot"
 """
 -------------------------------
 PAGE CLASSES
@@ -70,8 +72,8 @@ class SigninPage(tk.Frame):
         """
 
         """ buttons """
-        loginButton = widgets.createButton(self, function=lambda: self.submit(controller=controller, username="MagiChess_Bot"),
-        text="Login as degugBot", bgcolor="seashell3")
+        loginButton = widgets.createButton(self, function=lambda: self.submit(controller=controller, username=app_username),
+        text="Login as "+app_username, bgcolor="seashell3")
         loginButton.pack(pady=4)
 
         returnButton = widgets.createButton(self, function=lambda: controller.show_frame(StartupPage),
@@ -82,7 +84,7 @@ class SigninPage(tk.Frame):
     def submit(self, controller, username, password=None):
         valid = 1
 
-        # login as degugBot
+        # login as MagiChess_Bot
         if valid:
             controller.show_frame(MainMenuPage, user=username)
 
@@ -301,6 +303,8 @@ class PreviousGamesPage(tk.Frame):
         widgets.createButton(self, function=lambda: self.replay(controller, gamelist.get(gamelist.curselection())), 
                             text="Replay your previous game", bgcolor="sky blue").pack(pady=10)
 
+        # widgets.createButton(self, function=lambda: self.refresh(controller), text="Refresh", bgcolor="gray").pack(pady=10)
+
         returnButton = widgets.createButton(self, function=lambda: controller.show_frame(ReplayGamePage),
                                                 text="Return", bgcolor="sky blue")
         returnButton.pack(pady=10)
@@ -310,10 +314,10 @@ class PreviousGamesPage(tk.Frame):
         gameid = entry.split(" ~ ")[0]
         white = entry.split(" ~ ")[1].split(": ")[1]
         black = entry.split(" ~ ")[2].split(": ")[1]
-        if white == 'degugBot':
+        if white == app_username:
             user_color = 'w'
             opp_name = black
-        elif black == 'degugBot':
+        elif black == app_username:
             user_color = 'b'
             opp_name = white
 
@@ -329,6 +333,15 @@ class PreviousGamesPage(tk.Frame):
         
         gamestate = gameState.GameState(replay=True, gameQueue=moves.split(" "), replay_user_color=user_color)
         chessboard.init_chessboard(opp_name, gamestate)
+
+    def refresh(self, controller):
+
+        # self.games = interface.get_all_games()
+        # self.gamelist = widgets.createListbox(sb_frame, width=100, yscrollcommand=sb.set)
+        # sb.config(command=gamelist.yview)
+        # sb.pack(side='right', fill='y')
+        pass
+
 
 """   
 -------------------------------
