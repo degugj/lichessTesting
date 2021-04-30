@@ -73,7 +73,7 @@ class Node:
         return succs
 
     def __str__(self):
-        return self.state
+        return str(self.heuristic)
 
 def next_buffer_pos(gamestate, piece):
     pieceColor = piece[0]
@@ -140,7 +140,7 @@ def gamestate_to_position_map(gamestate):
 def create_heuristic_map(posMap, endPos):
     for i in range(len(posMap)):
         for j in range(len(posMap[i])):
-            if posMap[i][j].state == '. ' and i != len(posMap)-1:
+            if posMap[i][j].state == '. ' and i != 0 and i != len(posMap)-1:
                 straightLineDist = math.sqrt(math.pow(endPos[0]-i,2) + math.pow(endPos[1]-j, 2))
                 posMap[i][j].heuristic = straightLineDist
             else:
