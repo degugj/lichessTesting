@@ -9,6 +9,7 @@ IMPORTS
 -------------------------------
 """
 import time
+import multiprocessing as mp
 
 import tkinter as tk
 from tkinter import messagebox
@@ -24,6 +25,10 @@ from Engine.lichess import lichessInterface_new as interface
 
 isSoundOn = False
 wGantry = True
+
+fastscanning = False
+
+fastscanQueue = mp.Queue()
 
 """
 -------------------------------
@@ -429,12 +434,18 @@ class GameState():
             chessboard.display_alert(gamestate.message)
 
             # color no cells if last iteration was incongruent
-            if self.prev_incongruent:
-                chessboard.color_cells(self.nocolorCells, "Khaki")
-                self.prev_incongruent = 0
+            # if self.prev_incongruent:
+            #     chessboard.color_cells(self.nocolorCells, "Khaki")
+            #     self.prev_incongruent = 0
             print("make move")
             
             # start fast scan and wait for user move
+            if not fastscan_start:
+                global fastscanning
+                fastscannning = mp.Process(target=fastscan_process)
+                fastscanning.start()
+                fastscan_start = True
+
             move = fs_interface.start_fast_scan(self)
             if check_response(self, "readmove_check", move) == "ok":
 
@@ -584,3 +595,10 @@ def check_response(gamestate, rtype, response):
     elif rtype == "gantrymove_check":
         pass
 
+""" fastscan_process: seperate process for fast scanning
+    params: 
+    return: only when move is found
+"""
+def fastscan_process():
+    move = fs_interface.start_fast_scan()
+    fastscanQueue.put_nowait(move)
