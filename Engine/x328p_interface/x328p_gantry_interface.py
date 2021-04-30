@@ -140,7 +140,7 @@ def gamestate_to_position_map(gamestate):
 def create_heuristic_map(posMap, endPos):
     for i in range(len(posMap)):
         for j in range(len(posMap[i])):
-            if posMap[i][j].state == '. ':
+            if posMap[i][j].state == '. ' and i != len(posMap)-1:
                 straightLineDist = math.sqrt(math.pow(endPos[0]-i,2) + math.pow(endPos[1]-j, 2))
                 posMap[i][j].heuristic = straightLineDist
             else:
@@ -267,7 +267,7 @@ def transmit_path(path):
     send_to_328p(message_encode(0b00000,"EM"))
     # Wait for EM OFF?
     recv_from_328p("EM", 10)
-    time.sleep(.5)
+    #time.sleep(.5)
 
     #Add if for topple king
 
