@@ -14,8 +14,7 @@ import multiprocessing as mp
 import tkinter as tk
 from tkinter import messagebox
 
-from Engine import chessboard
-from Engine import audio
+from Engine import chessboard, audio, gui_pages as pages
 
 from Engine.lichess import lichessInterface_new as interface
 
@@ -47,7 +46,7 @@ class GameState():
             self.userColor = 'w'
         else:
             if not self.replay:
-                if self.gameQueue.get()["white"]["id"] == 'magichess_bot':
+                if self.gameQueue.get()["white"]["id"] == pages.app_username:
                     self.userColor = 'w'
                 else:
                     self.userColor = 'b'
@@ -230,10 +229,18 @@ class GameState():
             # check for promotion
             if moveLength == 5:
                 startpiece = self.promotion(startpiece, move)
+<<<<<<< HEAD
         
         # increment number of turns that have occurred
         self.turn += 1
         
+=======
+
+
+        # increment number of turns that have occurred
+        self.turn += 1
+
+>>>>>>> eb33763ac39ed664a1c28ff7e07c4226ca8cd8ea
         # move piece to destination
         self.replace_piece_onboard(move, startpiece)
 
@@ -433,30 +440,44 @@ class GameState():
             self.message = "Congruent States: User Move"
             chessboard.display_alert(self.message)
 
-            # color no cells if last iteration was incongruent
-            # if self.prev_incongruent:
-            #     chessboard.color_cells(self.nocolorCells, "Khaki")
-            #     self.prev_incongruent = 0
-
             print("make move")
             
-            # start fast scan and wait for user move
-            if not fastscan_start:
-                global fastscanning
-                fastscannning = mp.Process(target=fastscan_process)
-                fastscanning.start()
-                fastscan_start = True
+            # ---------------------TODO---------------------TODO--------------------------TODO----------
+            # - unhighlight incongruent cells once incongruency has been fixed
+            # - branch a new process for fast scanning to allow users to interact with application 
+            #     while fast scan system waits for player move
 
+            # # color no cells if last iteration was incongruent
+            # # if self.prev_incongruent:
+            # #     chessboard.color_cells(self.nocolorCells, "Khaki")
+            # #     self.prev_incongruent = 0
+
+            # # if not fastscan_start:
+            # #     global fastscanning
+            # #     fastscannning = mp.Process(target=fastscan_process)
+            # #     fastscanning.start()
+            # #     fastscan_start = True
+            # ------------------------------------------------------------------------------------------
+
+            # start fast scan and wait for user move
             move = fs_interface.start_fast_scan(self)
             if check_response(self, "readmove_check", move) == "ok":
 
-                # prompt user on move resolution
-#                movecheckBox = messagebox.askyesno('Move Resolution', 'Was this your intended move?')
-                # if movecheckBox == 'Yes':
-                #    pass
-                #else:
-                #    return "invalid"
-                # check for pawn move and promotion
+                # ---------------------TODO---------------------TODO--------------------------TODO----------
+                # - create popups to confirm user moves
+                # - create popups to resolve promotion
+
+                # # prompt user on move resolution
+                # # movecheckBox = messagebox.askyesno('Move Resolution', 'Was this your intended move?')
+                # # if movecheckBox == 'Yes':
+                # #   pass
+                # # else:
+                # #   return "invalid"
+                # # check for pawn move and promotion
+
+                # ------------------------------------------------------------------------------------------
+
+                # promotion handling *** need to implement popup for user to choose which piece to promote to ***
                 piece = self.board[self.number_to_x[move[1]]][self.letter_to_y[move[0]]]
                 if piece[1] == 'P' and (move[3] == '1' or move[3] == '8'):
                    while 1:
@@ -468,7 +489,7 @@ class GameState():
                        # append promotion piece to move
                        move += inputPiece
 
-                     # send move to LiChess server
+                # send move to LiChess server
                 response = interface.make_move(move)
                 if response == 1:
                     return move
@@ -529,7 +550,7 @@ class GameState():
                         if event["status"] == "mate":
                             self.gameOver = True
                             # send topple king message to gantry
-                            # topple_king(self.board, event['winner'])
+                            topple_king(self, event['winner'])
                             return ('mate', event['winner'], move)
                         else:
                             return move
@@ -542,13 +563,16 @@ class GameState():
     def replay_move(self):
         try:
             move = self.moveset[self.turn]
-            time.sleep(2)
+            print(self.turn, move)
+            time.sleep(1)
             self.move_piece(move)
             return 1
         except IndexError:
             self.gameOver = True
             self.message = "Replay Over"
             return 0
+        except:
+            print("ERROR")
 
     """ reset board to original state """ 
     def reset(self):
@@ -588,6 +612,10 @@ def check_response(gamestate, rtype, response):
             gamestate.prev_incongruent = 1
             return 'invalid'
 
+    # ---------------------TODO---------------------TODO--------------------------TODO----------
+    # - implement more error handling for various responses from fs and gantry interfaces
+    # ------------------------------------------------------------------------------------------
+
     elif rtype == "readmove_check":
         if response == -1:
             gamestate.message = "Error in move"
@@ -597,6 +625,12 @@ def check_response(gamestate, rtype, response):
 
     elif rtype == "gantrymove_check":
         pass
+
+    elif rtype == "topking_check":
+        if response == 0:
+            return 'ok'
+        elif response == -1:
+            return 'invalid'
 
 """ fastscan_process: seperate process for fast scanning
     params: 
@@ -611,20 +645,31 @@ def fastscan_process():
     params: board, winner
     return:
 """
-def topple_king(board, winner):
+def topple_king(gamestate, winner):
     # find the losing king
     if winner == "white":
         king = "bK"
     else:
         king = "wK"
 
-    for row in board:
+    # mapping from board indices to chessboard coords
+    if gamestate.get_usercolor == "white":
+        row2number = {0:"8", 1:"7", 2:"6", 3:"5", 4:"4", 5:"3", 6:"2", 7:"1"}
+        col2letter = {0:"a", 1:"b", 2:"c", 3:"d", 4:"e", 5:"f", 6:"g", 7:"h"}
+    else:
+        row2number = {0:"1", 1:"2", 2:"3", 3:"4", 4:"5", 5:"6", 6:"7", 7:"8"}
+        col2letter = {0:"h", 1:"g", 2:"f", 3:"e", 4:"d", 5:"c", 6:"b", 7:"a"}
+
+    for row in gamestate.board:
         for col in row:
             cell = board[row][col]
             if cell == king:
-                coords = (row, col)
-                # send the coordinates of losing king to gantry
-                gantry_interface.topple_king(coords)
+                coords = col2letter[col] + row2number[row]
+                # send the coordinates of losing king to gantry and check response
+                if check_response(gamestate, 'topking_check', gantry_interface.topple_king(coords)) == 0: return
+                else:
+                    print("Error in toppling king")
+
                 return
 
     return
