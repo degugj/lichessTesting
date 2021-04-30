@@ -268,6 +268,7 @@ def transmit_path(path):
     send_to_328p(message_encode(0b00000,"EM"))
     # Wait for EM OFF?
     recv_from_328p("EM", 10)
+
     #time.sleep(.5)
 
     #Add if for topple king
@@ -400,17 +401,17 @@ def make_physical_state_congruent(gs, nextGs):
 
     return 0 # Should be congruent
 
+
 def topple_king(gs, king):
     posMap = gamestate_to_position_map(gs)
     kingPos = [0,0]
     for row in posMap:
         for node in row:
             if node.state == king:
-                print("Found king position")
                 kingPos = node.pos
+                print("Found king position:", king.pos)
 
-    kingPos[0] = (int(kingPos[1]) * 2) - 1
-    kingPos[1] = letterToColumn[kingPos[0]]
+    print("Sending position")
     send_to_328p(message_encode(kingPos[1], "XADDRESS"))
     send_to_328p(message_encode(kingPos[0], "YADDRESS"))
     send_to_328p(message_encode(0b11111, "GO"))
@@ -418,6 +419,7 @@ def topple_king(gs, king):
     if resp == -1:
         return -1
     send_to_328p(message_encode(0b01010,"EM"))
+    return 0
 
 # External function used to interface with GUI and game execution. Takes current gamestate and string move (ie 'e4e5')
 def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
