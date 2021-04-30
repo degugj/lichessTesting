@@ -406,10 +406,13 @@ def topple_king(gs, king):
     posMap = gamestate_to_position_map(gs)
     kingPos = [0,0]
     for row in posMap:
+        print("Row", row)
         for node in row:
+            print("Node", node.state)
             if node.state == king:
                 kingPos = node.pos
-                print("Found king position:", king.pos)
+                print("Found king position:", node.pos)
+                break
 
     print("Sending position")
     send_to_328p(message_encode(kingPos[1], "XADDRESS"))
