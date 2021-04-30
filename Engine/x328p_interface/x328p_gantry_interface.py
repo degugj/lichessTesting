@@ -4,13 +4,13 @@
 
 import math
 import heapq
-#import serial
-# import time
+import serial
+import time
 import sys
 letterToColumn = {'a':5, 'b':7,'c':9,'d':11,'e':13,'f':15,'g':17,'h':19}  # To translate cell to posMap location
 pieceToBuffer = {'wP':[15,0], 'bP': [15, 24], 'bP': [15, 22]}
 # easy translation from number to row ((number * 2) + 1)
-#ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
+ser = serial.Serial("/dev/ttyS0", 9600)  # Open port with baud rate
 
 # self.letter_to_x = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
 # self.number_to_y = {'1':7, '2':6, '3':5, '4':4, '5':3, '6':2, '7':1, '8':0}
@@ -238,13 +238,13 @@ def transmit_path(path):
     #send_to_328p(message_encode(0b11010,"RFID"))
     # Check RFID, compare to my state
     #print("Recieve and confirm RFID (Mocking with sleep for now)")
-    print("Skip RFID wait for now...")
+    #print("Skip RFID wait for now...")
     #recv_from_328p("RFID", 10)
     # EM ON
     #print("EM Message: ",format(message_encode(0b11111,"EM"), '#010b'))
     send_to_328p(message_encode(0b11111,"EM"))
     #print("Wait for EM ON message (Mocking with sleep for now)")
-    #recv_from_328p("EM", 10)
+    recv_from_328p("EM", 10)
 
     # Loop path[1] and on:
     time.sleep(.5)
@@ -266,7 +266,7 @@ def transmit_path(path):
     #print("EM Message: ",format(message_encode(0b00000,"EM"), '#010b'))
     send_to_328p(message_encode(0b00000,"EM"))
     # Wait for EM OFF?
-    #recv_from_328p("EM", 10)
+    recv_from_328p("EM", 10)
     time.sleep(.5)
 
     #Add if for topple king
@@ -433,7 +433,7 @@ def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
     solution = greedy(heurMap, heurMap[startPos[0]][startPos[1]])
     print("\nBefore Straightline Path Compression: ")
     print_posMap(heurMap, solution)
-    #resp = transmit_path(sl_compression(solution))
+    resp = transmit_path(sl_compression(solution))
 
     #if resp == -1:
     #    make_physical_move(gamestate, move, startOverride, destOveride)
