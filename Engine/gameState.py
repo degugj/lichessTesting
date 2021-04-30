@@ -9,6 +9,7 @@ IMPORTS
 -------------------------------
 """
 import time
+import multiprocessing as mp
 
 import tkinter as tk
 from tkinter import messagebox
@@ -18,12 +19,16 @@ from Engine import audio
 
 from Engine.lichess import lichessInterface_new as interface
 
-from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
-from Engine.x328p_interface import x328p_fs_interface as fs_interface
+# from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
+# from Engine.x328p_interface import x328p_fs_interface as fs_interface
 
 
 isSoundOn = False
 wGantry = True
+
+fastscanning = False
+
+fastscanQueue = mp.Queue()
 
 """
 -------------------------------
@@ -185,9 +190,9 @@ class GameState():
     def move_piece(self, move, castling = False):
 
         # return: '1' = ok, '0' = wrong scan, '-1' = hardware error
-        if wGantry:
-            if not self.userMove or self.replay:
-                gantry_interface.make_physical_move(self, move)
+        # if wGantry:
+        #     if not self.userMove or self.replay:
+        #         gantry_interface.make_physical_move(self, move)
 
         # length of move string (normally 4, pawn promotion 5)
         moveLength = len(move)
@@ -429,12 +434,19 @@ class GameState():
             chessboard.display_alert(self.message)
 
             # color no cells if last iteration was incongruent
-            if self.prev_incongruent:
-                chessboard.color_cells(self.nocoloredCells, "Khaki")
-                self.prev_incongruent = 0
+            # if self.prev_incongruent:
+            #     chessboard.color_cells(self.nocolorCells, "Khaki")
+            #     self.prev_incongruent = 0
+
             print("make move")
             
             # start fast scan and wait for user move
+            if not fastscan_start:
+                global fastscanning
+                fastscannning = mp.Process(target=fastscan_process)
+                fastscanning.start()
+                fastscan_start = True
+
             move = fs_interface.start_fast_scan(self)
             if check_response(self, "readmove_check", move) == "ok":
 
@@ -516,6 +528,8 @@ class GameState():
                         # check if the move caused mate
                         if event["status"] == "mate":
                             self.gameOver = True
+                            # send topple king message to gantry
+                            # topple_king(self.board, event['winner'])
                             return ('mate', event['winner'], move)
                         else:
                             return move
@@ -528,7 +542,7 @@ class GameState():
     def replay_move(self):
         try:
             move = self.moveset[self.turn]
-            time.sleep(3)
+            time.sleep(2)
             self.move_piece(move)
             return 1
         except IndexError:
@@ -584,3 +598,33 @@ def check_response(gamestate, rtype, response):
     elif rtype == "gantrymove_check":
         pass
 
+""" fastscan_process: seperate process for fast scanning
+    params: 
+    return: only when move is found
+"""
+def fastscan_process():
+    move = fs_interface.start_fast_scan()
+    fastscanQueue.put_nowait(move)
+
+
+""" topple_king: send toppple king message to gantry
+    params: board, winner
+    return:
+"""
+def topple_king(board, winner):
+    # find the losing king
+    if winner == "white":
+        king = "bK"
+    else:
+        king = "wK"
+
+    for row in board:
+        for col in row:
+            cell = board[row][col]
+            if cell == king:
+                coords = (row, col)
+                # send the coordinates of losing king to gantry
+                gantry_interface.topple_king(coords)
+                return
+
+    return
