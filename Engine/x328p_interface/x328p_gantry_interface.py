@@ -400,9 +400,10 @@ def make_physical_state_congruent(gs, nextGs):
 
     return 0 # Should be congruent
 
-def topple_king(kingPos):
-    kingPos[0] = (int(kingPos[1]) * 2) - 1
-    kingPos[1] = letterToColumn[kingPos[0]]
+def topple_king(kingCell):
+    print("Topple King Called on Gantry")
+    kingPos[0] = (int(kingCell[1]) * 2) - 1
+    kingPos[1] = letterToColumn[kingCell[0]]
     send_to_328p(message_encode(kingPos[1], "XADDRESS"))
     send_to_328p(message_encode(kingPos[0], "YADDRESS"))
     send_to_328p(message_encode(0b11111, "GO"))
@@ -410,6 +411,7 @@ def topple_king(kingPos):
     if resp == -1:
         return -1
     send_to_328p(message_encode(0b01010,"EM"))
+    return 0
 
 # External function used to interface with GUI and game execution. Takes current gamestate and string move (ie 'e4e5')
 def make_physical_move(gamestate, move, startOverride=None, destOveride=None):
