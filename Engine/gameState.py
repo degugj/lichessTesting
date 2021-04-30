@@ -18,8 +18,8 @@ from Engine import chessboard, audio, gui_pages as pages
 
 from Engine.lichess import lichessInterface_new as interface
 
-# from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
-# from Engine.x328p_interface import x328p_fs_interface as fs_interface
+from Engine.x328p_interface import x328p_gantry_interface as gantry_interface
+from Engine.x328p_interface import x328p_fs_interface as fs_interface
 
 
 isSoundOn = False
@@ -189,9 +189,9 @@ class GameState():
     def move_piece(self, move, castling = False):
 
         # return: '1' = ok, '0' = wrong scan, '-1' = hardware error
-        # if wGantry:
-        #     if not self.userMove or self.replay:
-        #         gantry_interface.make_physical_move(self, move)
+        if wGantry:
+            if not self.userMove or self.replay:
+                gantry_interface.make_physical_move(self, move)
 
         # length of move string (normally 4, pawn promotion 5)
         moveLength = len(move)
@@ -229,7 +229,6 @@ class GameState():
             # check for promotion
             if moveLength == 5:
                 startpiece = self.promotion(startpiece, move)
-
 
         # increment number of turns that have occurred
         self.turn += 1
