@@ -10,7 +10,7 @@ Magichess is an autonomous, internet connected smart chessboard that interfaces 
   * Jack DeGuglielmo CompE '21
 
 University of Massachusetts Amherst '21
-Electrical and Computer Senior Design Project
+Electrical and Computer Engineering Senior Design Project
 Team 10
 
 
