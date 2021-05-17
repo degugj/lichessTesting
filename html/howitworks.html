@@ -1,0 +1,309 @@
+<!DOCTYPE HTML>
+<!--
+	Road Trip by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+		<title>How it works?</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="icon" href="images/chess128.png" type="image/png">
+	</head>
+	
+	<body class="subpage">
+
+		<!-- Header -->
+			<header id="header" class="alt">
+				<div class="logo"><a href="index.html"><span>SDP 21 Team 10</span></a></div>
+				<a href="#menu"><span>Menu</span></a>
+			</header>
+
+		<!-- Nav -->
+			<nav id="menu">
+				<ul class="links">
+					<li><a href="index.html">Home</a></li>
+					<li><a href="team.html">Meet the team</a></li>
+					<li><a href="howitworks.html">How it works?</a></li>
+					<li><a href="specs.html">Tech Specs</a></li>
+					<li><a href="design_review.html">Design Reviews</a></li>
+					<li><a href="final.html">Final Project</a></li>
+				</ul>
+			</nav>
+
+
+		<!-- Main -->
+		<section id="banner" class="bg-img" data-bg="banner6.jpg">
+				<div class="inner box">
+					<article>
+						<header>
+							<h2>How it works?</h2>
+							<blockquote>
+							Learn more about the internals that creates the "Magic" in MagiChess.
+							</blockquote>
+						<br><br>
+						</header>
+					
+					
+				
+						<footer class="center">
+						<a href="#What" class="button small icon fa-arrow-circle-down">Learn more</a>
+						</footer>
+					</article>
+				</div>
+		</section>
+			
+		
+		<div id="What" class="wrapper post bg-img" data-bg="banner6.jpg">
+			<div class="inner">
+			<div class="box">
+			<h2>
+			What is MagiChess?
+			</h2>
+			<blockquote>
+				MagiChess is a computer operated chess robot that allows users to play a game of <b>physical </b>chess against a remote opponent. 			 			
+				MagiChess closes the gap between physical and digital chess. To do this, we plan to create a chess board that allows users to play with an AI or a remote human opponent. 	
+			
+</blockquote>
+			
+			</div>
+			</div>
+		</div>
+		
+		
+		
+<div id="interfacing" class="wrapper post bg-img" data-bg="banner6.jpg">
+			<div class="inner">
+			<div class="box">
+			<h3>
+			Interfacing with LiChess Server and User
+			</h3>
+	
+		
+				<div class="center">
+					<p>
+							To communicate, process information, control movements and accept user input, an internet connected Raspberry Pi is used. A Raspberry Pi is a credit-card sized computer that includes onboard WiFi capabilities and General Purpose Input/Output (GPIO) pins for interfacing with external systems. WiFi is used to enable the Pi’s internet connectivity and communication with Lichess.com, an open source online chess server. The Pi’s GPIO pins allow MagiChess to transmit movements and magnetic sensor commands to its XY-Gantry subsystem. MagiChess comes equipped with a touch display and speakers for user interfacing. The screen displays current game information, notifications, and accepts user input for game and system settings.
+					</p>	
+										
+				</div>
+		
+			</div>
+			</div>
+			</div>
+		
+<div id="move1" class="wrapper post bg-img" data-bg="banner6.jpg">
+			<div class="inner">
+			<div class="box">
+			
+	
+			<center>
+				<div class="center">
+			<table>
+			<tr>
+			
+			<th class = "3u">
+			<br/>
+
+			<span class="image fit">
+			<img  src="images/Chess Exploded.png" alt="Chess piece with embedded magnet and RFID Tag inside." />
+			</span>
+	
+			<br />
+			</th>
+			<th>
+			<br>
+			<h3>
+			<br>
+			Making Movements: The Chess Piece
+			</h4>
+			<p >
+			Each chess piece is fitted with a magnet to aid moving. When placed on the chess board, the magnet will trigger the sensors used to monitor moves made by the user. The magnet is also used in moving chess pieces with an electromagnet under the chessboard.
+			</p>
+			</th>							
+			</tr>
+					</table>				
+				</div>
+			</center>
+			</div>
+			</div>
+</div>		
+<div id="move2" class="wrapper post bg-img" data-bg="banner6.jpg">
+			<div class="inner">
+			<div class="box">
+			
+	
+			<center>
+				<div class="center">
+					<table class="alt" >
+			<tr>
+			
+			<th class = "3u">
+			<br /><br /><br />
+			<span class="image fit"><br/>
+			<img  src="images/gantry.jpg" alt="Gantry Photo" />
+			</span>
+	
+			<br />
+			</th>
+			<th>
+			<br>
+			<h3>
+			<br>
+			Making Movements: The Gantry
+			</h4>
+			<p >
+			The XY-Gantry located underneath the MagiChess board is responsible for piece movement. An electromagnet is attached to the head of the mechanical gantry. When turned on, it attracts a magnet embedded in a chess piece. The gantry will then move with the target piece in a desired path. Two stepper motors and drivers, an electromagnet, an RFID reader and a Microcontroller work together to control movements of the XY-Gantry. 	
+			
+			</p>
+			</th>							
+			</tr>
+					</table>				
+				</div>
+			</center>
+			</div>
+			</div>
+</div>	
+
+<div id="move3" class="wrapper post bg-img" data-bg="banner6.jpg">
+			<div class="inner">
+			<div class="box">
+			
+	
+			<center>
+				<div class="center">
+					<table >
+			<tr>
+			
+			<th class = "3u">
+			<br /><br /><br /><br />
+			<span class="image fit"><br/>
+			<img  src="images/pathplanning.jpg" alt="Gantry Photo" />
+			</span>
+	
+			<br />
+			</th>
+			<th>
+			<br>
+			<h3>
+			<br>
+			Making Movements: Path Planning Algorithm
+			</h4>
+			<p >
+			To avoid piece collisions and reduce move time, MagiChess implements a custom path planning algorithm. When a remote player executes a move, the algorithm determines a near optimal, collision free path between a target piece’s start and end location. The path planning process is executed by MagiChess’s Raspberry Pi. Solution paths are then transmitted to the XY-Gantry system’s microcontroller via the UART communication protocol.		
+			</p>
+			</th>							
+			</tr>
+					</table>				
+				</div>
+			</center>
+			</div>
+			</div>
+</div>	
+
+</div>		
+<div id="sense" class="wrapper post bg-img" data-bg="banner6.jpg">
+			<div class="inner">
+			<div class="box">
+			
+	
+			<center>
+				<div class="center">
+					<table>
+			<tr>
+			
+			<th class = "3u">
+			<br />
+			<span class="image fit">
+			<br>
+			<br />
+			<br /><br />
+			
+			<img  src="images/sensor.jpg" alt="Graphic explaining Path Planning" />
+			</span>
+	
+			<br />
+			</th>
+			<th>
+			<br>
+			<h3>
+			<br>
+			
+			Sensing Movements: The Hall Sensor Array
+			</h4>
+			<p >
+			Moving chess pieces autonomously is a challenging feat. To mitigate errors and enforce fault-tolerance, MagiChess is able to monitor the physical state of the board and detect a user’s move. MagiChess implements a Hall Sensor Array consisting of 64 magnetic hall sensors located under each cell to detect the presence of a chess piece. A microcontroller multiplexes 8 sensors at a time to scan for changes made on the chess board.
+			
+			</p>
+			</th>							
+			</tr>
+					</table>				
+				</div>
+			</center>
+			</div>
+			</div>
+</div>	
+
+<section id="post" class="wrapper post bg-img" data-bg="banner6.jpg">
+															<div class="inner"style="opacity: 1;">
+																<article id="Flow" class="box">
+																	<header>
+																		<center>
+																			<h2>Flowcharts</h2>
+																		</center>
+																	</header>
+																	<div class="content">
+																		<div class="table-wrapper">
+																			<table class="alt">
+																				<tr>
+																					<th>
+																						<center>
+																							<h3>
+			Hardware + Software Diagram
+			</h3>
+																							<span class="image fit">
+																								<img src="images/HW SW Flow.png" alt="Hardware and Software flow diagram" />
+																							</span>
+																						</center>
+																					</th>
+																				</tr>
+																				
+																			</table>
+																		</div>
+																	</div>
+																</article>
+															</div>
+														</section>
+		
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+
+					
+					<ul class="icons">
+					<h2>Team Resources And Links</h2>
+						<li><a href="https://github.com/degugj/lichessTesting" class="icon round fa-github"><span class="label"></span></a></li>
+						<li><a href="https://www.youtube.com/channel/UCYJXzD3qBwgGfacTnuPucgQ" class="icon round fa-youtube-play"><span class="label"></span></a></li>
+						<li><a href="mailto://sdpteam10@gmail.com" class="icon round fa-envelope"><span class="label"></span></a></li>
+					</ul>
+
+					<div class="copyright">
+						 MagiChess &copy; 2021. <br>
+						 Design: <a href="https://templated.co/roadtrip">TEMPLATED.co</a>. Images: <a href="https://unsplash.com">Unsplash</a>.<br>
+						Gears Photo by <a href="https://unsplash.com/@bill_oxford">Bill Oxford</a>.
+						 <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+						 
+					</div>
+
+				</div>
+			</footer>
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			
+	</body>	
+</html>
