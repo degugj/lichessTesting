@@ -300,6 +300,18 @@ def recv_from_328p(messageType, timeout):
 
         if recType != messageType:
             print("WARNING: Recieved message:",recType,"; expected:",messageType)
+            # -- Hotfix case for skipped arrive command but valid XADDRESS confirmation.
+            if(recType == "XADDRESS" && messageType == "ARRIVED"):
+                print("XADDRESS message recieved while waiting for ARRIVED. \nChecking for skip case.")
+                expectedX_Addr = currentGantryPos[1]
+                recX_Addr = (intMessage&0b00011111)
+                if expectedX_Addr != recX_Addr:
+                    print("Warning: Received x address:",recX_Addr,"expected x address:",expectedX_Addr, '\nContinuing under skip arrival logic.')
+                yTrue = recv_from_328p("YADDRESS", 10)
+                if yTrue == -1:
+                    print("Exiting, current address is not verified") # This could be where we try to move it back or call a scan
+                return
+            # --
         if messageType == "RFID":
             print("Do nothing...")
             return
